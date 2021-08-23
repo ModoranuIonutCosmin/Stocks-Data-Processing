@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31410.414
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocks Data Processing", "Stocks Data Processing\Stocks Data Processing.csproj", "{2A70B178-2371-4636-9458-E51357F4B547}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StocksProccesing.Relational", "StocksProccesing.Relational\StocksProccesing.Relational.csproj", "{A5B61E7D-F27C-4075-B731-6B7BCF18891C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A70B178-2371-4636-9458-E51357F4B547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A70B178-2371-4636-9458-E51357F4B547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A70B178-2371-4636-9458-E51357F4B547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A70B178-2371-4636-9458-E51357F4B547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5B61E7D-F27C-4075-B731-6B7BCF18891C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5B61E7D-F27C-4075-B731-6B7BCF18891C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5B61E7D-F27C-4075-B731-6B7BCF18891C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5B61E7D-F27C-4075-B731-6B7BCF18891C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4671669B-1F9B-416F-85A6-56B146512255}
+	EndGlobalSection
+EndGlobal
