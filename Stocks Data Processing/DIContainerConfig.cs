@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StocksProccesing.Relational.DataAccess;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Stocks_Data_Processing
         private static void ConfigureLogging(ILoggingBuilder log)
         {
             log.ClearProviders();
-            log.SetMinimumLevel(LogLevel.Information);
+            log.SetMinimumLevel(LogLevel.Warning);
             log.AddConsole();
         }
         public static IContainer Configure()
@@ -27,11 +26,7 @@ namespace Stocks_Data_Processing
 
             builder.RegisterType<StocksDataHandlingLogic>().As<IStocksDataHandlingLogic>();
 
-            IServiceCollection databaseServiceCollection = new ServiceCollection();
-
-            databaseServiceCollection.AddDbContext<StocksMarketContext>();
-
-            builder.Populate(databaseServiceCollection);
+            builder.RegisterType<StockContextFactory>().SingleInstance();
 
             builder.Register(handler => LoggerFactory.Create(ConfigureLogging))
                 .As<ILoggerFactory>()

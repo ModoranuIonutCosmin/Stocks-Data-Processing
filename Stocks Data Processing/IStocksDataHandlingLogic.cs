@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing
 {
@@ -10,8 +11,7 @@ namespace Stocks_Data_Processing
 
         public async Task StartAllFunctions()
         {
-            await StartMantainingCurrentStocksData();
-            await StartPredictionEngine();
+            await Task.WhenAll(new List<Task>{ StartMantainingCurrentStocksData(), StartPredictionEngine() });
         }
     }
 }

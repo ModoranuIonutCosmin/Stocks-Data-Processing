@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Stocks.General;
 using Stocks_Data_Processing.Models;
 using StocksProccesing.Relational.DataAccess;
 using System;

@@ -1,4 +1,6 @@
-﻿namespace Stocks_Data_Processing
+﻿using System.Threading.Tasks;
+
+namespace Stocks_Data_Processing
 {
     public class Application : IApplication
     {
@@ -8,9 +10,9 @@
         {
             this.stocksDataHandlingLogic = stocksDataHandlingLogic;
         }
-        public void Run()
+        public async Task Run()
         {
-           stocksDataHandlingLogic.StartAllFunctions().Wait();
+            await stocksDataHandlingLogic.StartAllFunctions();
         }
     }
 }

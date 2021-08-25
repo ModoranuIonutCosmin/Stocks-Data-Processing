@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StocksProccesing.Relational.Model
 {
-    public class StocksPriceData
+    public class StocksPriceData : IComparable<StocksPriceData>
     {
         [Key]
         public int Id { get; set; }
@@ -18,5 +18,10 @@ namespace StocksProccesing.Relational.Model
 
         [MaxLength(10)]
         public string CompanyTicker { get; set; }
+
+        public int CompareTo(StocksPriceData other)
+        {
+            return Price.CompareTo(other.Price);
+        }
     }
 }

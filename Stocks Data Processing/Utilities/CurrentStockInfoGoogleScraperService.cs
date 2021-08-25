@@ -1,4 +1,6 @@
 ﻿using HtmlAgilityPack;
+using Stocks.General;
+using Stocks_Data_Processing.ExtensionMethods;
 using Stocks_Data_Processing.Models;
 using System;
 using System.Linq;
@@ -73,7 +75,7 @@ namespace Stocks_Data_Processing.Utilities
             }
 
             //Asociaza data la care s-au obtinut valorile in format UTC.
-            stocksInfoResponse.DateTime = DateTimeOffset.UtcNow;
+            stocksInfoResponse.DateTime = DateTimeOffset.UtcNow.RoundDown(TimeSpan.FromMinutes(1));
 
             //Incarca documentul html in memorie.
             var htmlDoc = new HtmlDocument();
@@ -98,8 +100,8 @@ namespace Stocks_Data_Processing.Utilities
             ///<remarks>Va avea formatul $100.40</remarks>
             string value = htmlElements.First().InnerText;
 
-            value = value.Replace('.', ',');
             value = value.Trim('$');
+            value = value.Replace('.', ',');
 
             //Parseaza valoarea ca double si salveaza statusul in aceasta variabila
             //iar valoarea, in caz de success in currentPrice.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stocks.General;
+using System;
 
 namespace Stocks_Data_Processing.Models
 {

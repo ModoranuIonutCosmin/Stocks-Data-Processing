@@ -2,7 +2,6 @@
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +15,8 @@ namespace Stocks_Data_Processing.Utilities
     {
         #region Private members
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
-        private readonly StocksMarketContext _stocksContext; 
+        private readonly StockContextFactory _stocksContextFactory; 
+        private readonly StocksMarketContext _stocksContext;
         #endregion
 
         #region Constructor
@@ -29,10 +29,11 @@ namespace Stocks_Data_Processing.Utilities
         /// <param name="stocksContext">Context-ul bazei de date aferent aplicatiei.</param>
         public MaintainCurrentStockData(
             ICurrentStockInfoDataScraperService currentStockInfoDataScraper,
-            StocksMarketContext stocksContext)
+            StockContextFactory stocksContextFactory)
         {
             _currentStockInfoDataScraper = currentStockInfoDataScraper;
-            _stocksContext = stocksContext;
+            _stocksContextFactory = stocksContextFactory;
+            _stocksContext = _stocksContextFactory.Create();
         }
 
         #endregion
@@ -47,21 +48,6 @@ namespace Stocks_Data_Processing.Utilities
         {
             //Obtine date despre stock-urile companiilor urmarite.
             var stockData = await _currentStockInfoDataScraper.GatherAllAsync();
-
-            ///Obtine lista acestor companii din enumul <see cref="StocksTicker"/>
-            var companies = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                    .Select(s => s.ToString()).ToList();
-
-            if (!_stocksContext.Companies.Any())
-            //Daca tabelul companiilor (din BD) nu contine nicio companie...
-            {
-                //... introduce toate companiile urmarite.
-                _stocksContext.Companies.AddRange(companies.Select(ticker => new Company()
-                {
-                    Name = $"{ticker} company",
-                    Ticker = ticker
-                }));
-            }
 
             //Formeaza lista de randuri ce trebuie adaugate in tabelul cu preturi.
             var stocksTableEntries = stockData.Select(response =>
@@ -83,7 +69,6 @@ namespace Stocks_Data_Processing.Utilities
 
             _stocksContext.PricesData.RemoveRange(oldPredictions);
 
-            //Incepe tranzactia formata local si in BD si-i face SAVE.
             _stocksContext.SaveChanges();
         }
     }  

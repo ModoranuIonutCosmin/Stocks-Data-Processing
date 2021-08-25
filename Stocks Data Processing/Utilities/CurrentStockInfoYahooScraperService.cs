@@ -1,4 +1,6 @@
 ﻿using HtmlAgilityPack;
+using Stocks.General;
+using Stocks_Data_Processing.ExtensionMethods;
 using Stocks_Data_Processing.Models;
 using System;
 using System.Linq;
@@ -71,7 +73,7 @@ namespace Stocks_Data_Processing.Utilities
             }
 
             //Asociaza data la care s-au obtinut valorile in format UTC.
-            stocksInfoResponse.DateTime = DateTimeOffset.UtcNow;
+            stocksInfoResponse.DateTime = DateTimeOffset.UtcNow.RoundDown(TimeSpan.FromMinutes(1));
 
             //Incarca documentul html in memorie.
             var htmlDoc = new HtmlDocument();

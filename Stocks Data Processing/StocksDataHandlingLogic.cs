@@ -14,34 +14,36 @@ namespace Stocks_Data_Processing
     {
         private readonly ILogger _logger;
         private readonly IMaintainCurrentStockData _maintainerCurrentStockService;
-        private readonly StocksMarketContext _dbContext;
+        private readonly IMaintainPredictionsUpToDate _maintainPredictionsUpToDateService;
 
         public StocksDataHandlingLogic(ILogger<StocksDataHandlingLogic> logger,
             IMaintainCurrentStockData maintainerCurrentStockService,
-            StocksMarketContext dbContext)
+            IMaintainPredictionsUpToDate maintainPredictionsUpToDateService
+            )
         {
             _logger = logger;
             _maintainerCurrentStockService = maintainerCurrentStockService;
-            _dbContext = dbContext;
+            _maintainPredictionsUpToDateService = maintainPredictionsUpToDateService;
         }
 
         public async Task StartMantainingCurrentStocksData()
         {
-            Console.WriteLine("Started to maintain current stocks data!");
 
-            while (true)
-            {
-                await _maintainerCurrentStockService.UpdateStockDataAsync();
+            //while (true)
+            //{
+            //    await _maintainerCurrentStockService.UpdateStockDataAsync();
 
-                _logger.LogInformation("Updated stocks!");
+            //    _logger.LogWarning("Updated stocks!");
 
                 await Task.Delay(TimeSpan.FromMinutes(1));
-            }
+            //}
         }
 
         public async Task StartPredictionEngine()
         {
-            System.Console.WriteLine("Started prediction engine!");
+            _logger.LogWarning("Started to maintain predictions up-to-date!");
+
+            await _maintainPredictionsUpToDateService.UpdatePredictionsAsync();
         }
     }
 }
