@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Stocks.General;
-using Stocks_Data_Processing.ExtensionMethods;
+using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Models;
 using System;
 using System.Linq;
@@ -16,7 +16,7 @@ namespace Stocks_Data_Processing.Utilities
     public class CurrentStockInfoGoogleScraperService : ICurrentStockInfoGoogleScraperService
     {
         #region Private members
-        private readonly HttpClient httpClient; 
+        private readonly HttpClient httpClient;
         #endregion
 
         #region Constructor
@@ -134,7 +134,7 @@ namespace Stocks_Data_Processing.Utilities
         public string BuildResourceLink(string ticker)
         {
             return $"https://www.google.com/finance?q={ticker}";
-        } 
+        }
         #endregion
     }
 }

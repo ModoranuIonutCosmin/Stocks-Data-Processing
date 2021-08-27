@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Stocks.General;
-using Stocks_Data_Processing.ExtensionMethods;
+using Stocks.General.ExtensionMethods;
+
 using Stocks_Data_Processing.Models;
 using System;
 using System.Linq;
@@ -132,7 +133,7 @@ namespace Stocks_Data_Processing.Utilities
         public string BuildResourceLink(string ticker)
         {
             return $"https://finance.yahoo.com/quote/{ticker}";
-        } 
+        }
         #endregion
     }
 }

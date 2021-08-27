@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Stocks.General\Stocks.General.csproj" />
     <ProjectReference Include="..\StocksProccesing.Relational\StocksProccesing.Relational.csproj" />
   </ItemGroup>
 

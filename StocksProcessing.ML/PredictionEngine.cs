@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Stocks.General.ExtensionMethods;
 
 namespace StocksProcessing.ML
 {
@@ -26,6 +27,7 @@ namespace StocksProcessing.ML
             //Va avea offset +3 din oarece motiv chiar daca in BD e UTC(offset +0). Se modifica la loc.
 
             DateTime dateGMT3 = stockData.Last().Date;
+
             dateGMT3 = DateTime.SpecifyKind(dateGMT3, DateTimeKind.Utc);
 
             DateTimeOffset nextPredictionDateTime = dateGMT3;
@@ -34,15 +36,18 @@ namespace StocksProcessing.ML
 
             var results = predictionModel.Predict();
 
-            return results.ForecastedPrices.Select(price =>
+            return results.ForecastedPrices.Select( (price, index) =>
             {
+                nextPredictionDateTime = nextPredictionDateTime.GetNextStockMarketTime(TimeSpan.FromMinutes(1));
+
                 var result = new PredictionResult()
                 {
                     Price = price,
-                    Date = nextPredictionDateTime
+                    Date = nextPredictionDateTime,
+                    Ticker = ticker,
+                    LowerBoundPrice = results.LowerBoundPrices[index],
+                    UpperBoundPrice = results.UpperBoundPrices[index],
                 };
-
-                nextPredictionDateTime = nextPredictionDateTime.AddMinutes(1);
 
                 return result;
 
@@ -102,8 +107,8 @@ namespace StocksProcessing.ML
             var forecastingPipeline = mlContext.Forecasting.ForecastBySsa(
                outputColumnName: "ForecastedPrices",
                inputColumnName: "Price",
-               windowSize: 60,
-               seriesLength: 7 * 24 * 60,
+               windowSize: 5 * 16 * 60,
+               seriesLength: trainDataLength,
                trainSize: trainDataLength,
                horizon: horizon,
                confidenceLevel: 0.95f,

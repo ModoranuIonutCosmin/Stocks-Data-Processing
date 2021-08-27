@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Stocks.General;
 using Stocks_Data_Processing.Models;
-using StocksProccesing.Relational.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +35,7 @@ namespace Stocks_Data_Processing.Utilities
         /// </summary>
         private static readonly List<string> WatchList
             = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                                .Select(s => s.ToString()).ToList(); 
+                                                .Select(s => s.ToString()).ToList();
         #endregion
 
 
@@ -113,7 +112,7 @@ namespace Stocks_Data_Processing.Utilities
             //Returneaza valorile pentru fiecare companie cand se termina task-urile
             //aferente obtinerii lor.
             return await Task.WhenAll(GatherTasks);
-        } 
+        }
         #endregion
 
     }

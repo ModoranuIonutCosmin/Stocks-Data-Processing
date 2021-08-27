@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using Quartz;
 using Stocks.General;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
+using StocksProcessing.ML;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
+    public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate, IJob
     {
-        private readonly StocksMarketContext _stockContext;
+        private readonly StocksMarketContext _stocksContext;
         private readonly IPredictionsService _predictionsService;
         private readonly ILogger<MaintainPredictionsUpToDate> _logger;
 
@@ -31,43 +33,65 @@ namespace Stocks_Data_Processing.Utilities
             IPredictionsService predictionsService,
             ILogger<MaintainPredictionsUpToDate> logger)
         {
-            _stockContext = stockContextFactory.Create();
+            _stocksContext = stockContextFactory.Create();
             _predictionsService = predictionsService;
             _logger = logger;
         }
 
+
+        public async Task Execute(IJobExecutionContext context)
+        {
+            await UpdatePredictionsAsync();
+        }
+
         public async Task UpdatePredictionsAsync()
         {
+            var tasks = new List<Task<List<PredictionResult>>>();
+
+            _logger.LogWarning("Started prediction refreshing!");
+
             foreach (var ticker in WatchList)
             {
-                var predictionsChunk = (await _predictionsService.Predict(ticker))
-                    .Select(k => new StocksPriceData()
-                    {
-                        Prediction = true,
-                        Price = Math.Round(k.Price, 2),
-                        Date = k.Date,
-                        CompanyTicker = ticker
-                    });
-
-                var max = predictionsChunk.Max();
-                var min = predictionsChunk.Min();
-
-
-                if (max.Price > 10000 || min.Price <= 0)
-                {
-                    _logger.LogError($"Bad values, Was {max.Price} for max and {min.Price} for min!");
-                    continue;
-                } 
-                else
-                {
-                    _logger.LogWarning($"Values are {max.Price} for max and {min.Price} for min!");
-                }
-
-                await _stockContext.PricesData.AddRangeAsync(predictionsChunk);
-                await _stockContext.SaveChangesAsync();
-
-                _logger.LogWarning($"Updated predictions for {ticker}!");
+                tasks.Add(GatherPredictions(ticker));
             }
+
+            var results = (await Task.WhenAll(tasks)).SelectMany(x => x)
+                .Select(e => new StocksPriceData()
+                {
+                    Price = Math.Round(e.Price, 2),
+                    CompanyTicker = e.Ticker,
+                    Prediction = true,
+                    Date = e.Date
+                }).ToList();
+
+            _stocksContext.PricesData.RemoveRange(_stocksContext.PricesData.Where(k => k.Prediction));
+            await _stocksContext.PricesData.AddRangeAsync(results);
+            await _stocksContext.SaveChangesAsync();
         }
+
+        public async Task<List<PredictionResult>> GatherPredictions(string ticker)
+        {
+            var predictionsChunk = (await _predictionsService.Predict(ticker));
+
+            var max = predictionsChunk.Max();
+            var min = predictionsChunk.Min();
+
+
+            if (max.Price > 100000 || min.Price <= 0)
+            {
+                _logger.LogError($"Bad values, Was {max.Price} for max and {min.Price} for min!");
+                return new List<PredictionResult>();
+            }
+            else
+            {
+                _logger.LogWarning($"Values are {max.Price} for max and {min.Price} for min!");
+            }
+
+            _logger.LogWarning($"Updated predictions for {ticker}!");
+
+            return predictionsChunk;
+        }
+
+
     }
 }

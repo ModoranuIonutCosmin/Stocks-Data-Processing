@@ -1,4 +1,5 @@
-﻿using Stocks_Data_Processing.Models;
+﻿using Microsoft.Extensions.Logging;
+using Quartz;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
 using System;
@@ -11,11 +12,12 @@ namespace Stocks_Data_Processing.Utilities
     /// Serviciu ce updateaza valorile stock-urilor urmarite in baza de date.
     /// </summary>
     /// <returns></returns>
-    public class MaintainCurrentStockData : IMaintainCurrentStockData
+    public class MaintainCurrentStockData : IMaintainCurrentStockData, IJob
     {
         #region Private members
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
-        private readonly StockContextFactory _stocksContextFactory; 
+        private readonly StockContextFactory _stocksContextFactory;
+        private readonly ILogger<MaintainCurrentStockData> _logger;
         private readonly StocksMarketContext _stocksContext;
         #endregion
 
@@ -29,23 +31,34 @@ namespace Stocks_Data_Processing.Utilities
         /// <param name="stocksContext">Context-ul bazei de date aferent aplicatiei.</param>
         public MaintainCurrentStockData(
             ICurrentStockInfoDataScraperService currentStockInfoDataScraper,
-            StockContextFactory stocksContextFactory)
+            StockContextFactory stocksContextFactory,
+            ILogger<MaintainCurrentStockData> logger)
         {
             _currentStockInfoDataScraper = currentStockInfoDataScraper;
             _stocksContextFactory = stocksContextFactory;
+            _logger = logger;
             _stocksContext = _stocksContextFactory.Create();
         }
 
+
+
         #endregion
 
-
         #region Main functionality
+
+
+        public async Task Execute(IJobExecutionContext context)
+        {
+            await UpdateStockDataAsync();
+        }
 
         /// <summary>
         /// Updateaza valorile stock-urilor urmarite in baza de date.
         /// </summary>
         public async Task UpdateStockDataAsync()
         {
+            _logger.LogWarning("Starting to update current stock data");
+
             //Obtine date despre stock-urile companiilor urmarite.
             var stockData = await _currentStockInfoDataScraper.GatherAllAsync();
 
@@ -71,6 +84,6 @@ namespace Stocks_Data_Processing.Utilities
 
             _stocksContext.SaveChanges();
         }
-    }  
+    }
     #endregion
 }

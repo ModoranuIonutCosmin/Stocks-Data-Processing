@@ -79,7 +79,7 @@ namespace StockBulkGatherer
             {
                 _dbContext.PricesData.AddRange(items);
             }
-            
+
             items.Clear();
         }
 
@@ -99,7 +99,7 @@ namespace StockBulkGatherer
                 currentDt = current.Date;
                 nextDt = next.Date;
 
-                if(currentDt.AddMinutes(1) != nextDt)
+                if (currentDt.Day == nextDt.Day)
                 {
                     TimeSpan deltaTime = nextDt - currentDt;
                     double source, target;
@@ -111,11 +111,8 @@ namespace StockBulkGatherer
                     {
                         ++i;
 
-                        if(currentDt.Day == nextDt.Day)
-                        {
-                            source = (source + target) / 2;
-                            source = Math.Truncate(100 * source) / 100;
-                        }
+                        source = (source + target) / 2;
+                        source = Math.Round(source, 2);
 
                         var fillingRow = new StocksPriceData()
                         {
@@ -149,18 +146,19 @@ namespace StockBulkGatherer
             //var ticker = "VOO";
             var api_key = "ItDQkGgz7847ipgJ_e11TpgPrSBDkVJr";
             var chunksNo = 1;
+            var limitPerMinute = 5;
 
             var tasks = new List<Task>();
 
             foreach (var ticker in WatchList)
             {
-                //if (!ticker.Equals("VOO") && !ticker.Equals("MS")) 
-                //    continue;
-
-                if (ticker.Equals("VOO") || ticker.Equals("MS"))
-                    continue;
+                if (limitPerMinute == 0)
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(1));
+                }
 
                 tasks.Add(GatherApiStockDataIntoDatabase(ticker, api_key, chunksNo));
+                limitPerMinute--;
             }
 
             await Task.WhenAll(tasks);

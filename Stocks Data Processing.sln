@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockBulkGatherer", "StockB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StocksProcessing.ML", "StocksProcessing.ML\StocksProcessing.ML.csproj", "{9EB284C6-794C-4A5D-8AEC-FB5027617927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stocks.General", "Stocks.General\Stocks.General.csproj", "{2BC1757E-58DC-4E3C-9E06-F04B60D1C847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocks.General", "Stocks.General\Stocks.General.csproj", "{2BC1757E-58DC-4E3C-9E06-F04B60D1C847}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StocksProcessing.API", "StocksProcessing.API\StocksProcessing.API.csproj", "{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{2BC1757E-58DC-4E3C-9E06-F04B60D1C847}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BC1757E-58DC-4E3C-9E06-F04B60D1C847}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BC1757E-58DC-4E3C-9E06-F04B60D1C847}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

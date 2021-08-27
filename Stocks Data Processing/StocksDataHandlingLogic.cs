@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using Stocks_Data_Processing.Models;
+using Quartz;
+using Quartz.Impl.Triggers;
 using Stocks_Data_Processing.Utilities;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Model;
 using System;
-using System.Linq;
-using System.Text.Json;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing
@@ -15,35 +14,56 @@ namespace Stocks_Data_Processing
         private readonly ILogger _logger;
         private readonly IMaintainCurrentStockData _maintainerCurrentStockService;
         private readonly IMaintainPredictionsUpToDate _maintainPredictionsUpToDateService;
+        private readonly IScheduler _scheduler;
 
         public StocksDataHandlingLogic(ILogger<StocksDataHandlingLogic> logger,
             IMaintainCurrentStockData maintainerCurrentStockService,
-            IMaintainPredictionsUpToDate maintainPredictionsUpToDateService
+            IMaintainPredictionsUpToDate maintainPredictionsUpToDateService,
+            IScheduler scheduler
             )
         {
             _logger = logger;
             _maintainerCurrentStockService = maintainerCurrentStockService;
             _maintainPredictionsUpToDateService = maintainPredictionsUpToDateService;
+            _scheduler = scheduler;
         }
 
         public async Task StartMantainingCurrentStocksData()
         {
+            var currentStocksJob = JobBuilder.Create<MaintainCurrentStockData>().WithIdentity("CurrentStock", "Maintenance").Build();
 
-            //while (true)
-            //{
-            //    await _maintainerCurrentStockService.UpdateStockDataAsync();
+            //Fiecare minut intr-un workday in perioada de trade 8:00-23:59 UTC.
+            var cronTrigger = new CronTriggerImpl();
 
-            //    _logger.LogWarning("Updated stocks!");
+            cronTrigger.CronExpression = new CronExpression("0 8-23 * ? * MON-FRI");
+            cronTrigger.TimeZone = TimeZoneInfo.Utc;
+            cronTrigger.JobName = "CurrentStock";
+            cronTrigger.JobGroup = "Maintenance";
+            cronTrigger.Name = "CurrentStock";
+            cronTrigger.Group = "Maintenance";
 
-                await Task.Delay(TimeSpan.FromMinutes(1));
-            //}
+            await _scheduler.ScheduleJob(currentStocksJob, cronTrigger);
         }
 
         public async Task StartPredictionEngine()
         {
-            _logger.LogWarning("Started to maintain predictions up-to-date!");
+            var predictionsJob = JobBuilder.Create<MaintainPredictionsUpToDate>().WithIdentity("Predictions", "Maintenance").Build();
 
-            await _maintainPredictionsUpToDateService.UpdatePredictionsAsync();
+            //Fiecare sambata la 12:00 PM
+            var predictionsTrigger = TriggerBuilder.Create()
+                .WithIdentity("Predictions", "Maintenance")
+                .StartNow()
+                .WithCronSchedule("0 0 12 ? * SAT").Build();
+            await _scheduler.ScheduleJob(predictionsJob, predictionsTrigger);
+        }
+
+        public async Task StartAllFunctions()
+        {
+            await Task.WhenAll(new List<Task> { StartMantainingCurrentStocksData(), StartPredictionEngine() });
+
+            await _scheduler.Start();
+
+            await Task.Delay(Timeout.InfiniteTimeSpan);
         }
     }
 }
