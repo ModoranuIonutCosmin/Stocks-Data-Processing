@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Linq;
@@ -58,6 +59,8 @@ namespace Stocks_Data_Processing.Utilities
         public async Task UpdateStockDataAsync()
         {
             _logger.LogWarning("Starting to update current stock data");
+
+            _stocksContext.EnsureCompaniesDataExists();
 
             //Obtine date despre stock-urile companiilor urmarite.
             var stockData = await _currentStockInfoDataScraper.GatherAllAsync();

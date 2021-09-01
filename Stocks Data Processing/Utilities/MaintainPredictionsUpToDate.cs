@@ -2,6 +2,7 @@
 using Quartz;
 using Stocks.General;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.ML;
 using System;
@@ -49,6 +50,8 @@ namespace Stocks_Data_Processing.Utilities
             var tasks = new List<Task<List<PredictionResult>>>();
 
             _logger.LogWarning("Started prediction refreshing!");
+
+            _stocksContext.EnsureCompaniesDataExists();
 
             foreach (var ticker in WatchList)
             {

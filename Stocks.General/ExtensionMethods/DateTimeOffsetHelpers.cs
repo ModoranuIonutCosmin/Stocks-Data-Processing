@@ -68,6 +68,7 @@ namespace Stocks.General.ExtensionMethods
             var betweenTradingHours = dt.IsDayTimeBetweenStockTradingRange();
             var stockMarketOpen = isWorkDay && betweenTradingHours;
 
+
             if (!stockMarketOpen)
             //Daca nu e in intervalul de trade...
             {
@@ -88,6 +89,13 @@ namespace Stocks.General.ExtensionMethods
             }
 
             return dt;
+        }
+
+        public static string ExtractDate(this DateTimeOffset dto)
+        {
+            return dto != null
+                        ? dto.Date.ToShortDateString()
+                        : null;// 7/24/2014
         }
     }
 }

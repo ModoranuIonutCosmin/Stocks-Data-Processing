@@ -3,6 +3,7 @@ using Stocks.General;
 using Stocks_Data_Processing;
 using Stocks_Data_Processing.Models;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -147,6 +148,8 @@ namespace StockBulkGatherer
             var api_key = "ItDQkGgz7847ipgJ_e11TpgPrSBDkVJr";
             var chunksNo = 1;
             var limitPerMinute = 5;
+
+            _dbContext.EnsureCompaniesDataExists();
 
             var tasks = new List<Task>();
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20210830181355_ModifiedCompanyData")]
+    partial class ModifiedCompanyData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,30 +280,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.ToTable("PricesData");
                 });
 
-            modelBuilder.Entity("StocksProcessing.API.Models.StocksDailySummaryModel", b =>
-                {
-                    b.Property<double>("CloseValue")
-                        .HasColumnType("float");
-
-                    b.Property<double>("High")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Low")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("OpenValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Ticker")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UrlLogo")
-                        .HasColumnType("nvarchar(max)");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -355,11 +333,9 @@ namespace StocksProccesing.Relational.Migrations
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
-                    b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
+                    b.HasOne("StocksProccesing.Relational.Model.Company", null)
                         .WithMany("PricesData")
                         .HasForeignKey("CompanyTicker");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.Company", b =>

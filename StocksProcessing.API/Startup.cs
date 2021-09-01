@@ -1,15 +1,25 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StocksProccesing.Relational;
+using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Model;
+using StocksProcessing.API.Email;
+using StocksProcessing.API.Email.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace StocksProcessing.API
@@ -32,6 +42,63 @@ namespace StocksProcessing.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
             });
+
+            services.AddDbContext<StocksMarketContext>(options =>
+                options.UseSqlServer(DatabaseSettings.ConnectionString)
+                );
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                    .AddEntityFrameworkStores<StocksMarketContext>()
+                    .AddDefaultTokenProviders();
+
+
+            services.AddAuthentication().AddJwtBearer(options =>
+
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    //Valideaza faptul ca payload-ul din Token a fost semnat cu secretul 
+                    //disponibil pe server si nu a fost modificat
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
+                };
+            });
+
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.MaxFailedAccessAttempts = 3;
+
+                options.SignIn.RequireConfirmedEmail = true;
+            });
+
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    });
+            });
+
+            services.AddTransient<IDirectEmailSender, DirectEmailSender>()
+                .AddTransient<ITemplatedEmailSender, TemplatedEmailSender>()
+                .AddTransient<IGeneralPurposeEmailService, GeneralPurposeEmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,10 +112,11 @@ namespace StocksProcessing.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors();
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

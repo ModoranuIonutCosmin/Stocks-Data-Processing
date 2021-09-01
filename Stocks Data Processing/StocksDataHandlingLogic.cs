@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Quartz;
+﻿using Quartz;
 using Quartz.Impl.Triggers;
 using Stocks_Data_Processing.Utilities;
 using System;
@@ -11,20 +10,12 @@ namespace Stocks_Data_Processing
 {
     public class StocksDataHandlingLogic : IStocksDataHandlingLogic
     {
-        private readonly ILogger _logger;
-        private readonly IMaintainCurrentStockData _maintainerCurrentStockService;
-        private readonly IMaintainPredictionsUpToDate _maintainPredictionsUpToDateService;
         private readonly IScheduler _scheduler;
 
-        public StocksDataHandlingLogic(ILogger<StocksDataHandlingLogic> logger,
-            IMaintainCurrentStockData maintainerCurrentStockService,
-            IMaintainPredictionsUpToDate maintainPredictionsUpToDateService,
+        public StocksDataHandlingLogic(
             IScheduler scheduler
             )
         {
-            _logger = logger;
-            _maintainerCurrentStockService = maintainerCurrentStockService;
-            _maintainPredictionsUpToDateService = maintainPredictionsUpToDateService;
             _scheduler = scheduler;
         }
 
@@ -35,7 +26,7 @@ namespace Stocks_Data_Processing
             //Fiecare minut intr-un workday in perioada de trade 8:00-23:59 UTC.
             var cronTrigger = new CronTriggerImpl();
 
-            cronTrigger.CronExpression = new CronExpression("0 8-23 * ? * MON-FRI");
+            cronTrigger.CronExpression = new CronExpression("0 * 8-23 ? * MON,TUE,WED,THU,FRI *");
             cronTrigger.TimeZone = TimeZoneInfo.Utc;
             cronTrigger.JobName = "CurrentStock";
             cronTrigger.JobGroup = "Maintenance";

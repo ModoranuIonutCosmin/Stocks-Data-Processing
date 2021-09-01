@@ -16,6 +16,11 @@ namespace StocksProccesing.Relational.Model
         [MaxLength(100)]
         public string Name { get; set; }
 
+        [MaxLength(500)]
+        public string Description { get; set; }
+
+        [MaxLength(350)]
+        public string UrlLogo { get; set; }
 
         public List<StocksPriceData> PricesData { get; set; } = new List<StocksPriceData>();
     }

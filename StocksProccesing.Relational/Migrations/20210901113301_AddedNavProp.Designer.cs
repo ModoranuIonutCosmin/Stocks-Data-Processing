@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20210901113301_AddedNavProp")]
+    partial class AddedNavProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -276,30 +278,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.HasIndex("Prediction");
 
                     b.ToTable("PricesData");
-                });
-
-            modelBuilder.Entity("StocksProcessing.API.Models.StocksDailySummaryModel", b =>
-                {
-                    b.Property<double>("CloseValue")
-                        .HasColumnType("float");
-
-                    b.Property<double>("High")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Low")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("OpenValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Ticker")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UrlLogo")
-                        .HasColumnType("nvarchar(max)");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
