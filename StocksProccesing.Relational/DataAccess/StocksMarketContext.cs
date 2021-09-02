@@ -38,6 +38,7 @@ namespace StocksProccesing.Relational.DataAccess
             modelBuilder.Entity<StocksDailySummaryModel>
                 ().HasNoKey().ToView(null);
 
+
             //Indexi
             modelBuilder.Entity<Company>()
             .HasIndex(d => d.Ticker)

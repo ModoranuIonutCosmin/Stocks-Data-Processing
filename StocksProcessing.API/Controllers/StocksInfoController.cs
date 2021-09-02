@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StocksProccesing.Relational.DataAccess;
+using StocksProcessing.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StocksProccesing.Relational.Extension_Methods;
 using Stocks.General.ExtensionMethods;
-using StocksProcessing.API.Models;
+using StocksProcessing.API.Payloads;
 using StocksProccesing.Relational.Model;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
+using Stocks.General;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,17 +29,27 @@ namespace StocksProcessing.API.Controllers
         }
 
         [HttpGet("report")]
-        public IEnumerable<StocksDailySummaryModel> Get()
+        public ApiResponse<List<StocksDailySummaryModel>> GetReportsAllCompanies()
         {
-            var currentDay = DateTimeOffset.UtcNow.AddDays(-5);
+            var currentDayStart = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
 
-            currentDay -= currentDay.TimeOfDay;
+            var response = new ApiResponse<List<StocksDailySummaryModel>>();
 
-            var result = _dbContext.Set<StocksDailySummaryModel>()
-                .FromSqlRaw("exec dbo.spGetDailyStockSummary {0}", currentDay)
+            try
+            {
+                var result = _dbContext.Set<StocksDailySummaryModel>()
+                .FromSqlRaw("exec dbo.spGetDailyStockSummary {0}", currentDayStart)
                 .AsNoTracking();
 
-            return result;
+                response.Response = result.ToList();
+            }
+
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
 
             //.Join(_dbContext.Companies,
             //priceData => priceData.CompanyTicker,
@@ -51,33 +65,154 @@ namespace StocksProcessing.API.Controllers
             //})
 
         }
-        [HttpGet("report2")]
-        public List<StocksPriceData> Get2()
-        {
-            var list = _dbContext.PricesData.Where(e => e.CompanyTicker == "TSLA").AsNoTracking();
 
-            return list.ToList();
+        [HttpGet("report/{ticker}")]
+        public ApiResponse<StocksDailySummaryModel> GetReportsByCompany([NotNull] string ticker)
+        {
+            //TODO: Remove this
+            var currentDayStart = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
+
+            var response = new ApiResponse<StocksDailySummaryModel>();
+
+            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
+            {
+                response.ErrorMessage = "Provide a known stock market ticker!";
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return response;
+            }
+
+            try
+            {
+                var result = _dbContext.Set<StocksDailySummaryModel>()
+                .FromSqlRaw("exec dbo.spGetDailyStockSummarySingleCompany {0}, {1}",
+                new object[] { currentDayStart, ticker })
+                .AsNoTracking().AsEnumerable();
+
+                response.Response = result.FirstOrDefault();
+            }
+
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
         }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("historicalData/{ticker}")]
+        public ApiResponse<WholeStocksPriceHistoryModel> GetAllMinutelyHistoricalData
+                                                            ([NotNull] string ticker)
         {
-            return "value";
+            var result = new WholeStocksPriceHistoryModel();
+
+            var response = new ApiResponse<WholeStocksPriceHistoryModel>();
+
+            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
+            {
+                response.ErrorMessage = "Provide a known stock market ticker!";
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return response;
+            }
+
+            var historicalData = new List<TimestampPrices>();
+
+            var companyInfo = default(Company);
+
+            try
+            {
+                historicalData = _dbContext.PricesData
+                .Where(e => e.CompanyTicker == ticker)
+                .OrderBy(c => c.Date)
+                .Select(e => new TimestampPrices()
+                {
+                    Prediction = e.Prediction,
+                    Price = e.Price,
+                    TimeStamp = e.Date
+                })
+                .AsNoTracking()
+                .ToList();
+
+                _dbContext.EnsureCompaniesDataExists();
+
+                companyInfo = _dbContext.Companies
+                    .Where(e => e.Ticker == ticker)
+                    .FirstOrDefault();
+            }
+
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            result.Ticker = companyInfo.Ticker;
+            result.Name = companyInfo.Name;
+            result.Description = companyInfo.Description;
+            result.UrlLogo = companyInfo.UrlLogo;
+            result.HistoricalPrices = historicalData;
+
+            response.Response = result;
+
+            return response;
         }
 
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("forecastData/{ticker}")]
+        public ApiResponse<WholeStocksPricePredictionsModel> GetMinutelyForecasts
+                                                        ([NotNull] string ticker)
         {
+            var result = new WholeStocksPricePredictionsModel();
+
+            var response = new ApiResponse<WholeStocksPricePredictionsModel>();
+
+            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
+            {
+                response.ErrorMessage = "Provide a known stock market ticker!";
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
+
+                return response;
+            }
+
+            var forecastData = new List<TimestampPrices>();
+
+            var companyInfo = default(Company);
+
+            try
+            {
+                forecastData = _dbContext.PricesData
+                .Where(e => e.CompanyTicker == ticker && e.Prediction == true)
+                .OrderBy(c => c.Date)
+                .Select(e => new TimestampPrices()
+                {
+                    Prediction = true,
+                    Price = e.Price,
+                    TimeStamp = e.Date
+                })
+                .AsNoTracking()
+                .ToList();
+
+                _dbContext.EnsureCompaniesDataExists();
+
+                companyInfo = _dbContext.Companies
+                    .Where(e => e.Ticker == ticker)
+                    .FirstOrDefault();
+            }
+
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            result.Ticker = companyInfo.Ticker;
+            result.Name = companyInfo.Name;
+            result.Description = companyInfo.Description;
+            result.UrlLogo = companyInfo.UrlLogo;
+            result.Predictions = forecastData;
+
+            response.Response = result;
+
+            return response;
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

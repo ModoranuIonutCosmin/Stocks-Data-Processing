@@ -112,8 +112,8 @@ namespace StockBulkGatherer
                     {
                         ++i;
 
-                        source = (source + target) / 2;
-                        source = Math.Round(source, 2);
+                        //source = (source + target) / 2;
+                        //source = Math.Round(source, 2);
 
                         var fillingRow = new StocksPriceData()
                         {
