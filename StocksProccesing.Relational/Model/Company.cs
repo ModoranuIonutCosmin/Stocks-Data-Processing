@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace StocksProccesing.Relational.Model
@@ -12,14 +13,13 @@ namespace StocksProccesing.Relational.Model
         [MaxLength(10)]
         public string Ticker { get; set; }
 
-
-        [MaxLength(100)]
+        [MaxLength(50)]
         public string Name { get; set; }
 
-        [MaxLength(500)]
+        [MaxLength(100)]
         public string Description { get; set; }
 
-        [MaxLength(350)]
+        [Column(TypeName = "VARCHAR(128)")]
         public string UrlLogo { get; set; }
 
         public List<StocksPriceData> PricesData { get; set; } = new List<StocksPriceData>();

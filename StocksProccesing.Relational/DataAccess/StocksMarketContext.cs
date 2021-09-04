@@ -35,9 +35,8 @@ namespace StocksProccesing.Relational.DataAccess
             base.OnModelCreating(modelBuilder);
 
             //Instante doar ca rezultat fara tabel - rezultate din stored procedures
-            modelBuilder.Entity<StocksDailySummaryModel>
-                ().HasNoKey().ToView(null);
-
+            //modelBuilder.Entity<StocksDailySummaryModel>
+            //    ().HasNoKey().ToView(null);
 
             //Indexi
             modelBuilder.Entity<Company>()
@@ -45,27 +44,11 @@ namespace StocksProccesing.Relational.DataAccess
             .IsUnique();
 
             modelBuilder.Entity<StocksPriceData>()
-            .HasIndex(p => p.Date);
-
-            modelBuilder.Entity<StocksPriceData>()
             .HasIndex(p => p.CompanyTicker);
 
             modelBuilder.Entity<StocksPriceData>()
-            .HasIndex(p => p.Prediction);
+                .HasIndex(p => p.Date);
         }
 
-        protected static void OnStateChange(object sender, StateChangeEventArgs args)
-        {
-            if (args.OriginalState == ConnectionState.Closed
-                && args.CurrentState == ConnectionState.Open)
-            {
-                using (DbCommand _Command = ((DbConnection)sender).CreateCommand())
-                {
-                    _Command.CommandType = CommandType.Text;
-                    _Command.CommandText = "SET ARITHABORT ON;";
-                    _Command.ExecuteNonQuery();
-                }
-            }
-        }
     }
 }

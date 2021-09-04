@@ -10,8 +10,8 @@ using StocksProccesing.Relational.DataAccess;
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    [Migration("20210830135535_AddedIdentityFull")]
-    partial class AddedIdentityFull
+    [Migration("20210904121904_SpsOrderByDate")]
+    partial class SpsOrderByDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,10 +172,10 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -229,9 +229,16 @@ namespace StocksProccesing.Relational.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Description")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UrlLogo")
+                        .HasColumnType("VARCHAR(128)");
 
                     b.HasKey("Ticker");
 
@@ -266,8 +273,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.HasIndex("CompanyTicker");
 
                     b.HasIndex("Date");
-
-                    b.HasIndex("Prediction");
 
                     b.ToTable("PricesData");
                 });
@@ -325,9 +330,11 @@ namespace StocksProccesing.Relational.Migrations
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
-                    b.HasOne("StocksProccesing.Relational.Model.Company", null)
+                    b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
                         .WithMany("PricesData")
                         .HasForeignKey("CompanyTicker");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.Company", b =>

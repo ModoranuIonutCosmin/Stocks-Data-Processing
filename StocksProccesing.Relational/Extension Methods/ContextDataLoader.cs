@@ -62,7 +62,7 @@ namespace StocksProccesing.Relational.Extension_Methods
                     {
                         Ticker = "T",
                         Name = "AT&T Inc",
-                        UrlLogo = "https://www.google.com/url?sa=i&url=https%3A%2F%2Flogodownload.org%2Fatt-logo%2F&psig=AOvVaw2Dt5fQ1gWv4gqiF2_Vn_iI&ust=1630434150585000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCOCM8dSu2fICFQAAAAAdAAAAABAD",
+                        UrlLogo = "https://logodownload.org/wp-content/uploads/2018/04/att-logo-0.png",
                         Description = ""
                     },
                     new Company()

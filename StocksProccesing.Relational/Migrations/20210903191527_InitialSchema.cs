@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StocksProccesing.Relational.Migrations
 {
-    public partial class AddedIdentity : Migration
+    public partial class InitialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,8 @@ namespace StocksProccesing.Relational.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "VARCHAR(50)", nullable: true),
+                    LastName = table.Column<string>(type: "VARCHAR(50)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -44,6 +46,20 @@ namespace StocksProccesing.Relational.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    Ticker = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    UrlLogo = table.Column<string>(type: "VARCHAR(128)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Ticker);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,6 +168,28 @@ namespace StocksProccesing.Relational.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PricesData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Prediction = table.Column<bool>(type: "bit", nullable: false),
+                    Date = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CompanyTicker = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PricesData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PricesData_Companies_CompanyTicker",
+                        column: x => x.CompanyTicker,
+                        principalTable: "Companies",
+                        principalColumn: "Ticker",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +228,22 @@ namespace StocksProccesing.Relational.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_Ticker",
+                table: "Companies",
+                column: "Ticker",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PricesData_CompanyTicker",
+                table: "PricesData",
+                column: "CompanyTicker");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PricesData_Date",
+                table: "PricesData",
+                column: "Date");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,10 +264,16 @@ namespace StocksProccesing.Relational.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PricesData");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
         }
     }
 }

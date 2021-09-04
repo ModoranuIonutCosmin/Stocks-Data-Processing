@@ -10,8 +10,8 @@ using StocksProccesing.Relational.DataAccess;
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    [Migration("20210901162046_AddedSummarySp")]
-    partial class AddedSummarySp
+    [Migration("20210903191557_AddedSps")]
+    partial class AddedSps
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,10 +172,10 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("VARCHAR(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -230,16 +230,15 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("UrlLogo")
-                        .HasMaxLength(350)
-                        .HasColumnType("nvarchar(350)");
+                        .HasColumnType("VARCHAR(128)");
 
                     b.HasKey("Ticker");
 
@@ -275,33 +274,7 @@ namespace StocksProccesing.Relational.Migrations
 
                     b.HasIndex("Date");
 
-                    b.HasIndex("Prediction");
-
                     b.ToTable("PricesData");
-                });
-
-            modelBuilder.Entity("StocksProcessing.API.Models.StocksDailySummaryModel", b =>
-                {
-                    b.Property<double>("CloseValue")
-                        .HasColumnType("float");
-
-                    b.Property<double>("High")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Low")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("OpenValue")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Ticker")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UrlLogo")
-                        .HasColumnType("nvarchar(max)");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

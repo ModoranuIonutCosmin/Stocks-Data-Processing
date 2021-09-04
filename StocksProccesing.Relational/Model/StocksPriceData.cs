@@ -10,10 +10,13 @@ namespace StocksProccesing.Relational.Model
         [Key]
         public int Id { get; set; }
 
+        [Required]
         public double Price { get; set; }
 
+        [Required]
         public bool Prediction { get; set; }
 
+        [Required]
         public DateTimeOffset Date { get; set; }
 
         [MaxLength(10)]

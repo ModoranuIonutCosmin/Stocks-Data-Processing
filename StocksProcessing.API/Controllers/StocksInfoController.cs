@@ -2,16 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using StocksProccesing.Relational.DataAccess;
 using StocksProcessing.API.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using StocksProccesing.Relational.Extension_Methods;
-using Stocks.General.ExtensionMethods;
 using StocksProcessing.API.Payloads;
 using StocksProccesing.Relational.Model;
 using Stocks.General;
+using Stocks.General.ExtensionMethods;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,19 +30,25 @@ namespace StocksProcessing.API.Controllers
         }
 
         [HttpGet("report")]
-        public ApiResponse<List<StocksDailySummaryModel>> GetReportsAllCompanies()
+        public async Task<ApiResponse<IList<StocksDailySummaryModel>>> GetReportsAllCompanies()
         {
-            var currentDayStart = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
+            var fromDate = DateTimeOffset.UtcNow.AddDays(-8).SetTime(8, 0);
 
-            var response = new ApiResponse<List<StocksDailySummaryModel>>();
+            var response = new ApiResponse<IList<StocksDailySummaryModel>>();
 
             try
             {
-                var result = _dbContext.Set<StocksDailySummaryModel>()
-                .FromSqlRaw("exec dbo.spGetDailyStockSummary {0}", currentDayStart)
-                .AsNoTracking();
 
-                response.Response = result.ToList();
+                var result = await _dbContext
+                    .LoadStoredProcedure("dbo.spGetDailyStockSummary")
+                    .WithSqlParams(
+                    (nameof(fromDate), fromDate))
+                    .ExecuteStoredProcedureAsync<StocksDailySummaryModel>();
+
+                //.FromSqlRaw("exec dbo.spGetDailyStockSummary {0}", currentDayStart)
+                //.AsNoTracking();
+
+                response.Response = result;
             }
 
             catch (Exception ex)
@@ -67,10 +74,10 @@ namespace StocksProcessing.API.Controllers
         }
 
         [HttpGet("report/{ticker}")]
-        public ApiResponse<StocksDailySummaryModel> GetReportsByCompany([NotNull] string ticker)
+        public async Task<ApiResponse<StocksDailySummaryModel>> GetReportsByCompany([NotNull] string ticker)
         {
             //TODO: Remove this
-            var currentDayStart = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
+            var fromDate = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
 
             var response = new ApiResponse<StocksDailySummaryModel>();
 
@@ -84,10 +91,12 @@ namespace StocksProcessing.API.Controllers
 
             try
             {
-                var result = _dbContext.Set<StocksDailySummaryModel>()
-                .FromSqlRaw("exec dbo.spGetDailyStockSummarySingleCompany {0}, {1}",
-                new object[] { currentDayStart, ticker })
-                .AsNoTracking().AsEnumerable();
+                var result = await _dbContext
+                .LoadStoredProcedure("dbo.spGetDailyStockSummarySingleCompany")
+                .WithSqlParams(
+                (nameof(fromDate), fromDate),
+                (nameof(ticker), ticker))
+                .ExecuteStoredProcedureAsync<StocksDailySummaryModel>();
 
                 response.Response = result.FirstOrDefault();
             }
@@ -108,7 +117,7 @@ namespace StocksProcessing.API.Controllers
 
             var response = new ApiResponse<WholeStocksPriceHistoryModel>();
 
-            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
+            if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
             {
                 response.ErrorMessage = "Provide a known stock market ticker!";
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -123,14 +132,14 @@ namespace StocksProcessing.API.Controllers
             try
             {
                 historicalData = _dbContext.PricesData
-                .Where(e => e.CompanyTicker == ticker)
-                .OrderBy(c => c.Date)
+                .Where(e => e.CompanyTicker == ticker && e.Prediction == false)
                 .Select(e => new TimestampPrices()
                 {
-                    Prediction = e.Prediction,
+                    Prediction = false,
                     Price = e.Price,
                     TimeStamp = e.Date
                 })
+                .OrderBy(e => e.TimeStamp)
                 .AsNoTracking()
                 .ToList();
 
@@ -144,6 +153,7 @@ namespace StocksProcessing.API.Controllers
             catch (Exception ex)
             {
                 response.ErrorMessage = ex.Message;
+                return response;
             }
 
             result.Ticker = companyInfo.Ticker;
@@ -165,7 +175,7 @@ namespace StocksProcessing.API.Controllers
 
             var response = new ApiResponse<WholeStocksPricePredictionsModel>();
 
-            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
+            if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
             {
                 response.ErrorMessage = "Provide a known stock market ticker!";
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -181,13 +191,13 @@ namespace StocksProcessing.API.Controllers
             {
                 forecastData = _dbContext.PricesData
                 .Where(e => e.CompanyTicker == ticker && e.Prediction == true)
-                .OrderBy(c => c.Date)
                 .Select(e => new TimestampPrices()
                 {
                     Prediction = true,
                     Price = e.Price,
                     TimeStamp = e.Date
                 })
+                .OrderBy(e => e.TimeStamp)
                 .AsNoTracking()
                 .ToList();
 

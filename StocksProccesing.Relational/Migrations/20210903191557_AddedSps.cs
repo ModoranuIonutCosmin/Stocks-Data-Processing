@@ -2,11 +2,10 @@
 
 namespace StocksProccesing.Relational.Migrations
 {
-    public partial class AddedSummarySp : Migration
+    public partial class AddedSps : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-			///SummarySp===========
 			migrationBuilder.Sql(@"CREATE OR ALTER PROCEDURE dbo.spGetDailyStockSummary
 								-- Add the parameters for the stored procedure here
 								@fromDate DATETIMEOFFSET(7)
@@ -25,8 +24,6 @@ namespace StocksProccesing.Relational.Migrations
 									,OpenValue FLOAT
 									);
 							
-
-
 								WITH list_oridinal
 								AS (
 									SELECT CompanyTicker
@@ -44,8 +41,6 @@ namespace StocksProccesing.Relational.Migrations
 								FROM list_oridinal
 								WHERE row_number_DESC = 1;
 							
-
-
 								WITH list_oridinal
 								AS (
 									SELECT CompanyTicker
@@ -63,7 +58,6 @@ namespace StocksProccesing.Relational.Migrations
 								FROM list_oridinal
 								WHERE row_number_ASC = 1;
 							
-
 								SELECT c1.Ticker
 									,UrlLogo
 									,Name
@@ -85,6 +79,60 @@ namespace StocksProccesing.Relational.Migrations
 								JOIN Companies c4 ON c4.Ticker = c3.Ticker;
 							END");
 			///====================
+			///
+
+			migrationBuilder.Sql(@"CREATE OR ALTER PROCEDURE dbo.spGetDailyStockSummarySingleCompany
+						-- Add the parameters for the stored procedure here
+						@fromDate DATETIMEOFFSET(7),
+						@ticker nvarchar(10)
+					AS
+					BEGIN
+						-- SET NOCOUNT ON added to prevent extra result sets from
+						-- interfering with SELECT statements.
+						SET NOCOUNT ON;
+					
+						DECLARE @LAST FLOAT;
+						DECLARE @FIRST FLOAT;
+					
+						SELECT 
+							@FIRST = t.Price
+							FROM (SELECT Price, ROW_NUMBER() OVER(ORDER BY Date ASC) AS row_number_ASC 
+									FROM PricesData
+									WHERE DATE >= @fromDate AND CompanyTicker = @ticker
+										AND Prediction = 0 
+								  ) AS t
+						WHERE row_number_ASC = 1;
+					
+					
+						SELECT 
+							@LAST = t.Price
+							FROM (SELECT Price, ROW_NUMBER() OVER(ORDER BY Date DESC) AS row_number_DESC
+									FROM PricesData
+									WHERE DATE >= @fromDate AND CompanyTicker = @ticker
+										AND Prediction = 0 
+								  ) AS t
+						WHERE row_number_DESC = 1;
+					
+					
+						SELECT Ticker
+							,UrlLogo
+							,Name
+							,High
+							,Low
+							,@FIRST as OpenValue
+							,@LAST as CloseValue
+						FROM (
+							SELECT p.CompanyTicker AS Ticker,
+							c.UrlLogo,
+							Name,
+							MAX(Price) AS High,
+							MIN(Price) AS Low
+							FROM PricesData p
+								JOIN Companies c ON p.CompanyTicker = c.Ticker
+							WHERE DATE >= @fromDate AND p.CompanyTicker = @ticker
+								AND Prediction = 0 GROUP BY CompanyTicker, UrlLogo, Name
+							)as t
+					END");
 		}
 
 		protected override void Down(MigrationBuilder migrationBuilder)

@@ -10,12 +10,14 @@ namespace Stocks_Data_Processing
 {
     public class StocksDataHandlingLogic : IStocksDataHandlingLogic
     {
+        private readonly IMaintainPredictionsUpToDate _maintainPredictionsUpToDate;
         private readonly IScheduler _scheduler;
 
-        public StocksDataHandlingLogic(
+        public StocksDataHandlingLogic(IMaintainPredictionsUpToDate maintainPredictionsUpToDate,
             IScheduler scheduler
             )
         {
+            _maintainPredictionsUpToDate = maintainPredictionsUpToDate;
             _scheduler = scheduler;
         }
 
@@ -38,13 +40,18 @@ namespace Stocks_Data_Processing
 
         public async Task StartPredictionEngine()
         {
+
+            //Executa odata la pornire si apoi schedule.
+
+            await _maintainPredictionsUpToDate.UpdatePredictionsAsync();
+
             var predictionsJob = JobBuilder.Create<MaintainPredictionsUpToDate>().WithIdentity("Predictions", "Maintenance").Build();
 
             //Fiecare sambata la 12:00 PM
             var predictionsTrigger = TriggerBuilder.Create()
                 .WithIdentity("Predictions", "Maintenance")
-                .StartNow()
-                .WithCronSchedule("0 0 12 ? * SAT").Build();
+                .WithCronSchedule("0 0 12 ? * SAT")
+                .StartNow().Build();
             await _scheduler.ScheduleJob(predictionsJob, predictionsTrigger);
         }
 
