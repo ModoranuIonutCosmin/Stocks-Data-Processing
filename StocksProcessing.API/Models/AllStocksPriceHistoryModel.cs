@@ -5,7 +5,7 @@ using Stocks.General.ExtensionMethods;
 
 namespace StocksProcessing.API.Models
 {
-    public class WholeStocksPriceHistoryModel
+    public class AllStocksPriceHistoryModel
     {
         public string Ticker { get; set; }
         public string Name { get; set; }
@@ -24,7 +24,7 @@ namespace StocksProcessing.API.Models
 
                 for (int i = HistoricalPrices.Count - 1; i >= 0; i--)
                 {
-                    if(HistoricalPrices[i].TimeStamp < currentDayStart)
+                    if(HistoricalPrices[i].Date < currentDayStart)
                     {
                         if(i + 1 < HistoricalPrices.Count)
                         {

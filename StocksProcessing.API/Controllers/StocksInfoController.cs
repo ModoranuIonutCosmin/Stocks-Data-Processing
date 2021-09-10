@@ -45,9 +45,6 @@ namespace StocksProcessing.API.Controllers
                     (nameof(fromDate), fromDate))
                     .ExecuteStoredProcedureAsync<StocksDailySummaryModel>();
 
-                //.FromSqlRaw("exec dbo.spGetDailyStockSummary {0}", currentDayStart)
-                //.AsNoTracking();
-
                 response.Response = result;
             }
 
@@ -72,6 +69,7 @@ namespace StocksProcessing.API.Controllers
             //})
 
         }
+
 
         [HttpGet("report/{ticker}")]
         public async Task<ApiResponse<StocksDailySummaryModel>> GetReportsByCompany([NotNull] string ticker)
@@ -109,13 +107,55 @@ namespace StocksProcessing.API.Controllers
             return response;
         }
 
+        [HttpGet("dailyData/{ticker}")]
+        public async Task<ApiResponse<AllStocksHistoricalPricesDaily>>
+            GetTickerDailyData([NotNull] string ticker)
+        {
+            var startDate = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+            var response = new ApiResponse<AllStocksHistoricalPricesDaily>();
+
+            var result = new AllStocksHistoricalPricesDaily();
+
+            try
+            {
+                var ohlcPrices = await _dbContext
+                    .LoadStoredProcedure("dbo.spGetPeriodicalSummary")
+                    .WithSqlParams(
+                    (nameof(startDate), startDate),
+                    (nameof(ticker), ticker))
+                    .ExecuteStoredProcedureAsync<OHLCPriceValue>();
+
+                var companyData = await _dbContext
+                    .Companies.Where(e => e.Ticker == ticker)
+                    .FirstOrDefaultAsync();
+
+                result.HistoricalPrices = ohlcPrices;
+                result.Name = companyData.Name;
+                result.Ticker = companyData.Ticker;
+                result.UrlLogo = companyData.UrlLogo;
+                result.Description = companyData.Description;
+
+                response.Response = result;
+            }
+
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
+        }
+
+        
+
         [HttpGet("historicalData/{ticker}")]
-        public ApiResponse<WholeStocksPriceHistoryModel> GetAllMinutelyHistoricalData
+        public ApiResponse<AllStocksPriceHistoryModel> GetAllMinutelyHistoricalData
                                                             ([NotNull] string ticker)
         {
-            var result = new WholeStocksPriceHistoryModel();
+            var result = new AllStocksPriceHistoryModel();
 
-            var response = new ApiResponse<WholeStocksPriceHistoryModel>();
+            var response = new ApiResponse<AllStocksPriceHistoryModel>();
 
             if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
             {
@@ -137,9 +177,9 @@ namespace StocksProcessing.API.Controllers
                 {
                     Prediction = false,
                     Price = e.Price,
-                    TimeStamp = e.Date
+                    Date = e.Date
                 })
-                .OrderBy(e => e.TimeStamp)
+                .OrderBy(e => e.Date)
                 .AsNoTracking()
                 .ToList();
 
@@ -168,12 +208,12 @@ namespace StocksProcessing.API.Controllers
         }
 
         [HttpGet("forecastData/{ticker}")]
-        public ApiResponse<WholeStocksPricePredictionsModel> GetMinutelyForecasts
+        public ApiResponse<AllStocksPricePredictionsModel> GetMinutelyForecasts
                                                         ([NotNull] string ticker)
         {
-            var result = new WholeStocksPricePredictionsModel();
+            var result = new AllStocksPricePredictionsModel();
 
-            var response = new ApiResponse<WholeStocksPricePredictionsModel>();
+            var response = new ApiResponse<AllStocksPricePredictionsModel>();
 
             if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
             {
@@ -195,9 +235,9 @@ namespace StocksProcessing.API.Controllers
                 {
                     Prediction = true,
                     Price = e.Price,
-                    TimeStamp = e.Date
+                    Date = e.Date
                 })
-                .OrderBy(e => e.TimeStamp)
+                .OrderBy(e => e.Date)
                 .AsNoTracking()
                 .ToList();
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20210904162443_AddedPeriodicalSummarySp")]
+    partial class AddedPeriodicalSummarySp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +160,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<double>("Capital")
-                        .HasColumnType("float");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -249,51 +248,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("StocksProccesing.Relational.Model.PortofolioOpenTransaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("Date")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("InvestedSum")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("IsBuy")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Leverage")
-                        .HasColumnType("int");
-
-                    b.Property<double>("StopLossAmount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("TakeProfitAmount")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Ticker")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<double>("UnitBuyPriceThen")
-                        .HasColumnType("float");
-
-                    b.Property<double>("UnitSellPriceThen")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
                     b.Property<int>("Id")
@@ -374,13 +328,6 @@ namespace StocksProccesing.Relational.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StocksProccesing.Relational.Model.PortofolioOpenTransaction", b =>
-                {
-                    b.HasOne("StocksProccesing.Relational.Model.ApplicationUser", null)
-                        .WithMany("OpenTransactions")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
@@ -388,11 +335,6 @@ namespace StocksProccesing.Relational.Migrations
                         .HasForeignKey("CompanyTicker");
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("StocksProccesing.Relational.Model.ApplicationUser", b =>
-                {
-                    b.Navigation("OpenTransactions");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.Company", b =>

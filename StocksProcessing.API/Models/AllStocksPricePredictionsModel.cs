@@ -5,7 +5,7 @@ using Stocks.General.ExtensionMethods;
 
 namespace StocksProcessing.API.Models
 {
-    public class WholeStocksPricePredictionsModel
+    public class AllStocksPricePredictionsModel
     {
         public string Ticker { get; set; }
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace StocksProcessing.API.Models
 
                 for (int i = Predictions.Count - 1; i >= 0; i--)
                 {
-                    if(Predictions[i].TimeStamp < currentDayStart)
+                    if(Predictions[i].Date < currentDayStart)
                     {
                         if(i + 1 < Predictions.Count)
                         {
@@ -35,7 +35,7 @@ namespace StocksProcessing.API.Models
                     }
                 }
 
-                todaysLatestClosePrice = Predictions.Where(e => e.TimeStamp < currentDayEnd)
+                todaysLatestClosePrice = Predictions.Where(e => e.Date < currentDayEnd)
                     .Last().Price;
 
                 if (!todaysOpenPrice.HasValue || !todaysLatestClosePrice.HasValue)

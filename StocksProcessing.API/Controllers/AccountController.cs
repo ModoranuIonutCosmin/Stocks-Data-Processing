@@ -64,13 +64,6 @@ namespace StocksProcessing.API.Controllers
                 return errorResponse;
             }
 
-            if (string.Compare(registerData.Password, registerData.PasswordAgain) == 0)
-            {
-                errorResponse.ErrorMessage = "Passwords don't match!";
-
-                return errorResponse;
-            }
-
             var user = new ApplicationUser
             {
                 UserName = registerData.UserName,
