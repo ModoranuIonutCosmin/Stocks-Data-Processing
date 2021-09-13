@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Models;
-using System.Data;
-using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 
 namespace StocksProccesing.Relational.DataAccess
@@ -13,6 +10,8 @@ namespace StocksProccesing.Relational.DataAccess
         public DbSet<StocksPriceData> PricesData { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<PortofolioOpenTransaction> Transactions { get; set; }
+        
+        public DbSet<Order> Orders { get; set; }
 
         public StocksMarketContext()
         {
@@ -49,6 +48,9 @@ namespace StocksProccesing.Relational.DataAccess
 
             modelBuilder.Entity<StocksPriceData>()
                 .HasIndex(p => p.Date);
+
+            modelBuilder.Entity<PortofolioOpenTransaction>().HasIndex(p => p.UniqueActionStamp)
+                .IsUnique();
         }
 
     }

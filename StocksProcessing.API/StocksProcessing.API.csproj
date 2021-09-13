@@ -14,4 +14,10 @@
     <ProjectReference Include="..\StocksProccesing.Relational\StocksProccesing.Relational.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Email\Template\message.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

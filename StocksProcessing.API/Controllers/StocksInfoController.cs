@@ -13,6 +13,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using StocksProcessing.API.Auth;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,7 +33,7 @@ namespace StocksProcessing.API.Controllers
         [HttpGet("report")]
         public async Task<ApiResponse<IList<StocksDailySummaryModel>>> GetReportsAllCompanies()
         {
-            var fromDate = DateTimeOffset.UtcNow.AddDays(-8).SetTime(8, 0);
+            var fromDate = DateTimeOffset.UtcNow.AddDays(-30).SetTime(8, 0);
 
             var response = new ApiResponse<IList<StocksDailySummaryModel>>();
 

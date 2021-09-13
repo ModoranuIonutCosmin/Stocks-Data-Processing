@@ -91,6 +91,25 @@ namespace Stocks.General.ExtensionMethods
             return dt;
         }
 
+        public static DateTimeOffset GetClosestPreviousStockMarketDateTime(this DateTimeOffset dto)
+        {
+            var date = dto;
+
+            switch (date.DayOfWeek)
+            {
+                case DayOfWeek.Saturday:
+                    date = date.AddDays(-1);
+                    break;
+                case DayOfWeek.Sunday:
+                    date = date.AddDays(-2);
+                    break;
+                default:
+                    break;
+            }
+
+            return date.SetTime(8, 0);
+        }
+
         public static string ExtractDate(this DateTimeOffset dto)
         {
             return dto != null
