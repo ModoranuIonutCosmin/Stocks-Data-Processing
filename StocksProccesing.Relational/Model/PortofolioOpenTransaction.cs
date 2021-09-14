@@ -12,6 +12,9 @@ namespace StocksProccesing.Relational.Model
         public string UniqueActionStamp { get; set; }
 
         [Required]
+        public bool Open { get; set; }
+
+        [Required]
         public bool IsBuy { get; set; }
 
         [MaxLength(10)]
