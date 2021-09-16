@@ -58,7 +58,7 @@ namespace Stocks_Data_Processing.Utilities
         /// </summary>
         public async Task UpdateStockDataAsync()
         {
-            _logger.LogWarning("Starting to update current stock data");
+            _logger.LogWarning($"[Current prices maintain task] Starting to update current stock data {DateTimeOffset.UtcNow}");
 
             _stocksContext.EnsureCompaniesDataExists();
 
@@ -86,6 +86,8 @@ namespace Stocks_Data_Processing.Utilities
             _stocksContext.PricesData.RemoveRange(oldPredictions);
 
             _stocksContext.SaveChanges();
+            _logger.LogWarning($"[Current prices maintain task] Done to update current stock data {DateTimeOffset.UtcNow}");
+
         }
     }
     #endregion

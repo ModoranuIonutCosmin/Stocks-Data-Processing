@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Stocks.General.ConstantsConfig;
+using Stocks.General.ExtensionMethods;
+using System;
 
 namespace StocksProcessing.API.Models
 {
-    public class StocksDailySummaryModel
+    public class StocksCurrentDaySummary
     {
         public string Ticker { get; set; }
         public string Name { get; set; }
@@ -12,5 +14,7 @@ namespace StocksProcessing.API.Models
         public double Low { get; set; }
         public double OpenValue { get; set; }
         public double CloseValue { get; set; }
+        public double SellPrice { get => CloseValue; }
+        public double BuyPrice { get => (SellPrice + SellPrice * TaxesConfig.FullSpreadFees).TruncateToDecimalPlaces(3); }
     }
 }

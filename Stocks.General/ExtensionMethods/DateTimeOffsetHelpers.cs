@@ -110,6 +110,18 @@ namespace Stocks.General.ExtensionMethods
             return date.SetTime(8, 0);
         }
 
+        public static double GetBusinessDays(DateTimeOffset startD, DateTimeOffset endD)
+        {
+            double calcBusinessDays =
+                1 + ((endD - startD).TotalDays * 5 -
+                (startD.DayOfWeek - endD.DayOfWeek) * 2) / 7;
+
+            if (endD.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
+            if (startD.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
+
+            return calcBusinessDays;
+        }
+
         public static string ExtractDate(this DateTimeOffset dto)
         {
             return dto != null

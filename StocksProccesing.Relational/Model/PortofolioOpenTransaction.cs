@@ -21,7 +21,7 @@ namespace StocksProccesing.Relational.Model
         public string Ticker { get; set; }
 
         [Required]
-        public double InvestedSum { get; set; }
+        public double InvestedAmount { get; set; }
 
         [Required]
         public int Leverage { get; set; }

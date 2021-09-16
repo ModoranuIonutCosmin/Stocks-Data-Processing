@@ -10,7 +10,8 @@ namespace StocksProccesing.Relational.DataAccess
         public DbSet<StocksPriceData> PricesData { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<PortofolioOpenTransaction> Transactions { get; set; }
-        
+        public DbSet<MaintenanceAction> Actions { get; set; }
+
         public DbSet<Order> Orders { get; set; }
 
         public StocksMarketContext()

@@ -10,6 +10,7 @@ namespace StocksProccesing.Relational.Helpers
     {
         public static double GatherCurrentPriceByCompany(this StocksMarketContext context, string ticker)
         {
+            //TODO: MODIFY THIS
             var latestTradingDayStart = DateTimeOffset.UtcNow.AddDays(-10).GetClosestPreviousStockMarketDateTime();
 
             var results = context.PricesData

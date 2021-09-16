@@ -49,7 +49,7 @@ namespace Stocks_Data_Processing.Utilities
         {
             var tasks = new List<Task<List<PredictionResult>>>();
 
-            _logger.LogWarning("Started prediction refreshing!");
+            _logger.LogWarning($"[Predictions maintan task] Started prediction refreshing! {DateTimeOffset.UtcNow}");
 
             _stocksContext.EnsureCompaniesDataExists();
 
@@ -70,6 +70,8 @@ namespace Stocks_Data_Processing.Utilities
             _stocksContext.PricesData.RemoveRange(_stocksContext.PricesData.Where(k => k.Prediction));
             await _stocksContext.PricesData.AddRangeAsync(results);
             await _stocksContext.SaveChangesAsync();
+
+            _logger.LogWarning($"[Predictions maintan task] Done prediction refreshing! { DateTimeOffset.UtcNow }");
         }
 
         public async Task<List<PredictionResult>> GatherPredictions(string ticker)

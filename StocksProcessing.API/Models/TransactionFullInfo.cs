@@ -1,8 +1,9 @@
-﻿using Stocks.General.ExtensionMethods;
+﻿using System;
+using Stocks.General.ExtensionMethods;
 
 namespace StocksProcessing.API.Models
 {
-    public class TransactionSummary
+    public class TransactionFullInfo
     {
         public string Ticker { get; set; }
 
@@ -16,12 +17,26 @@ namespace StocksProcessing.API.Models
 
         public double InvestedAmount { get; set; }
 
-        public double ProfitOrLoss {
+        public double StopLossAmount { get; set; }
 
+        public double TakeProfitAmount { get; set; }
+
+        public double Leverage { get; set; }
+
+        public DateTimeOffset Date { get; set; }
+
+        public bool IsCFD { 
+            get
+            {
+                return Leverage > 1 || !IsBuy;
+            }
+        }
+        public double ProfitOrLoss
+        {
             get
             {
                 return ((CurrentPrice - InitialPrice) * UnitsPurchased * (!IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
-            } 
+            }
         }
 
         public double ProfitOrLossPercentage

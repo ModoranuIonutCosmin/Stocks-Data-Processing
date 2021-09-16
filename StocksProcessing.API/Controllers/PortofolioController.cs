@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Models;
-using StocksProcessing.API.Payloads;
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Stocks.General.ExtensionMethods;
 using Stocks.General.ConstantsConfig;
-using System.Threading.Tasks;
-using System.Linq;
 using StocksProcessing.API.Auth;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using StocksProcessing.API.Models;
+using StocksProcessing.API.Payloads;
+using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Model;
 using StocksProccesing.Relational.Helpers;
 
 // For more information on enabling Web API for empty
@@ -21,6 +23,7 @@ namespace StocksProcessing.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [AuthorizeToken]
     public class PortofolioController : ControllerBase
     {
         private readonly StocksMarketContext _dbContext;
@@ -33,7 +36,6 @@ namespace StocksProcessing.API.Controllers
             _userManager = userManager;
         }
 
-        [AuthorizeToken]
         [HttpPost("refillBalance")]
         public async Task<ApiResponse<BalanceRefillOrder>> ReplenishBalance([FromBody] PaymentDetails paymentDetails)
         {
@@ -62,13 +64,13 @@ namespace StocksProcessing.API.Controllers
         }
 
         [HttpGet("buyOrder")]
-        [AuthorizeToken]
         public async Task<ApiResponse<OrderTaxesPreview>> GetTransactionTaxesBuy(string ticker, double invested, double leverage)
         {
             var currentDate = DateTimeOffset.UtcNow.AddDays(-20).SetTime(8, 0);
             var response = new ApiResponse<OrderTaxesPreview>();
             var result = new OrderTaxesPreview();
 
+            //TODO: CHECK USER EXISTS!
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -111,29 +113,30 @@ namespace StocksProcessing.API.Controllers
 
             var currentStocksPriceWithoutFees = todaysPrices.Last().Price; // sell price
 
-            result.Trend = Math.Round((result.CurrentPrice / openPrice) - 1, 3);
+            result.Trend = ((result.CurrentPrice / openPrice) - 1).TruncateToDecimalPlaces(3);
 
-            result.TodayIncrement = Math.Round(currentStocksPriceWithoutFees - openPrice, 3);
+            result.TodayIncrement = (currentStocksPriceWithoutFees - openPrice).TruncateToDecimalPlaces(3);
 
 
             var spreadTotalFees = leverage > 1 ? TaxesConfig.SpreadFee // buy price + (spread fee)
                                                : TaxesConfig.AverageStockMarketSpread; //buy price (sell price + spread)
 
             result.CurrentPrice += currentStocksPriceWithoutFees
-                + Math.Round(currentStocksPriceWithoutFees * spreadTotalFees, 3); //buy price (sell price + spread)
+                + currentStocksPriceWithoutFees * spreadTotalFees; //buy price (sell price + spread)
+
+            result.CurrentPrice = result.CurrentPrice.TruncateToDecimalPlaces(3);
 
             var effectiveMoney = leverage * invested;
-            var borrowedMoney = effectiveMoney - invested;
 
             result.InvestedAmount = invested;
-            result.UnitsPaid = Math.Round(effectiveMoney / result.CurrentPrice, 3);
-            result.PercentageExposed = Math.Round(effectiveMoney / userRequesting.Capital, 3);
+            result.UnitsPaid = (effectiveMoney / result.CurrentPrice).TruncateToDecimalPlaces(3);
+            result.PercentageExposed = (effectiveMoney / userRequesting.Capital).TruncateToDecimalPlaces(3);
 
             if (leverage == 1)
                 result.WeekdayTax = 0;
             else
-                result.WeekdayTax = Math.Round((TaxesConfig.BuyInterestRate
-                    + BankExchangeConsts.LiborOneMonthRatio) / 365 * borrowedMoney, 3);
+                result.WeekdayTax = ((TaxesConfig.BuyInterestRate 
+                    + BankExchangeConsts.LiborOneMonthRatio) / 365 * effectiveMoney).TruncateToDecimalPlaces(3);
 
             response.Response = result;
 
@@ -142,8 +145,7 @@ namespace StocksProcessing.API.Controllers
 
 
         [HttpPost("placeOrder")]
-        [AuthorizeToken]
-        public async Task<ApiResponse<MarketOrder>> PlaceSellOrder([FromBody] MarketOrder marketOrder)
+        public async Task<ApiResponse<MarketOrder>> PlaceOrder([FromBody] MarketOrder marketOrder)
         {
             //var lastMarketDate = DateTimeOffset.UtcNow.GetClosestPreviousStockMarketDateTime();
             var lastMarketDate = DateTimeOffset.UtcNow.AddDays(-20).SetTime(8, 0);
@@ -178,9 +180,10 @@ namespace StocksProcessing.API.Controllers
 
             if (marketOrder.Leverage > 1 || !marketOrder.IsBuy)
             {
-                if (marketOrder.StopLossAmount > marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent)
+                if (marketOrder.StopLossAmount > marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent
+                    || marketOrder.StopLossAmount < 0 || marketOrder.TakeProfitAmount < 0)
                 {
-                    response.ErrorMessage = "Stop loss can't be that permissive!";
+                    response.ErrorMessage = "Either stop loss or take profit can't have such values!";
 
                     return response;
                 }
@@ -226,7 +229,7 @@ namespace StocksProcessing.API.Controllers
                 StopLossAmount = marketOrder.StopLossAmount,
                 TakeProfitAmount = marketOrder.TakeProfitAmount,
                 Date = DateTimeOffset.UtcNow,
-                InvestedSum = marketOrder.InvestedAmount,
+                InvestedAmount = marketOrder.InvestedAmount,
                 UniqueActionStamp = marketOrder.Token,
                 IsBuy = marketOrder.IsBuy,
                 Open = true,
@@ -256,58 +259,10 @@ namespace StocksProcessing.API.Controllers
         }
 
 
-        [HttpGet("openedTransactions")]
-        [AuthorizeToken]
-        public async Task<ApiResponse<List<AllOpenTransactionsOneCompanySummary>>> GatherTransactionsSummary()
-        {
-            var response = new ApiResponse<List<AllOpenTransactionsOneCompanySummary>>();
-
-            var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
-
-            var transactionsSummary = new List<AllOpenTransactionsOneCompanySummary>();
-            var openTransactionsList = new List<TransactionSummary>();
-
-            try
-            {
-                openTransactionsList = _dbContext.Transactions
-                    .Where(e => e.ApplicationUserId == userRequesting.Id && e.Open == true)
-                    .Select(e => new TransactionSummary()
-                    {
-                        CurrentPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker),
-                        InitialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen,
-                        IsBuy = e.IsBuy,
-                        Ticker = e.Ticker,
-                        UnitsPurchased = e.InvestedSum / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)
-                    }).AsNoTracking().ToList();
-
-                transactionsSummary = openTransactionsList
-                    .GroupBy(c => c.Ticker)
-                    .Select(g => new AllOpenTransactionsOneCompanySummary()
-                    {
-                        Ticker = g.Key,
-                        AverageInitial = g.Average(e => e.InitialPrice),
-                        TotalInvested = g.Sum(e => e.InvestedAmount),
-                        TotalPl = g.Sum(e => e.ProfitOrLoss),
-                        TotalPlPercentage = g.Sum(e => e.ProfitOrLossPercentage),
-                        TotalUnits = g.Sum(e => e.UnitsPurchased)
-                    }).ToList();
-
-            }
-            catch (Exception e)
-            {
-                response.ErrorMessage = $"Couldn't get opened transactions data! | {e.Message}";
-
-                return response;
-            }
-
-            response.Response = transactionsSummary;
-
-            return response;
-        }
+        
 
 
         [HttpGet("sellOrder")]
-        [AuthorizeToken]
         public async Task<ApiResponse<OrderTaxesPreview>> GetTransactionTaxesSell(string ticker, double invested, double leverage)
         {
             var currentDate = DateTimeOffset.UtcNow.AddDays(-20).SetTime(8, 0);
@@ -355,28 +310,126 @@ namespace StocksProcessing.API.Controllers
             }
 
             var openPrice = todaysPrices.First().Price;
-
-            result.CurrentPrice = Math.Round(todaysPrices.Last().Price, 3); //sell price
-
-            result.TodayIncrement = Math.Round(result.CurrentPrice - openPrice, 3);
-            result.Trend = Math.Round(((result.CurrentPrice / openPrice) - 1) * 100, 3);
-
             var effectiveMoney = leverage * invested;
 
-            result.UnitsPaid = Math.Round(effectiveMoney / result.CurrentPrice, 3);
-            result.PercentageExposed = Math.Round(effectiveMoney / userRequesting.Capital, 3);
+            result.CurrentPrice = (todaysPrices.Last().Price).TruncateToDecimalPlaces(3); //sell price
+            result.TodayIncrement = (result.CurrentPrice - openPrice).TruncateToDecimalPlaces(3);
+            result.Trend = (((result.CurrentPrice / openPrice) - 1) * 100).TruncateToDecimalPlaces(3);
+            result.UnitsPaid = (effectiveMoney / result.CurrentPrice).TruncateToDecimalPlaces(3);
+            result.PercentageExposed = (effectiveMoney / userRequesting.Capital).TruncateToDecimalPlaces(3);
 
-            var borrowedMoney = effectiveMoney - invested;
-
-            result.WeekdayTax = Math.Round((TaxesConfig.SellInterestRate
-                + BankExchangeConsts.LiborOneMonthRatio) / 365 * borrowedMoney, 3);
+            result.WeekdayTax = ((TaxesConfig.SellInterestRate 
+                + BankExchangeConsts.LiborOneMonthRatio) / 365 * effectiveMoney).TruncateToDecimalPlaces(3);
 
             response.Response = result;
 
             return response;
         }
+
+
+
+        [HttpGet("openTransactions")]
+        public async Task<ApiResponse<List<AllOpenTransactionsOneCompanySummary>>> GatherTransactionsSummary()
+        {
+            var response = new ApiResponse<List<AllOpenTransactionsOneCompanySummary>>();
+
+            var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            var transactionsSummary = new List<AllOpenTransactionsOneCompanySummary>();
+            var openTransactionsList = new List<TransactionSummary>();
+
+            try
+            {
+                openTransactionsList = _dbContext.Transactions
+                    .Where(e => e.ApplicationUserId == userRequesting.Id && e.Open == true)
+                    .Select(e => new TransactionSummary()
+                    {
+                        CurrentPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker),
+                        InitialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen,
+                        InvestedAmount = e.InvestedAmount,
+                        IsBuy = e.IsBuy,
+                        Ticker = e.Ticker,
+                        UnitsPurchased = e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)
+                    }).AsNoTracking().ToList();
+
+                transactionsSummary = openTransactionsList
+                    .GroupBy(c => c.Ticker)
+                    .Select(g => new AllOpenTransactionsOneCompanySummary()
+                    {
+                        Ticker = g.Key,
+                        AverageInitial = (g.Average(e => e.InitialPrice)).TruncateToDecimalPlaces(3),
+                        TotalInvested = (g.Sum(e => e.InvestedAmount)).TruncateToDecimalPlaces(3),
+                        TotalPl = (g.Sum(e => e.ProfitOrLoss)).TruncateToDecimalPlaces(3),
+                        TotalPlPercentage = (g.Sum(e => e.ProfitOrLossPercentage 
+                                            * e.InvestedAmount) / g.Sum(e => e.InvestedAmount)).TruncateToDecimalPlaces(3),
+                        TotalUnits = (g.Sum(e => e.UnitsPurchased)).TruncateToDecimalPlaces(3)
+                    }).ToList();
+            }
+            catch (Exception e)
+            {
+                response.ErrorMessage = $"Couldn't get opened transactions data! | {e.Message}";
+
+                return response;
+            }
+
+            response.Response = transactionsSummary;
+
+            return response;
+        }
+
+        [HttpGet("openTransactionsForTicker/{ticker}")]
+        public async Task<ApiResponse<List<TransactionFullInfo>>> GatherTransactionsParticularTicker(string ticker)
+        {
+            var response = new ApiResponse<List<TransactionFullInfo>>();
+
+            var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            var openTransactionsList = new List<TransactionFullInfo>();
+
+            try
+            {
+                openTransactionsList = _dbContext.Transactions
+                    .Where(e => e.ApplicationUserId == userRequesting.Id 
+                    && e.Ticker == ticker.ToUpper() && e.Open == true)
+                    .Select(e => new TransactionFullInfo()
+                    {
+                        CurrentPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker).TruncateToDecimalPlaces(3),
+                        InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
+                        IsBuy = e.IsBuy,
+                        Ticker = e.Ticker,
+                        Leverage = e.Leverage,
+                        InvestedAmount = e.InvestedAmount,
+                        UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)).TruncateToDecimalPlaces(3),
+                        StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
+                        TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
+                        Date = e.Date
+                    }).AsNoTracking().ToList();
+
+            }
+            catch (Exception e)
+            {
+                response.ErrorMessage = $"Couldn't get opened transactions data! | {e.Message}";
+
+                return response;
+            }
+
+            response.Response = openTransactionsList;
+
+            return response;
+        }
+
+
+        [HttpGet("tradingContext")]
+        public async Task<ApiResponse<TradingContext>> GetTradingContext()
+        {
+            var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            return new ApiResponse<TradingContext>() {
+                Response = new TradingContext()
+                {
+                    Funds = userRequesting.Capital
+                }
+            };
+        }
     }
-
-
-    
 }

@@ -5,7 +5,12 @@ namespace Stocks_Data_Processing
     public interface IStocksDataHandlingLogic
     {
         Task StartMantainingCurrentStocksData();
+
         Task StartPredictionEngine();
+
+        Task StartTransactionsMonitoring();
+
+        Task StartTaxesCollecting();
 
         Task StartAllFunctions();
     }

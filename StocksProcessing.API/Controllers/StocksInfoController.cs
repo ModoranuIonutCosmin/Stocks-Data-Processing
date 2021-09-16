@@ -30,12 +30,39 @@ namespace StocksProcessing.API.Controllers
             _dbContext = context;
         }
 
+        [HttpGet("companyInfo/{ticker}")]
+        public async Task<ApiResponse<Company>> GetDescriptionByTicker(string ticker)
+        {
+            var response = new ApiResponse<Company>();
+
+            try
+            {
+                var companyList = await _dbContext.Companies
+                    .Where(e => e.Ticker.ToUpper() == ticker)
+                    .AsNoTracking().ToListAsync();
+
+                if(companyList.Count == 0)
+                {
+                    throw new Exception("Couldn't find company data!");
+                }
+
+                response.Response = companyList.First();
+            }
+
+            catch(Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
+        }
+
         [HttpGet("report")]
-        public async Task<ApiResponse<IList<StocksDailySummaryModel>>> GetReportsAllCompanies()
+        public async Task<ApiResponse<IList<StocksCurrentDaySummary>>> GetReportsAllCompanies()
         {
             var fromDate = DateTimeOffset.UtcNow.AddDays(-30).SetTime(8, 0);
 
-            var response = new ApiResponse<IList<StocksDailySummaryModel>>();
+            var response = new ApiResponse<IList<StocksCurrentDaySummary>>();
 
             try
             {
@@ -44,7 +71,7 @@ namespace StocksProcessing.API.Controllers
                     .LoadStoredProcedure("dbo.spGetDailyStockSummary")
                     .WithSqlParams(
                     (nameof(fromDate), fromDate))
-                    .ExecuteStoredProcedureAsync<StocksDailySummaryModel>();
+                    .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
 
                 response.Response = result;
             }
@@ -73,12 +100,12 @@ namespace StocksProcessing.API.Controllers
 
 
         [HttpGet("report/{ticker}")]
-        public async Task<ApiResponse<StocksDailySummaryModel>> GetReportsByCompany([NotNull] string ticker)
+        public async Task<ApiResponse<StocksCurrentDaySummary>> GetReportsByCompany([NotNull] string ticker)
         {
             //TODO: Remove this
             var fromDate = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
 
-            var response = new ApiResponse<StocksDailySummaryModel>();
+            var response = new ApiResponse<StocksCurrentDaySummary>();
 
             if (!Enum.IsDefined(typeof(StocksTicker), ticker))
             {
@@ -95,7 +122,7 @@ namespace StocksProcessing.API.Controllers
                 .WithSqlParams(
                 (nameof(fromDate), fromDate),
                 (nameof(ticker), ticker))
-                .ExecuteStoredProcedureAsync<StocksDailySummaryModel>();
+                .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
 
                 response.Response = result.FirstOrDefault();
             }
