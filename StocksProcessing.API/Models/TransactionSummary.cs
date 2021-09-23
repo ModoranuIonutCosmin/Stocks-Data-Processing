@@ -12,9 +12,20 @@ namespace StocksProcessing.API.Models
 
         public double InitialPrice { get; set; }
 
-        public double CurrentPrice { get; set; }
-
+        public double CurrentSellPrice { get; set; }
         public double InvestedAmount { get; set; }
+
+        public double CurrentPrice {
+            get => IsBuy ? CurrentSellPrice : CurrentBuyPrice;
+        }
+
+        public double CurrentBuyPrice { 
+            get
+            {
+                return StockMarketCalculus.CalculateBuyPrice(CurrentSellPrice);
+            } 
+        }
+
 
         public double ProfitOrLoss {
 

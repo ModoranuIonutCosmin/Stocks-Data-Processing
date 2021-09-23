@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StocksProccesing.Relational.Model
 {
@@ -8,7 +9,7 @@ namespace StocksProccesing.Relational.Model
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(16)]
+        [Column(TypeName = "varchar(40)")]
         public string UniqueActionStamp { get; set; }
 
         [Required]

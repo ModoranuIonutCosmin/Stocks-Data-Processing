@@ -5,7 +5,7 @@ namespace StocksProcessing.API.Models
 {
     public class TransactionFullInfo
     {
-        public string Ticker { get; set; }
+        public int Id { get; set; }
 
         public bool IsBuy { get; set; }
 
@@ -24,6 +24,8 @@ namespace StocksProcessing.API.Models
         public double Leverage { get; set; }
 
         public DateTimeOffset Date { get; set; }
+
+        public double Value { get => InitialPrice * UnitsPurchased + ProfitOrLoss; }
 
         public bool IsCFD { 
             get

@@ -42,5 +42,32 @@ namespace StocksProcessing.API.Email
                 });
         }
 
+
+        public async Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
+            string resetPasswordLink)
+        {
+            var emailDetails = new SendEmailDetails
+            {
+                FromEmail = "accounts@modsdeal.com",
+                ToEmail = recipient.Email,
+                ToName = recipient.FirstName,
+                Subject = "Password reset for ModsDeal",
+            };
+
+            return await templatedEmailSender
+                .SendEmailAsync(emailDetails, "message",
+                new()
+                {
+                    { "--Username--", recipient.UserName },
+                    { "--Content1--", "A password reset request was made for this account." },
+                    {
+                        "--Content2--",
+                        "If it was made by you, click the button below to reset the password " +
+                        "otherwise, simply ignore this message."
+                    },
+                    { "--Link--", resetPasswordLink },
+                    { "--LinkAction--", "Confirm" }
+                });
+        }
     }
 }

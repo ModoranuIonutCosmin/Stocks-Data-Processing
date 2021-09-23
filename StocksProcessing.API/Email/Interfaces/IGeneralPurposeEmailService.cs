@@ -7,5 +7,8 @@ namespace StocksProcessing.API.Email.Interfaces
     {
         Task<SendEmailResponse> SendConfirmationEmail(ApplicationUser recipient,
             string confirmationLink);
+
+        Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
+            string resetPasswordLink);
     }
 }

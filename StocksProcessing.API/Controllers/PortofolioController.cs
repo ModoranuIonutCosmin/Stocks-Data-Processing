@@ -15,6 +15,7 @@ using StocksProcessing.API.Payloads;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
 using StocksProccesing.Relational.Helpers;
+using System.Net;
 
 // For more information on enabling Web API for empty
 // projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -70,9 +71,16 @@ namespace StocksProcessing.API.Controllers
             var response = new ApiResponse<OrderTaxesPreview>();
             var result = new OrderTaxesPreview();
 
-            //TODO: CHECK USER EXISTS!
-
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (userRequesting is null)
+            {
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
 
             if (invested > userRequesting.Capital || invested == 0)
             {
@@ -113,7 +121,6 @@ namespace StocksProcessing.API.Controllers
 
             var currentStocksPriceWithoutFees = todaysPrices.Last().Price; // sell price
 
-            result.Trend = ((result.CurrentPrice / openPrice) - 1).TruncateToDecimalPlaces(3);
 
             result.TodayIncrement = (currentStocksPriceWithoutFees - openPrice).TruncateToDecimalPlaces(3);
 
@@ -126,6 +133,7 @@ namespace StocksProcessing.API.Controllers
 
             result.CurrentPrice = result.CurrentPrice.TruncateToDecimalPlaces(3);
 
+            result.Trend = ((result.CurrentPrice / openPrice) - 1).TruncateToDecimalPlaces(3);
             var effectiveMoney = leverage * invested;
 
             result.InvestedAmount = invested;
@@ -135,7 +143,7 @@ namespace StocksProcessing.API.Controllers
             if (leverage == 1)
                 result.WeekdayTax = 0;
             else
-                result.WeekdayTax = ((TaxesConfig.BuyInterestRate 
+                result.WeekdayTax = ((TaxesConfig.BuyInterestRate
                     + BankExchangeConsts.LiborOneMonthRatio) / 365 * effectiveMoney).TruncateToDecimalPlaces(3);
 
             response.Response = result;
@@ -162,6 +170,15 @@ namespace StocksProcessing.API.Controllers
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
+            if (userRequesting is null)
+            {
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
+
             if (marketOrder.InvestedAmount > userRequesting.Capital ||
                 marketOrder.InvestedAmount == 0
                 )
@@ -178,7 +195,7 @@ namespace StocksProcessing.API.Controllers
                 return response;
             }
 
-            if (marketOrder.Leverage > 1 || !marketOrder.IsBuy)
+            if (marketOrder.Leverage > 1)
             {
                 if (marketOrder.StopLossAmount > marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent
                     || marketOrder.StopLossAmount < 0 || marketOrder.TakeProfitAmount < 0)
@@ -220,9 +237,7 @@ namespace StocksProcessing.API.Controllers
             }
 
             var sellPrice = todaysPrices.Last().Price;
-            var buyPrice = sellPrice;
-
-            buyPrice += sellPrice * (TaxesConfig.AverageStockMarketSpread + TaxesConfig.SpreadFee);
+            var buyPrice = StockMarketCalculus.CalculateBuyPrice(sellPrice);
 
             var transaction = new PortofolioOpenTransaction()
             {
@@ -247,9 +262,9 @@ namespace StocksProcessing.API.Controllers
 
                 await _dbContext.SaveChangesAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                response.ErrorMessage = "Can't place the order. Try again later.";
+                response.ErrorMessage = $"Can't place the order. Try again later. | {ex.Message}";
 
                 return response;
             }
@@ -259,7 +274,7 @@ namespace StocksProcessing.API.Controllers
         }
 
 
-        
+
 
 
         [HttpGet("sellOrder")]
@@ -269,11 +284,21 @@ namespace StocksProcessing.API.Controllers
             //var currentDate = DateTimeOffset.UtcNow.GetClosestPreviousStockMarketDateTime();
 
             var response = new ApiResponse<OrderTaxesPreview>();
-            var result = new OrderTaxesPreview();
-
-            result.InvestedAmount = invested;
+            var result = new OrderTaxesPreview
+            {
+                InvestedAmount = invested
+            };
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (userRequesting is null)
+            {
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
 
             if (invested > userRequesting.Capital || invested == 0)
             {
@@ -318,7 +343,7 @@ namespace StocksProcessing.API.Controllers
             result.UnitsPaid = (effectiveMoney / result.CurrentPrice).TruncateToDecimalPlaces(3);
             result.PercentageExposed = (effectiveMoney / userRequesting.Capital).TruncateToDecimalPlaces(3);
 
-            result.WeekdayTax = ((TaxesConfig.SellInterestRate 
+            result.WeekdayTax = ((TaxesConfig.SellInterestRate
                 + BankExchangeConsts.LiborOneMonthRatio) / 365 * effectiveMoney).TruncateToDecimalPlaces(3);
 
             response.Response = result;
@@ -329,22 +354,34 @@ namespace StocksProcessing.API.Controllers
 
 
         [HttpGet("openTransactions")]
-        public async Task<ApiResponse<List<AllOpenTransactionsOneCompanySummary>>> GatherTransactionsSummary()
+        public async Task<ApiResponse<AllTransactionsGroupedSummary>> GatherTransactionsSummary()
         {
-            var response = new ApiResponse<List<AllOpenTransactionsOneCompanySummary>>();
+            var response = new ApiResponse<AllTransactionsGroupedSummary>();
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
-            var transactionsSummary = new List<AllOpenTransactionsOneCompanySummary>();
+            if (userRequesting is null)
+            {
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
+
+            var transactionsSummary = new List<CompanyTransactionsSummary>();
             var openTransactionsList = new List<TransactionSummary>();
 
             try
             {
+                var companiesData = _dbContext.Companies.ToList();
+
                 openTransactionsList = _dbContext.Transactions
                     .Where(e => e.ApplicationUserId == userRequesting.Id && e.Open == true)
-                    .Select(e => new TransactionSummary()
+                    .Select(e =>
+                    new TransactionSummary()
                     {
-                        CurrentPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker),
+                        CurrentSellPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker),
                         InitialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen,
                         InvestedAmount = e.InvestedAmount,
                         IsBuy = e.IsBuy,
@@ -354,16 +391,26 @@ namespace StocksProcessing.API.Controllers
 
                 transactionsSummary = openTransactionsList
                     .GroupBy(c => c.Ticker)
-                    .Select(g => new AllOpenTransactionsOneCompanySummary()
+                    .Select(g => new CompanyTransactionsSummary()
                     {
                         Ticker = g.Key,
                         AverageInitial = (g.Average(e => e.InitialPrice)).TruncateToDecimalPlaces(3),
                         TotalInvested = (g.Sum(e => e.InvestedAmount)).TruncateToDecimalPlaces(3),
                         TotalPl = (g.Sum(e => e.ProfitOrLoss)).TruncateToDecimalPlaces(3),
-                        TotalPlPercentage = (g.Sum(e => e.ProfitOrLossPercentage 
-                                            * e.InvestedAmount) / g.Sum(e => e.InvestedAmount)).TruncateToDecimalPlaces(3),
-                        TotalUnits = (g.Sum(e => e.UnitsPurchased)).TruncateToDecimalPlaces(3)
-                    }).ToList();
+                        TotalPlPercentage = (g.Sum(e => e.ProfitOrLoss) / g.Sum(e => e.InvestedAmount) * 100).TruncateToDecimalPlaces(3),
+                        TotalUnits = (g.Sum(e => e.UnitsPurchased)).TruncateToDecimalPlaces(3),
+                        Value = (g.Sum(e => e.UnitsPurchased * e.InitialPrice + e.ProfitOrLoss)).TruncateToDecimalPlaces(3)
+                    })
+                    .Join(companiesData, e => e.Ticker, e => e.Ticker,
+                    (transaction, company) =>
+                    {
+                        transaction.UrlLogo = company.UrlLogo;
+                        transaction.Name = company.Name;
+                        transaction.Description = company.Description;
+
+                        return transaction;
+                    })
+                    .ToList();
             }
             catch (Exception e)
             {
@@ -372,39 +419,68 @@ namespace StocksProcessing.API.Controllers
                 return response;
             }
 
-            response.Response = transactionsSummary;
+            response.Response = new AllTransactionsGroupedSummary
+            {
+                Transactions = transactionsSummary
+            };
 
             return response;
         }
 
         [HttpGet("openTransactionsForTicker/{ticker}")]
-        public async Task<ApiResponse<List<TransactionFullInfo>>> GatherTransactionsParticularTicker(string ticker)
+        public async Task<ApiResponse<AllTransactionsDetailed>> GatherTransactionsParticularTicker(string ticker)
         {
-            var response = new ApiResponse<List<TransactionFullInfo>>();
+            var response = new ApiResponse<AllTransactionsDetailed>();
+
+            var result = new AllTransactionsDetailed();
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (userRequesting is null)
+            {
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
 
             var openTransactionsList = new List<TransactionFullInfo>();
 
             try
             {
-                openTransactionsList = _dbContext.Transactions
-                    .Where(e => e.ApplicationUserId == userRequesting.Id 
-                    && e.Ticker == ticker.ToUpper() && e.Open == true)
-                    .Select(e => new TransactionFullInfo()
-                    {
-                        CurrentPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker).TruncateToDecimalPlaces(3),
-                        InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
-                        IsBuy = e.IsBuy,
-                        Ticker = e.Ticker,
-                        Leverage = e.Leverage,
-                        InvestedAmount = e.InvestedAmount,
-                        UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)).TruncateToDecimalPlaces(3),
-                        StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
-                        TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
-                        Date = e.Date
-                    }).AsNoTracking().ToList();
+                var companyData = _dbContext.Companies.First(e => e.Ticker == ticker);
 
+                openTransactionsList = _dbContext.Transactions
+                    .Where(e => e.ApplicationUserId == userRequesting.Id
+                    && e.Ticker == ticker.ToUpper() && e.Open == true)
+                    .AsNoTracking()
+                    .AsEnumerable()
+                    .Select(e =>
+                    {
+                        var currentSellPrice = _dbContext.GatherCurrentPriceByCompany(e.Ticker);
+
+                        var currentPrice = e.IsBuy ? currentSellPrice : StockMarketCalculus.CalculateBuyPrice(currentSellPrice);
+
+                        return new TransactionFullInfo()
+                        {
+                            Id = e.Id,
+                            CurrentPrice = (currentPrice).TruncateToDecimalPlaces(3),
+                            InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
+                            IsBuy = e.IsBuy,
+                            Leverage = e.Leverage,
+                            InvestedAmount = e.InvestedAmount,
+                            UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)).TruncateToDecimalPlaces(3),
+                            StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
+                            TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
+                            Date = e.Date
+                        };
+                    }).ToList();
+
+                result.UrlLogo = companyData.UrlLogo;
+                result.Name = companyData.Name;
+                result.Description = companyData.Description;
+                result.Ticker = ticker;
             }
             catch (Exception e)
             {
@@ -413,18 +489,89 @@ namespace StocksProcessing.API.Controllers
                 return response;
             }
 
-            response.Response = openTransactionsList;
+            result.Transactions = openTransactionsList;
+
+            response.Response = result;
 
             return response;
         }
 
+        [HttpPost("closeTransaction")]
+        public async Task<ApiResponse<CloseTransactionRequest>> CancelTransaction([FromBody]CloseTransactionRequest request)
+        {
+            var response = new ApiResponse<CloseTransactionRequest>();
+
+            try
+            {
+                var transaction = _dbContext.Transactions
+                .First(e => e.Id == request.Id);
+
+                var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
+
+                if (userRequesting is null || transaction is null || transaction.ApplicationUserId != userRequesting.Id)
+                {
+
+                    response.ErrorMessage = "User is unauthorized!";
+
+                    Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                    return response;
+                }
+
+                var currentSellPrice = _dbContext.GatherCurrentPriceByCompany(transaction.Ticker);
+
+                var currentBuyPrice = StockMarketCalculus.CalculateBuyPrice(currentSellPrice);
+
+                var initialSellPrice = transaction.UnitSellPriceThen;
+                var initialBuyPrice = transaction.UnitBuyPriceThen;
+
+                var profitOrLoss = default(double);
+
+                if (transaction.IsBuy)
+                {
+                    profitOrLoss = (currentSellPrice - initialBuyPrice) * (transaction.InvestedAmount / initialBuyPrice);
+                } 
+                else
+                {
+                    profitOrLoss = (initialSellPrice - currentBuyPrice) * (transaction.InvestedAmount / initialSellPrice);
+                }
+
+                userRequesting.Capital += transaction.InvestedAmount + profitOrLoss;
+                transaction.Open = false;
+
+                await _dbContext.SaveChangesAsync();
+            }
+
+            catch(Exception ex)
+            {
+                response.ErrorMessage = $"An error occured. Please try again later. | {ex.Message}";
+
+                return response;
+            }
+
+            response.Response = request;
+
+            return response;
+        }
 
         [HttpGet("tradingContext")]
         public async Task<ApiResponse<TradingContext>> GetTradingContext()
         {
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
-            return new ApiResponse<TradingContext>() {
+            if (userRequesting is null)
+            {
+                var response = new ApiResponse<TradingContext>();
+
+                response.ErrorMessage = "User is unauthorized!";
+
+                Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+
+                return response;
+            }
+
+            return new ApiResponse<TradingContext>()
+            {
                 Response = new TradingContext()
                 {
                     Funds = userRequesting.Capital

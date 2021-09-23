@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
@@ -11,7 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,6 +26,7 @@ namespace StocksProcessing.API.Controllers
     {
 
         private const string EmailNotConfirmedErrorMessage = "Email is not confirmed yet!";
+        private const string FrontendResetPasswordUrl = "localhost:4200/auth/resetPassword";
 
         protected StocksMarketContext _mContext;
         protected UserManager<ApplicationUser> _userManager;
@@ -216,6 +220,85 @@ namespace StocksProcessing.API.Controllers
                 Response = "Confirmation Success"
             }
                                     : failedResponse;
+        }
+
+
+
+        [HttpPost("ForgotPasswordRequest")]
+        public async Task<ApiResponse> ForgotPasswordRequest([FromBody] ModifyPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+
+            var failedResponse = new ApiResponse
+            {
+                ErrorMessage = "Password reset failed.",
+            };
+
+            if (user is null)
+            {
+                return failedResponse;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var queryParams = new Dictionary<string, string>
+            {
+              {"token", token },
+              {"email", request.Email }
+            };
+
+            var resetLink = QueryHelpers.AddQueryString(FrontendResetPasswordUrl, queryParams);
+
+            var emailSendingResult = await _emailSender
+                     .SendResetPasswordEmail(user, resetLink);
+
+            if (!emailSendingResult.Successful)
+            {
+                return failedResponse;
+            }
+
+            return new ApiResponse()
+            {
+                Response = "Reset request taken. Email containing reset link sent."
+            };
+        }
+
+        [HttpPost("ModifyPasswordRequest")]
+        public async Task<ApiResponse> ModifyPasswordRequest([FromBody] ModifyPasswordRequest request)
+        {
+            return await ForgotPasswordRequest(request);
+        }
+
+
+        [HttpPost("ResetPassword")]
+        public async Task<ApiResponse> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+
+            var failedResponse = new ApiResponse
+            {
+                ErrorMessage = "Password reset failed.",
+            };
+
+            if (user is null)
+            {
+                return failedResponse;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return new ApiResponse()
+                {
+                    ErrorMessage = result.Errors.AggregateErrors()
+                };
+            }
+
+            return new ApiResponse()
+            {
+                Response = "Password changed."
+            };
         }
     }
 }

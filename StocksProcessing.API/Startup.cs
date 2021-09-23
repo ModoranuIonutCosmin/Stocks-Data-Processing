@@ -84,6 +84,9 @@ namespace StocksProcessing.API
                 options.SignIn.RequireConfirmedEmail = true;
             });
 
+            services.Configure<DataProtectionTokenProviderOptions>(e =>
+                e.TokenLifespan = TimeSpan.FromHours(3));
+
 
             services.AddCors(options =>
             {

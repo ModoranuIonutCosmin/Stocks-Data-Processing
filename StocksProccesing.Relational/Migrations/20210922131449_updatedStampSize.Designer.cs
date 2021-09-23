@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20210922131449_updatedStampSize")]
+    partial class updatedStampSize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -330,7 +332,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("UniqueActionStamp")
-                        .HasColumnType("varchar(40)");
+                        .HasColumnType("varchar(32)");
 
                     b.Property<double>("UnitBuyPriceThen")
                         .HasColumnType("float");
