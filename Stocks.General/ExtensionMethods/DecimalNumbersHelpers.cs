@@ -5,9 +5,9 @@ namespace Stocks.General.ExtensionMethods
     public static class DecimalNumbersHelpers
     {
 
-        public static double TruncateToDecimalPlaces(this double number, int decimaPlaces)
+        public static decimal TruncateToDecimalPlaces(this decimal number, int decimalPlaces)
         {
-            return Convert.ToDouble(number.ToString("N" + decimaPlaces));
+            return Convert.ToDecimal(number.ToString("N" + decimalPlaces));
         }
     }
 }

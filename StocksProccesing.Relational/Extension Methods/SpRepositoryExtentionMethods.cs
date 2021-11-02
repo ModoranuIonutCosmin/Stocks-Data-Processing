@@ -40,11 +40,9 @@ namespace StocksProccesing.Relational.Extension_Methods
 					command.Connection.Open();
 				try
 				{
-					using (var reader = command.ExecuteReader())
-					{
-						return reader.MapToList<T>();
-					}
-				}
+                    using var reader = command.ExecuteReader();
+                    return reader.MapToList<T>();
+                }
 				finally
 				{
 					command.Connection.Close();

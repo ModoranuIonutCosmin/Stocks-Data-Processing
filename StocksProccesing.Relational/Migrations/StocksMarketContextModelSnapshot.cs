@@ -158,8 +158,8 @@ namespace StocksProccesing.Relational.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<double>("Capital")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Capital")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -275,8 +275,8 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CurrencyTicker")
                         .HasMaxLength(15)
@@ -292,61 +292,6 @@ namespace StocksProccesing.Relational.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("StocksProccesing.Relational.Model.PortofolioOpenTransaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("Date")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<double>("InvestedAmount")
-                        .HasColumnType("float");
-
-                    b.Property<bool>("IsBuy")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Leverage")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Open")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("StopLossAmount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("TakeProfitAmount")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Ticker")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("UniqueActionStamp")
-                        .HasColumnType("varchar(40)");
-
-                    b.Property<double>("UnitBuyPriceThen")
-                        .HasColumnType("float");
-
-                    b.Property<double>("UnitSellPriceThen")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("UniqueActionStamp")
-                        .IsUnique()
-                        .HasFilter("[UniqueActionStamp] IS NOT NULL");
-
-                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
@@ -366,8 +311,8 @@ namespace StocksProccesing.Relational.Migrations
                     b.Property<bool>("Prediction")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -376,6 +321,61 @@ namespace StocksProccesing.Relational.Migrations
                     b.HasIndex("Date");
 
                     b.ToTable("PricesData");
+                });
+
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("InvestedAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsBuy")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Leverage")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Open")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("StopLossAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TakeProfitAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Ticker")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("UniqueActionStamp")
+                        .HasColumnType("varchar(40)");
+
+                    b.Property<decimal>("UnitBuyPriceThen")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitSellPriceThen")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("UniqueActionStamp")
+                        .IsUnique()
+                        .HasFilter("[UniqueActionStamp] IS NOT NULL");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -429,13 +429,6 @@ namespace StocksProccesing.Relational.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StocksProccesing.Relational.Model.PortofolioOpenTransaction", b =>
-                {
-                    b.HasOne("StocksProccesing.Relational.Model.ApplicationUser", null)
-                        .WithMany("OpenTransactions")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
@@ -443,6 +436,13 @@ namespace StocksProccesing.Relational.Migrations
                         .HasForeignKey("CompanyTicker");
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksTransaction", b =>
+                {
+                    b.HasOne("StocksProccesing.Relational.Model.ApplicationUser", null)
+                        .WithMany("OpenTransactions")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.ApplicationUser", b =>

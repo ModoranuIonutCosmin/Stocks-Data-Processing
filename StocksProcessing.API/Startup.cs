@@ -11,9 +11,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
+using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Email;
 using StocksProcessing.API.Email.Interfaces;
 using System;
@@ -101,7 +103,17 @@ namespace StocksProcessing.API
 
             services.AddTransient<IDirectEmailSender, DirectEmailSender>()
                 .AddTransient<ITemplatedEmailSender, TemplatedEmailSender>()
-                .AddTransient<IGeneralPurposeEmailService, GeneralPurposeEmailService>();
+                .AddTransient<IGeneralPurposeEmailService, GeneralPurposeEmailService>()
+                .AddTransient<IUsersRepository, UsersRepository>()
+                .AddTransient<IOrdersRepository, OrdersRepository>()
+                .AddTransient<ITransactionsRepository, TransactionsRepository>()
+                .AddTransient<IStockPricesRepository, StockPricesRepository>()
+                .AddTransient<ICompaniesRepository, CompaniesRepository>()
+                .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
+                .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
+                .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
+                .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
+                .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

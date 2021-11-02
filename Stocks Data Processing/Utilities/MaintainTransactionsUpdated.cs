@@ -34,7 +34,7 @@ namespace Stocks_Data_Processing.Utilities
             {
 
                 var ticker = transaction.Ticker;
-                var profit = default(double);
+                var profit = default(decimal);
 
                 var currentSellPrice = _dbContext.GatherCurrentPriceByCompany(ticker);
 

@@ -9,12 +9,12 @@ namespace StocksProcessing.API.Models
         public string Ticker { get; set; }
         public string Name { get; set; }
         public string UrlLogo { get; set; }
-        public double Trend { get { return Math.Round(100 - CloseValue / OpenValue * 100, 2); } }
-        public double High { get; set; }
-        public double Low { get; set; }
-        public double OpenValue { get; set; }
-        public double CloseValue { get; set; }
-        public double SellPrice { get => CloseValue; }
-        public double BuyPrice { get => (SellPrice + SellPrice * TaxesConfig.FullSpreadFees).TruncateToDecimalPlaces(3); }
+        public double Trend { get { return (double)Math.Round(100 - CloseValue / OpenValue * 100, 2); } }
+        public decimal High { get; set; }
+        public decimal Low { get; set; }
+        public decimal OpenValue { get; set; }
+        public decimal CloseValue { get; set; }
+        public decimal SellPrice { get => CloseValue; }
+        public decimal BuyPrice { get => (SellPrice + SellPrice * TaxesConfig.FullSpreadFees).TruncateToDecimalPlaces(3); }
     }
 }

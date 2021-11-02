@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StocksProccesing.Relational.Model
@@ -23,9 +22,9 @@ namespace StocksProccesing.Relational.Model
         [Column(TypeName = "VARCHAR(50)")]
         public string LastName { get; set; }
 
-        public double Capital { get; set; }
+        public decimal Capital { get; set; }
 
-        public List<PortofolioOpenTransaction> OpenTransactions { get; set; }
+        public List<StocksTransaction> OpenTransactions { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -2,7 +2,6 @@
 using Quartz;
 using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
-using Stocks_Data_Processing.Models;
 using StocksProccesing.Relational.DataAccess;
 using System;
 using System.Linq;
@@ -45,12 +44,13 @@ namespace Stocks_Data_Processing.Utilities
 
             foreach (var transaction in allTaxableTransactions)
             {
-
                 var dateTransactionUpdated = lastGlobalUpdate < transaction.Date ? transaction.Date
                                                                                  : lastGlobalUpdate;
 
                 var workDays = DateTimeOffsetHelpers.GetBusinessDays(dateTransactionUpdated, currentDate);
-                var weekEndDays = currentDate.Subtract(dateTransactionUpdated).TotalDays - workDays;
+                var weekEndDays = (decimal)currentDate.Subtract(dateTransactionUpdated).TotalDays - workDays;
+
+                //dangerous cast
 
                 var interestAmount = transaction.IsBuy ? TaxesConfig.BuyInterestRate : TaxesConfig.SellInterestRate;
 

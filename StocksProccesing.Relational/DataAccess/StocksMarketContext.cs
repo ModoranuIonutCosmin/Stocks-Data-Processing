@@ -9,7 +9,7 @@ namespace StocksProccesing.Relational.DataAccess
     {
         public DbSet<StocksPriceData> PricesData { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<PortofolioOpenTransaction> Transactions { get; set; }
+        public DbSet<StocksTransaction> Transactions { get; set; }
         public DbSet<MaintenanceAction> Actions { get; set; }
 
         public DbSet<Order> Orders { get; set; }
@@ -50,7 +50,7 @@ namespace StocksProccesing.Relational.DataAccess
             modelBuilder.Entity<StocksPriceData>()
                 .HasIndex(p => p.Date);
 
-            modelBuilder.Entity<PortofolioOpenTransaction>().HasIndex(p => p.UniqueActionStamp)
+            modelBuilder.Entity<StocksTransaction>().HasIndex(p => p.UniqueActionStamp)
                 .IsUnique();
         }
 

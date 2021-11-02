@@ -103,7 +103,7 @@ namespace StockBulkGatherer
                 if (currentDt.Day == nextDt.Day)
                 {
                     TimeSpan deltaTime = nextDt - currentDt;
-                    double source, target;
+                    decimal source, target;
 
                     source = current.Price;
                     target = next.Price;

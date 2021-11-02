@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stocks_Data_Processing.Models
+namespace Stocks.General.ConstantsConfig
 {
     public static class MaintenanceRoutinesPeriod
     {

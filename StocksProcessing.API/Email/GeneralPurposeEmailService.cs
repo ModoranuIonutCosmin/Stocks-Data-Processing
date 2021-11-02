@@ -9,8 +9,8 @@ namespace StocksProcessing.API.Email
     {
         private readonly ITemplatedEmailSender templatedEmailSender;
 
-        public GeneralPurposeEmailService(ITemplatedEmailSender templatedEmailSender,
-            IDirectEmailSender directEmailSender)
+        public GeneralPurposeEmailService(ITemplatedEmailSender templatedEmailSender
+            )
         {
             this.templatedEmailSender = templatedEmailSender;
         }

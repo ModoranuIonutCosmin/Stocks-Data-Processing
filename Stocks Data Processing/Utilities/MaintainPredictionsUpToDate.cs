@@ -61,7 +61,7 @@ namespace Stocks_Data_Processing.Utilities
             var results = (await Task.WhenAll(tasks)).SelectMany(x => x)
                 .Select(e => new StocksPriceData()
                 {
-                    Price = Math.Round(e.Price, 2),
+                    Price = (decimal)Math.Round(e.Price, 2),
                     CompanyTicker = e.Ticker,
                     Prediction = true,
                     Date = e.Date

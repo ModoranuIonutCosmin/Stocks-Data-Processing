@@ -28,12 +28,12 @@ namespace Stocks_Data_Processing.Models
         /// <summary>
         /// Pretul de pornire a valorii stock-ului pe acea zi
         /// </summary>
-        public double Open { get; set; }
+        public decimal Open { get; set; }
 
         /// <summary>
         /// Valoarea curenta a unui stock
         /// </summary>
-        public double Current { get; set; }
+        public decimal Current { get; set; }
 
         /// <summary>
         /// Data si ora la care a fost observata valoarea preturilor

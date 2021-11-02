@@ -1,6 +1,6 @@
 ﻿using Quartz;
 using Quartz.Impl.Triggers;
-using Stocks_Data_Processing.Models;
+using Stocks.General.ConstantsConfig;
 using Stocks_Data_Processing.Utilities;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
@@ -35,7 +35,8 @@ namespace Stocks_Data_Processing
 
         public async Task StartMantainingCurrentStocksData()
         {
-            var currentStocksJob = JobBuilder.Create<MaintainCurrentStockData>().WithIdentity(MaintananceJobsName.CurrentStocksValuesJob, "Maintenance").Build();
+            var currentStocksJob = JobBuilder.Create<MaintainCurrentStockData>()
+                .WithIdentity(MaintananceJobsName.CurrentStocksValuesJob, "Maintenance").Build();
 
             //Fiecare minut intr-un workday in perioada de trade 8:00-23:59 UTC.
             var cronTrigger = new CronTriggerImpl();
@@ -52,8 +53,6 @@ namespace Stocks_Data_Processing
 
         public async Task StartPredictionEngine()
         {
-            
-
             var predictionsJob = JobBuilder.Create<MaintainPredictionsUpToDate>().WithIdentity(MaintananceJobsName.PredictionsJob, "Maintenance").Build();
 
             //Fiecare sambata la 12:00 PM
@@ -64,45 +63,45 @@ namespace Stocks_Data_Processing
             await _scheduler.ScheduleJob(predictionsJob, predictionsTrigger);
 
 
-            //var dbContext = _dbContextFactory.Create();
+            var dbContext = _dbContextFactory.Create();
 
-            ////Executa odata la pornire daca nu a mai fost executat vreodata si apoi fa schedule
-            //var maintananceActionsData = dbContext.Actions
-            //    .Where(e => e.Type == MaintananceJobsName.PredictionsJob)
-            //    .ToList();
+            //Executa odata la pornire daca nu a mai fost executat vreodata si apoi fa schedule
+            var maintananceActionsData = dbContext.Actions
+                .Where(e => e.Type == MaintananceJobsName.PredictionsJob)
+                .ToList();
 
-            //bool shouldRun = false;
+            bool shouldRun = false;
 
-            //if (maintananceActionsData.Count == 0)
-            //{
-            //    dbContext.Actions.Add(new MaintenanceAction()
-            //    {
-            //        Type = MaintananceJobsName.PredictionsJob,
+            if (maintananceActionsData.Count == 0)
+            {
+                dbContext.Actions.Add(new MaintenanceAction()
+                {
+                    Type = MaintananceJobsName.PredictionsJob,
 
-            //    });
+                });
 
-            //    await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
 
-            //    shouldRun = true;
-            //}
-            //else
-            //{
-            //    var jobEntry = maintananceActionsData.Last();
+                shouldRun = true;
+            }
+            else
+            {
+                var jobEntry = maintananceActionsData.Last();
 
-            //    if (jobEntry.LastFinishedDate.Add(MaintenanceRoutinesPeriod.PredictionsJob) < DateTimeOffset.UtcNow)
-            //        shouldRun = true;
-            //}
+                if (jobEntry.LastFinishedDate.Add(MaintenanceRoutinesPeriod.PredictionsJob) < DateTimeOffset.UtcNow)
+                    shouldRun = true;
+            }
 
-            //if (shouldRun)
-            //{
-            //    await _maintainPredictionsUpToDate.UpdatePredictionsAsync();
+            if (shouldRun)
+            {
+                await _maintainPredictionsUpToDate.UpdatePredictionsAsync();
 
-            //    dbContext.Actions
-            //     .Where(e => e.Type == MaintananceJobsName.PredictionsJob)
-            //     .ToList().Last().LastFinishedDate = DateTimeOffset.UtcNow;
+                dbContext.Actions
+                 .Where(e => e.Type == MaintananceJobsName.PredictionsJob)
+                 .ToList().Last().LastFinishedDate = DateTimeOffset.UtcNow;
 
-            //    await dbContext.SaveChangesAsync();
-            //}
+                await dbContext.SaveChangesAsync();
+            }
         }
 
 
@@ -183,7 +182,8 @@ namespace Stocks_Data_Processing
 
         public async Task StartAllFunctions()
         {
-            await Task.WhenAll(new List<Task> { StartMantainingCurrentStocksData(), StartPredictionEngine(),
+            await Task.WhenAll(new List<Task> { StartMantainingCurrentStocksData(), 
+                //StartPredictionEngine(),
                 StartTaxesCollecting(), StartTransactionsMonitoring() });
 
             await _scheduler.Start();

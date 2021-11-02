@@ -105,7 +105,7 @@ namespace Stocks_Data_Processing.Utilities
 
             //Parseaza valoarea ca double si salveaza statusul in aceasta variabila
             //iar valoarea, in caz de success in currentPrice
-            var successfulParse = double.TryParse(value, out double currentPrice);
+            var successfulParse = decimal.TryParse(value, out decimal currentPrice);
 
             if (!successfulParse)
             //Daca nu s-a parsat cu success...

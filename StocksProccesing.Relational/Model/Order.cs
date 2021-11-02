@@ -14,7 +14,7 @@ namespace StocksProccesing.Relational.Model
         [MaxLength(15)]
         public string CurrencyTicker { get; set; }
 
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public DateTimeOffset DateFinalized { get; set; }
     }
