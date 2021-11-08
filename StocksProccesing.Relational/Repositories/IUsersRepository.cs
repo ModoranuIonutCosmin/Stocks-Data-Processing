@@ -8,7 +8,8 @@ namespace StocksProccesing.Relational.Repositories
 {
     public interface IUsersRepository : IEFRepository<StocksMarketContext>
     {
-        Task CloseUserTransaction(ApplicationUser user, StocksTransaction transaction, decimal profitOrLoss);
+        Task CloseUserTransaction(StocksTransaction transaction, decimal profitOrLoss);
+        ApplicationUser FindUserById(string id);
         StocksTransaction GetTransactionInfo(int id);
         List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user);
         List<StocksTransaction> GetTransactionsListForUserByTicker(ApplicationUser user, string ticker);

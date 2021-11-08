@@ -5,6 +5,7 @@ using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
@@ -23,7 +24,7 @@ namespace StocksProccesing.Relational.Repositories
 
         public List<StocksPriceData> GetTodaysPriceEvolution(string ticker)
         {
-            var currentDateUTC = DateTimeOffset.UtcNow.AddDays(-20).SetTime(8, 0);
+            var currentDateUTC = DateTimeOffset.UtcNow.SetTime(8, 0);
             var todaysPrices = new List<StocksPriceData>();
 
                 return todaysPrices = _dbContext.PricesData
@@ -31,6 +32,17 @@ namespace StocksProccesing.Relational.Repositories
                                 .OrderBy(e => e.Date)
                                 .AsNoTracking()
                                 .ToList();
+        }
+
+        public async Task AddPricesDataAsync(List<StocksPriceData> elements)
+        {
+            await _dbContext.PricesData.AddRangeAsync(elements);
+        }
+
+        public void RemoveAllPricePredictionsForTicker(string ticker)
+        {
+            _dbContext.PricesData.RemoveRange(_dbContext.PricesData.Where(k => k.Prediction 
+            && k.CompanyTicker == ticker));
         }
     }
 }

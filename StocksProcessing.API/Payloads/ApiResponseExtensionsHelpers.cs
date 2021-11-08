@@ -8,7 +8,7 @@ namespace StocksProcessing.API.Payloads
         public static ApiResponse<T> FailedApiOperationResponse<T>(this ControllerBase controller,
             string reason,
             T value = default,
-            HttpStatusCode statusCode = HttpStatusCode.NotFound)
+            HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var result = new ApiResponse<T>();
 

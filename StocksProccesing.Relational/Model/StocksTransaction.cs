@@ -22,6 +22,7 @@ namespace StocksProccesing.Relational.Model
         public string Ticker { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal InvestedAmount { get; set; }
 
         [Required]
@@ -31,15 +32,19 @@ namespace StocksProccesing.Relational.Model
         public DateTimeOffset Date { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal UnitSellPriceThen { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal UnitBuyPriceThen { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal StopLossAmount { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal TakeProfitAmount { get; set; }
 
         public string ApplicationUserId { get; set; }

@@ -65,8 +65,8 @@ namespace StocksProcessing.API.Controllers
 
             var response = new ApiResponse<IList<StocksCurrentDaySummary>>();
 
-            try
-            {
+            //try
+            //{
 
                 var result = await _dbContext
                     .LoadStoredProcedure("dbo.spGetDailyStockSummary")
@@ -75,12 +75,12 @@ namespace StocksProcessing.API.Controllers
                     .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
 
                 response.Response = result;
-            }
+            //}
 
-            catch (Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-            }
+            //catch (Exception ex)
+            //{
+                //response.ErrorMessage = ex.Message;
+            //}
 
             return response;
 

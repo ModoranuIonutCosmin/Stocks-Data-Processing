@@ -21,6 +21,9 @@ namespace StocksProccesing.Relational.Repositories
         => _dbContext.Transactions
                .First(e => e.Id == id);
 
+        public ApplicationUser FindUserById(string id)
+            => _dbContext.Users.First(u => u.Id == id);
+
         public List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user)
         {
             return _dbContext.Transactions
@@ -54,10 +57,12 @@ namespace StocksProccesing.Relational.Repositories
 
             return true;
         }
-        public async Task CloseUserTransaction(ApplicationUser user, StocksTransaction transaction,
+        public async Task CloseUserTransaction(StocksTransaction transaction,
             decimal profitOrLoss)
         {
-            user.Capital = transaction.InvestedAmount + profitOrLoss;
+            ApplicationUser user = FindUserById(transaction.ApplicationUserId);
+
+            user.Capital += transaction.InvestedAmount + profitOrLoss;
             transaction.Open = false;
 
             await _dbContext.SaveChangesAsync();

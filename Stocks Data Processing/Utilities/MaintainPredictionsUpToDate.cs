@@ -4,6 +4,7 @@ using Stocks.General;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
+using StocksProccesing.Relational.Repositories;
 using StocksProcessing.ML;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,10 @@ namespace Stocks_Data_Processing.Utilities
     {
         private readonly StocksMarketContext _stocksContext;
         private readonly IPredictionsService _predictionsService;
+        private readonly IStockPricesRepository stockPricesRepository;
+        private readonly ICompaniesRepository companiesRepository;
         private readonly ILogger<MaintainPredictionsUpToDate> _logger;
-
+            
         #region Private members - Variables
 
         /// <summary>
@@ -32,10 +35,14 @@ namespace Stocks_Data_Processing.Utilities
 
         public MaintainPredictionsUpToDate(StockContextFactory stockContextFactory,
             IPredictionsService predictionsService,
+            IStockPricesRepository stockPricesRepository,
+            ICompaniesRepository companiesRepository,
             ILogger<MaintainPredictionsUpToDate> logger)
         {
             _stocksContext = stockContextFactory.Create();
             _predictionsService = predictionsService;
+            this.stockPricesRepository = stockPricesRepository;
+            this.companiesRepository = companiesRepository;
             _logger = logger;
         }
 
@@ -47,36 +54,36 @@ namespace Stocks_Data_Processing.Utilities
 
         public async Task UpdatePredictionsAsync()
         {
-            var tasks = new List<Task<List<PredictionResult>>>();
+            //var tasks = new List<Task<List<PredictionResult>>>();
 
             _logger.LogWarning($"[Predictions maintan task] Started prediction refreshing! {DateTimeOffset.UtcNow}");
 
-            _stocksContext.EnsureCompaniesDataExists();
+            companiesRepository.EnsureCompaniesDataExists();
 
             foreach (var ticker in WatchList)
             {
-                tasks.Add(GatherPredictions(ticker));
+                var predictions = (await GatherPredictions(ticker))
+                    .Select(e => new StocksPriceData()
+                    {
+                        Price = (decimal)Math.Round(e.Price, 2),
+                        CompanyTicker = e.Ticker,
+                        Prediction = true,
+                        Date = e.Date
+                    }).ToList();
+
+                stockPricesRepository.RemoveAllPricePredictionsForTicker(ticker);
+
+                await stockPricesRepository.AddPricesDataAsync(predictions);
+
+                await _stocksContext.SaveChangesAsync();
             }
-
-            var results = (await Task.WhenAll(tasks)).SelectMany(x => x)
-                .Select(e => new StocksPriceData()
-                {
-                    Price = (decimal)Math.Round(e.Price, 2),
-                    CompanyTicker = e.Ticker,
-                    Prediction = true,
-                    Date = e.Date
-                }).ToList();
-
-            _stocksContext.PricesData.RemoveRange(_stocksContext.PricesData.Where(k => k.Prediction));
-            await _stocksContext.PricesData.AddRangeAsync(results);
-            await _stocksContext.SaveChangesAsync();
-
             _logger.LogWarning($"[Predictions maintan task] Done prediction refreshing! { DateTimeOffset.UtcNow }");
+
         }
 
         public async Task<List<PredictionResult>> GatherPredictions(string ticker)
         {
-            var predictionsChunk = (await _predictionsService.Predict(ticker));
+            var predictionsChunk = await _predictionsService.Predict(ticker);
 
             var max = predictionsChunk.Max();
             var min = predictionsChunk.Min();
@@ -84,7 +91,7 @@ namespace Stocks_Data_Processing.Utilities
 
             if (max.Price > 100000 || min.Price <= 0)
             {
-                _logger.LogError($"Bad values, Was {max.Price} for max and {min.Price} for min!");
+                _logger.LogError($"Bad values, they wewre {max.Price} for max and {min.Price} for min!");
                 return new List<PredictionResult>();
             }
             else

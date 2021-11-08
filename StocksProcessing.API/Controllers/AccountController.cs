@@ -147,15 +147,13 @@ namespace StocksProcessing.API.Controllers
                 return errorResponse;
             }
 
-            // Is it an email?
+            //Este email?
             var isEmail = loginData.UserNameOrEmail.Contains("@");
 
-            // Get the user details
-            var user = isEmail ?
-                // Find by email
-                await _userManager.FindByEmailAsync(loginData.UserNameOrEmail) :
-                // Find by username
-                await _userManager.FindByNameAsync(loginData.UserNameOrEmail);
+            //Cauta userul dupa username sau email
+            var user = isEmail ? await _userManager.FindByEmailAsync(loginData.UserNameOrEmail)
+                : await _userManager.FindByNameAsync(loginData.UserNameOrEmail);
+
 
             if (user == null)
             {

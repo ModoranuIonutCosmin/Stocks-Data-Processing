@@ -134,7 +134,7 @@ namespace StocksProcessing.API.Controllers
 
                 var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
-                if (userRequesting.UserOwnsTheTransaction(transaction))
+                if (!userRequesting.UserOwnsTheTransaction(transaction))
                 {
 
                     response.ErrorMessage = "User is unauthorized!";
@@ -146,7 +146,7 @@ namespace StocksProcessing.API.Controllers
 
                 decimal profitOrLoss = _stockMarketProfitCalculator.CalculateTransactionProfit(transaction);
 
-                await _userRepository.CloseUserTransaction(userRequesting, transaction, profitOrLoss);
+                await _userRepository.CloseUserTransaction(transaction, profitOrLoss);
             }
 
             catch (Exception ex)

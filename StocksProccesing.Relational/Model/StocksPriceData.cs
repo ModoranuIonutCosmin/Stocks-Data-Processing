@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StocksProccesing.Relational.Model
 {
@@ -9,6 +10,7 @@ namespace StocksProccesing.Relational.Model
         public int Id { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(20, 4)")]
         public decimal Price { get; set; }
 
         [Required]

@@ -4,7 +4,9 @@ using Microsoft.Extensions.Logging;
 using Quartz.Impl;
 using Stocks_Data_Processing.QuartzDI;
 using Stocks_Data_Processing.Utilities;
+using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Repositories;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -31,6 +33,7 @@ namespace Stocks_Data_Processing
             builder.RegisterType<StocksDataHandlingLogic>().As<IStocksDataHandlingLogic>();
 
             builder.RegisterType<StockContextFactory>().SingleInstance();
+            builder.RegisterType<StocksMarketContext>().SingleInstance();
 
             builder.Register(handler => LoggerFactory.Create(ConfigureLogging))
                 .As<ILoggerFactory>()
@@ -48,6 +51,21 @@ namespace Stocks_Data_Processing
             builder.Register(c => new HttpClient())
                    .As<HttpClient>()
                    .SingleInstance();
+
+            /// Repositories, calculators
+            /// 
+
+
+            builder.RegisterType<UsersRepository>().As<IUsersRepository>();
+            builder.RegisterType<OrdersRepository>().As<IOrdersRepository>();
+            builder.RegisterType<TransactionsRepository>().As<ITransactionsRepository>();
+            builder.RegisterType<StockPricesRepository>().As<IStockPricesRepository>();
+            builder.RegisterType<CompaniesRepository>().As<ICompaniesRepository>();
+            builder.RegisterType<StockMarketDisplayPriceCalculator>().As<IStockMarketDisplayPriceCalculator>();
+            builder.RegisterType<StockMarketOrderTaxesCalculator>().As<IStockMarketOrderTaxesCalculator>();
+            builder.RegisterType<PricesDisparitySimulator>().As<IPricesDisparitySimulator>();
+            builder.RegisterType<StockMarketProfitCalculator>().As<IStockMarketProfitCalculator>();
+            builder.RegisterType<TransactionSummaryCalculator>().As<ITransactionSummaryCalculator>();
 
             ///Quartz net
 

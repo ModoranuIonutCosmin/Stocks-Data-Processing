@@ -2,7 +2,9 @@
 using Quartz;
 using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
+using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,12 +14,21 @@ namespace Stocks_Data_Processing.Utilities
     public class MaintainTaxesCollected : IMaintainTaxesCollected, IJob
     {
         private readonly StocksMarketContext _dbContext;
+        private readonly IStockMarketOrderTaxesCalculator taxesCalculator;
+        private readonly IUsersRepository usersRepository;
+        private readonly ITransactionsRepository transactionsRepository;
         private readonly ILogger<MaintainTaxesCollected> _logger;
 
         public MaintainTaxesCollected(StockContextFactory contextFactory,
+            IStockMarketOrderTaxesCalculator taxesCalculator,
+            IUsersRepository usersRepository,
+            ITransactionsRepository transactionsRepository,
             ILogger<MaintainTaxesCollected> logger)
         {
             _dbContext = contextFactory.Create();
+            this.taxesCalculator = taxesCalculator;
+            this.usersRepository = usersRepository;
+            this.transactionsRepository = transactionsRepository;
             _logger = logger;
         }
 
@@ -37,9 +48,8 @@ namespace Stocks_Data_Processing.Utilities
                 lastGlobalUpdate = maintananceActionsData.Last().LastFinishedDate;
             }
 
-            var allTaxableTransactions = _dbContext
-                .Transactions
-                .Where(e => e.Open && (!e.IsBuy || e.Leverage > 1))
+            var allTaxableTransactions = transactionsRepository.GetOpenTransactions()
+                .Where(e => !e.IsBuy || e.Leverage > 1)
                 .ToList();
 
             foreach (var transaction in allTaxableTransactions)
@@ -47,25 +57,22 @@ namespace Stocks_Data_Processing.Utilities
                 var dateTransactionUpdated = lastGlobalUpdate < transaction.Date ? transaction.Date
                                                                                  : lastGlobalUpdate;
 
-                var workDays = DateTimeOffsetHelpers.GetBusinessDays(dateTransactionUpdated, currentDate);
-                var weekEndDays = (decimal)currentDate.Subtract(dateTransactionUpdated).TotalDays - workDays;
+                var weekDays = DateTimeOffsetHelpers.GetBusinessDays(dateTransactionUpdated, currentDate);
+                var weekendDays = (decimal)currentDate.Subtract(dateTransactionUpdated).TotalDays - weekDays;
 
-                //dangerous cast
+                var borrowedMoney = transaction.Leverage * transaction.InvestedAmount - transaction.InvestedAmount;
 
-                var interestAmount = transaction.IsBuy ? TaxesConfig.BuyInterestRate : TaxesConfig.SellInterestRate;
+                var weekdayTax = taxesCalculator.CalculateWeekDayTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
+                var weekendTax = taxesCalculator.CalculateWeekEndTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
 
-                var weekdayTax = ((interestAmount + BankExchangeConsts.LiborOneMonthRatio) / 365 * transaction.InvestedAmount)
-                .TruncateToDecimalPlaces(3);
-                var weekEndTax = weekdayTax * TaxesConfig.WeekendOvernightMultiplier;
+                var requestingUser = usersRepository.FindUserById(transaction.ApplicationUserId);
 
-                var requestingUser = _dbContext.Users
-                    .Where(e => e.Id == transaction.ApplicationUserId)
-                    .First();
-
-                requestingUser.Capital -= workDays * weekdayTax + weekEndDays * weekEndTax;
+                requestingUser.Capital -= weekDays * weekdayTax + weekendDays * weekendTax;
 
                 await _dbContext.SaveChangesAsync();
             }
+
+            //Flaw aici 
 
             _logger.LogWarning($"[Tax collection task] Done collecting taxes! {DateTimeOffset.UtcNow}");
         }

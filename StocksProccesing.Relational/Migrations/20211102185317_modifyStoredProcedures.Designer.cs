@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20211102185317_modifyStoredProcedures")]
+    partial class modifyStoredProcedures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,7 +161,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Capital")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -276,7 +278,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CurrencyTicker")
                         .HasMaxLength(15)
@@ -312,7 +314,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -337,7 +339,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("InvestedAmount")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsBuy")
                         .HasColumnType("bit");
@@ -349,10 +351,10 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("StopLossAmount")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TakeProfitAmount")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ticker")
                         .HasMaxLength(10)
@@ -362,10 +364,10 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("varchar(40)");
 
                     b.Property<decimal>("UnitBuyPriceThen")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UnitSellPriceThen")
-                        .HasColumnType("decimal(20,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

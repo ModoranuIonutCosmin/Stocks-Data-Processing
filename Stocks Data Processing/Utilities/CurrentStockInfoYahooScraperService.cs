@@ -4,6 +4,7 @@ using Stocks.General.ExtensionMethods;
 
 using Stocks_Data_Processing.Models;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -101,17 +102,17 @@ namespace Stocks_Data_Processing.Utilities
             ///Salveaza continutul elementului HTML ce contine valoarea
             ///<remarks>Va avea formatul 100.40</remarks>
             string value = htmlElements.First().InnerText;
-            value = value.Replace('.', ',');
 
             //Parseaza valoarea ca double si salveaza statusul in aceasta variabila
             //iar valoarea, in caz de success in currentPrice
-            var successfulParse = decimal.TryParse(value, out decimal currentPrice);
+            var successfulParse = decimal.TryParse(value, NumberStyles.Number, 
+                new CultureInfo("en-US"), out decimal currentPrice);
 
             if (!successfulParse)
             //Daca nu s-a parsat cu success...
             {
                 // ...asociaza exceptie noua si returneaza statusul.
-                stocksInfoResponse.Exception = new Exception("Double parsing failed");
+                stocksInfoResponse.Exception = new Exception("Decimal parsing failed");
             }
             else
             //Altfel...
