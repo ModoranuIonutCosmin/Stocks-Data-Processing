@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Quartz;
+using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
@@ -7,7 +8,7 @@ namespace Stocks_Data_Processing.Utilities
     /// datele obtinute printr-un serviciu ce implementeaza 
     /// interfata <see cref="ICurrentStockInfoDataScraperService"/>
     /// </summary>
-    public interface IMaintainCurrentStockData
+    public interface IMaintainCurrentStockData : IJob
     {
         Task UpdateStockDataAsync();
     }

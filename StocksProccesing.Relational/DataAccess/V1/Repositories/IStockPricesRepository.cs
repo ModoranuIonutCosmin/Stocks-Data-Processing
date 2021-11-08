@@ -1,11 +1,11 @@
-﻿using StocksProccesing.Relational.DataAccess;
+﻿using StocksProccesing.Relational.Interfaces;
 using StocksProccesing.Relational.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public interface IStockPricesRepository : IEFRepository<StocksMarketContext>
+    public interface IStockPricesRepository : IRepository<StocksPriceData, int>
     {
         Task AddPricesDataAsync(List<StocksPriceData> elements);
         decimal GetCurrentUnitPriceByStocksCompanyTicker(string ticker);

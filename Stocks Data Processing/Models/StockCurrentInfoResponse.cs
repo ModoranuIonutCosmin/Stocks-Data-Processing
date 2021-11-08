@@ -23,7 +23,7 @@ namespace Stocks_Data_Processing.Models
         /// <summary>
         /// Simbolul unei companii pe piata de stock-uri
         /// </summary>
-        public StocksTicker Ticker { get; set; }
+        public string Ticker { get; set; }
 
         /// <summary>
         /// Pretul de pornire a valorii stock-ului pe acea zi

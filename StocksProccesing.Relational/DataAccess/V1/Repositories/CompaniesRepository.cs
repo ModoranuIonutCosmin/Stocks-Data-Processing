@@ -1,5 +1,6 @@
 ﻿using Stocks.General;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,10 @@ using System.Linq;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public class CompaniesRepository : ICompaniesRepository
+    public class CompaniesRepository : Repository<Company, int>, ICompaniesRepository
     {
-        public StocksMarketContext _dbContext { get; set; }
-
-        public CompaniesRepository(StocksMarketContext dbContext)
+        public CompaniesRepository(StocksMarketContext context) : base(context)
         {
-            _dbContext = dbContext;
         }
 
         public Company GetCompanyData(string ticker)

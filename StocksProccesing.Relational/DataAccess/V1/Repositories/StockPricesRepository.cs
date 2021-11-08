@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stocks.General.ExtensionMethods;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,11 @@ using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public class StockPricesRepository : IStockPricesRepository
+    public class StockPricesRepository : Repository<StocksPriceData, int>,
+        IStockPricesRepository
     {
-        public StocksMarketContext _dbContext { get; set; }
-
-        public StockPricesRepository(StocksMarketContext dbContext)
+        public StockPricesRepository(StocksMarketContext context) : base(context)
         {
-            _dbContext = dbContext;
         }
 
         public decimal GetCurrentUnitPriceByStocksCompanyTicker(string ticker)

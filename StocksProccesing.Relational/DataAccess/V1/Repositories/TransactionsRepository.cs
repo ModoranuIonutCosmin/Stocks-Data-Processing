@@ -2,17 +2,15 @@
 using System.Linq;
 using System.Collections.Generic;
 using StocksProccesing.Relational.Model;
+using StocksProccesing.Relational.DataAccess.V1;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public class TransactionsRepository : ITransactionsRepository
+    public class TransactionsRepository : Repository<StocksTransaction, int>,
+        ITransactionsRepository
     {
-
-        public StocksMarketContext _dbContext { get; set; }
-
-        public TransactionsRepository(StocksMarketContext dbContext)
+        public TransactionsRepository(StocksMarketContext context) : base(context)
         {
-            _dbContext = dbContext;
         }
 
         public List<StocksTransaction> GetOpenTransactions()

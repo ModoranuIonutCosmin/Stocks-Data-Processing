@@ -16,12 +16,12 @@ using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 // For more information on enabling Web API for empty
 // projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StocksProcessing.API.Controllers
+namespace StocksProcessing.API.Controllers.v1
 {
-    [Route("api/v1/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     [AuthorizeToken]
-    public class PortofolioController : ControllerBase
+    public class PortofolioController : BaseController
     {
         private readonly IStockMarketDisplayPriceCalculator _priceCalculator;
         private readonly IStockMarketOrderTaxesCalculator _taxesCalculator;

@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stocks.General", "Stocks.Ge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StocksProcessing.API", "StocksProcessing.API\StocksProcessing.API.csproj", "{9BF77E45-71F6-4EA8-B936-83F2F5A833BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StocksFinalSolution.BusinessLogic", "StocksFinalSolution.BusinessLogic\StocksFinalSolution.BusinessLogic.csproj", "{32DFAE8E-D4B5-4BC0-BDC2-D48CDD2F0C06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StocksFinalSolution.BusinessLogic", "StocksFinalSolution.BusinessLogic\StocksFinalSolution.BusinessLogic.csproj", "{32DFAE8E-D4B5-4BC0-BDC2-D48CDD2F0C06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scheduled Tasks", "Scheduled Tasks", "{951E7497-FAA2-437A-9E1B-BD26910AE678}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A70B178-2371-4636-9458-E51357F4B547} = {951E7497-FAA2-437A-9E1B-BD26910AE678}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4671669B-1F9B-416F-85A6-56B146512255}

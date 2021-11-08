@@ -17,7 +17,8 @@ namespace Stocks_Data_Processing.Utilities
     public class CurrentStockInfoGoogleScraperService : ICurrentStockInfoGoogleScraperService
     {
         #region Private members
-        private readonly HttpClient httpClient;
+        private readonly IScraperService scraper;
+        private const string GOOGLE_LINK = "https://www.google.com/finance?q=";
         #endregion
 
         #region Constructor
@@ -25,9 +26,10 @@ namespace Stocks_Data_Processing.Utilities
         /// 
         /// </summary>
         /// <param name="httpClient">Client ce face diverse request-uri HTTP</param>
-        public CurrentStockInfoGoogleScraperService(HttpClient httpClient)
+        public CurrentStockInfoGoogleScraperService(HttpClient httpClient,
+            IScraperService scraper)
         {
-            this.httpClient = httpClient;
+            this.scraper = scraper;
         }
         #endregion
 
@@ -42,30 +44,17 @@ namespace Stocks_Data_Processing.Utilities
         /// <returns>Obiect indicand success-ul si rezultatul metodei</returns>
         public async Task<StockCurrentInfoResponse> GatherAsync(string ticker)
         {
-            var pageSource = default(string);
 
             var stocksInfoResponse = new StockCurrentInfoResponse();
 
-            if (!Enum.TryParse(ticker, out StocksTicker tickerEnum))
-            //Daca simbolul companiei nu exista in lista tickerelor ce ne intereseaza...
-            {
-                // ...asociaza exceptie noua si returneaza statusul.
-                stocksInfoResponse.Exception = new Exception("Invalid ticker option");
-
-                return stocksInfoResponse;
-            }
-
-            //Asociaza situatiei simbolul companiei pentru care este observata.
-            stocksInfoResponse.Ticker = tickerEnum;
+            stocksInfoResponse.Ticker = ticker;
 
             try
             {
-                //Incearca sa faca GET la sursa paginii pe care avem informatiile necesare...
-                var response = await httpClient.GetAsync(BuildResourceLink(ticker));
-
-                response.EnsureSuccessStatusCode();
-
-                pageSource = await response.Content.ReadAsStringAsync();
+                stocksInfoResponse.Current =
+                   await scraper.GetNumericFieldValueByHtmlClassesCombination(BuildResourceLink(ticker),
+                   new() { "YMlKec", "fxKbKc" });
+                stocksInfoResponse.DateTime = DateTimeOffset.UtcNow.RoundDown(TimeSpan.FromMinutes(1));
             }
 
             catch (Exception ex)
@@ -73,49 +62,6 @@ namespace Stocks_Data_Processing.Utilities
                 //Daca esueaza GET-ul, asociaza exceptia si returneaza statusul.
                 stocksInfoResponse.Exception = ex;
                 return stocksInfoResponse;
-            }
-
-            //Asociaza data la care s-au obtinut valorile in format UTC.
-            stocksInfoResponse.DateTime = DateTimeOffset.UtcNow.RoundDown(TimeSpan.FromMinutes(1));
-
-            //Incarca documentul html in memorie.
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(pageSource);
-
-            //Si apoi cauta elementul ce contine pretul unui share
-            //in functie de unele trasaturi care identifica unic elementul.
-            var htmlElements = htmlDoc.DocumentNode.
-                    Descendants(0)
-                .Where(n => n.HasClass("YMlKec") &&
-                            n.HasClass("fxKbKc"));
-
-            if (!htmlElements.Any())
-            //Daca nu gasim vreun element...
-            {
-                // ...asociaza exceptie noua si returneaza statusul.
-                stocksInfoResponse.Exception = new Exception("Couldn't find the html element");
-                return stocksInfoResponse;
-            }
-
-            ///Salveaza continutul elementului HTML ce contine valoarea
-            ///<remarks>Va avea formatul $100.40</remarks>
-            string value = htmlElements.First().InnerText;
-
-            value = value.Trim('$');
-
-            //Parseaza valoarea ca double si salveaza statusul in aceasta variabila
-            //iar valoarea, in caz de success in currentPrice.
-            var successfulParse = decimal.TryParse(value, NumberStyles.Currency,
-                new CultureInfo("en-US"), out decimal currentPrice);
-
-            if (!successfulParse)
-            {
-                stocksInfoResponse.Exception = new Exception("Decimal parsing failed");
-            }
-            else
-            {
-                //... salveaza valoarea astfel obtinuta in obiectul rezultant.
-                stocksInfoResponse.Current = currentPrice;
             }
 
             return stocksInfoResponse;
@@ -131,7 +77,7 @@ namespace Stocks_Data_Processing.Utilities
         /// <returns></returns>
         public string BuildResourceLink(string ticker)
         {
-            return $"https://www.google.com/finance?q={ticker}";
+            return $"{GOOGLE_LINK}{ticker}";
         }
         #endregion
     }

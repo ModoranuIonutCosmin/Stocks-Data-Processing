@@ -4,6 +4,7 @@ using StocksProccesing.Relational.Model;
 using StocksProccesing.Relational.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {
@@ -22,9 +23,9 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             this.displayPriceCalculator = displayPriceCalculator;
         }
 
-        public List<CompanyTransactionsSummary> AggregateOpenTransactionsDataByCompaniesInfo(List<StocksTransaction> transactions)
+        public async Task<List<CompanyTransactionsSummary>> AggregateOpenTransactionsDataByCompaniesInfoAsync(List<StocksTransaction> transactions)
         {
-            var companiesData = companiesRepository.GetAllStocksCompanies();
+            var companiesData = await companiesRepository.GetAllAsync();
 
             var allOpenTransactions = transactions
                 .Select(e =>

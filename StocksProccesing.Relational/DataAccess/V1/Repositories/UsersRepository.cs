@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -8,21 +9,16 @@ using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public class UsersRepository : IUsersRepository
+    public class UsersRepository : Repository<ApplicationUser, string>, IUsersRepository
     {
-        public StocksMarketContext _dbContext { get; set; }
-
-        public UsersRepository(StocksMarketContext dbContext)
+        public UsersRepository(StocksMarketContext context) : base(context)
         {
-            _dbContext = dbContext;
+
         }
 
         public StocksTransaction GetTransactionInfo(int id)
         => _dbContext.Transactions
                .First(e => e.Id == id);
-
-        public ApplicationUser FindUserById(string id)
-            => _dbContext.Users.First(u => u.Id == id);
 
         public List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user)
         {
@@ -60,7 +56,7 @@ namespace StocksProccesing.Relational.Repositories
         public async Task CloseUserTransaction(StocksTransaction transaction,
             decimal profitOrLoss)
         {
-            ApplicationUser user = FindUserById(transaction.ApplicationUserId);
+            ApplicationUser user = await GetByIdAsync(transaction.ApplicationUserId);
 
             user.Capital += transaction.InvestedAmount + profitOrLoss;
             transaction.Open = false;

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate, IJob
+    public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
     {
         private readonly StocksMarketContext _stocksContext;
         private readonly IPredictionsService _predictionsService;

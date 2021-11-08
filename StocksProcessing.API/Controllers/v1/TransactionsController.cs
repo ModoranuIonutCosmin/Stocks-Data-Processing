@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StocksProcessing.API.Controllers
+namespace StocksProcessing.API.Controllers.v1
 {
-    [Route("api/v1/[controller]")]
     [AuthorizeToken]
     [ApiController]
-    public class TransactionsController : ControllerBase
+    [ApiVersion("1.0")]
+    public class TransactionsController : BaseController
     {
         private readonly IUsersRepository _userRepository;
         private readonly ITransactionSummaryCalculator _transactionSummaryCalculator;
@@ -64,8 +64,8 @@ namespace StocksProcessing.API.Controllers
                     .GetTransactionsListForUser(userRequesting);
 
 
-                transactionsSummary = _transactionSummaryCalculator
-                    .AggregateOpenTransactionsDataByCompaniesInfo(openTransactionsList);
+                transactionsSummary = await _transactionSummaryCalculator
+                    .AggregateOpenTransactionsDataByCompaniesInfoAsync(openTransactionsList);
             }
             catch (Exception e)
             {

@@ -18,11 +18,11 @@ using Stocks.General.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StocksProcessing.API.Controllers
+namespace StocksProcessing.API.Controllers.v1
 {
-    [Route("api/v1/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
-    public class StocksInfoController : ControllerBase
+    public class StocksInfoController : BaseController
     {
         private readonly StocksMarketContext _dbContext;
 

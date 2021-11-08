@@ -1,15 +1,13 @@
-﻿using StocksProccesing.Relational.DataAccess;
+﻿using StocksProccesing.Relational.Interfaces;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public interface IUsersRepository : IEFRepository<StocksMarketContext>
+    public interface IUsersRepository : IRepository<ApplicationUser, string>
     {
         Task CloseUserTransaction(StocksTransaction transaction, decimal profitOrLoss);
-        ApplicationUser FindUserById(string id);
         StocksTransaction GetTransactionInfo(int id);
         List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user);
         List<StocksTransaction> GetTransactionsListForUserByTicker(ApplicationUser user, string ticker);

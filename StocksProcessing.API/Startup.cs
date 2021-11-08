@@ -1,14 +1,10 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
@@ -19,10 +15,7 @@ using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Email;
 using StocksProcessing.API.Email.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StocksProcessing.API
 {
@@ -43,6 +36,13 @@ namespace StocksProcessing.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
+            });
+
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
             });
 
             services.AddDbContext<StocksMarketContext>(options =>
@@ -132,6 +132,8 @@ namespace StocksProcessing.API
 
             app.UseAuthorization();
             app.UseAuthentication();
+
+
 
             app.UseEndpoints(endpoints =>
             {

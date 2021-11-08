@@ -13,7 +13,7 @@ namespace Stocks_Data_Processing.Utilities
     /// Serviciu ce updateaza valorile stock-urilor urmarite in baza de date.
     /// </summary>
     /// <returns></returns>
-    public class MaintainCurrentStockData : IMaintainCurrentStockData, IJob
+    public class MaintainCurrentStockData : IMaintainCurrentStockData
     {
         #region Private members
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
@@ -78,8 +78,6 @@ namespace Stocks_Data_Processing.Utilities
             //Adauga aceste randuri in tabel.
             await _stocksContext.AddRangeAsync(stocksTableEntries);
 
-            //Sterge toate predictiile mai vechi decat cea mai noua valoare
-            //realizata in acest moment.
             var oldPredictions = _stocksContext.PricesData
                 .Where(p => (p.Prediction && p.Date < DateTimeOffset.UtcNow));
 

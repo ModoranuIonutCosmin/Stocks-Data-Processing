@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Quartz;
+using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public interface IMaintainTaxesCollected
+    public interface IMaintainTaxesCollected : IJob
     {
         Task CollectTaxes();
     }

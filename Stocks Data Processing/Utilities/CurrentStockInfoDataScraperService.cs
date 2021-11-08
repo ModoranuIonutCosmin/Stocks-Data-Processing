@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Stocks.General;
+using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Models;
 using System;
 using System.Collections.Generic;
@@ -24,20 +25,6 @@ namespace Stocks_Data_Processing.Utilities
         private readonly ILogger<CurrentStockInfoDataScraperService> _logger;
 
         #endregion
-
-
-        #region Private members - Variables
-
-        /// <summary>
-        /// Tine intr-o variabila statica lista companiilor pe care le
-        /// urmarim spre a le updata datele in BD.
-        /// See creaza pornind de la toate field-urile enumeratiei <see cref="StocksTicker"/>
-        /// </summary>
-        private static readonly List<string> WatchList
-            = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                                .Select(s => s.ToString()).ToList();
-        #endregion
-
 
         #region Constructor
 
@@ -101,6 +88,7 @@ namespace Stocks_Data_Processing.Utilities
         public async Task<IList<StockCurrentInfoResponse>> GatherAllAsync()
         {
             var GatherTasks = new List<Task<StockCurrentInfoResponse>>();
+            var WatchList = TickersHelpers.GatherAllTickers();
 
             foreach (var ticker in WatchList)
             //Pentru fiecare companie pe care o urmarim...

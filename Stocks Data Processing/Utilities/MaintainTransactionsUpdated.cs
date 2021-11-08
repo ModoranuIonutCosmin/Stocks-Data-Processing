@@ -1,18 +1,14 @@
-﻿using Quartz;
-using System.Linq;
-using System.Threading.Tasks;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Helpers;
-using Stocks.General.ConstantsConfig;
-using Stocks.General.ExtensionMethods;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using Microsoft.Extensions.Logging;
+using Quartz;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Repositories;
+using System;
+using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public class MaintainTransactionsUpdated : IJob, IMaintainTransactionsUpdated
+    public class MaintainTransactionsUpdated : IMaintainTransactionsUpdated
     {
         private readonly StocksMarketContext _dbContext;
         private readonly ILogger<MaintainTransactionsUpdated> _logger;

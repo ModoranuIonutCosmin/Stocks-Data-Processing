@@ -1,16 +1,16 @@
 ﻿using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1;
 using StocksProccesing.Relational.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public class OrdersRepository : IOrdersRepository
+    public class OrdersRepository : Repository<Order, int>, IOrdersRepository
     {
-        public StocksMarketContext _dbContext { get; set; }
-
-        public OrdersRepository(StocksMarketContext dbContext)
+        public OrdersRepository(StocksMarketContext context) : base(context)
         {
-            _dbContext = dbContext;
+
         }
 
         public async Task PlaceRefillBalanceOrder(ApplicationUser user, Order order)

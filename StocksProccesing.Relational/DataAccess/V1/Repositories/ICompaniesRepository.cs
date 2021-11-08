@@ -1,10 +1,10 @@
-﻿using StocksProccesing.Relational.DataAccess;
+﻿using StocksProccesing.Relational.Interfaces;
 using StocksProccesing.Relational.Model;
 using System.Collections.Generic;
 
 namespace StocksProccesing.Relational.Repositories
 {
-    public interface ICompaniesRepository : IEFRepository<StocksMarketContext>
+    public interface ICompaniesRepository : IRepository<Company, int>
     {
         void EnsureCompaniesDataExists();
         List<Company> GetAllStocksCompanies();

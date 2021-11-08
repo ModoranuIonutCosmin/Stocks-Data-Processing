@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public class MaintainTaxesCollected : IMaintainTaxesCollected, IJob
+    public class MaintainTaxesCollected : IMaintainTaxesCollected
     {
         private readonly StocksMarketContext _dbContext;
         private readonly IStockMarketOrderTaxesCalculator taxesCalculator;
@@ -65,7 +65,7 @@ namespace Stocks_Data_Processing.Utilities
                 var weekdayTax = taxesCalculator.CalculateWeekDayTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
                 var weekendTax = taxesCalculator.CalculateWeekEndTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
 
-                var requestingUser = usersRepository.FindUserById(transaction.ApplicationUserId);
+                var requestingUser = await usersRepository.GetByIdAsync(transaction.ApplicationUserId);
 
                 requestingUser.Capital -= weekDays * weekdayTax + weekendDays * weekendTax;
 

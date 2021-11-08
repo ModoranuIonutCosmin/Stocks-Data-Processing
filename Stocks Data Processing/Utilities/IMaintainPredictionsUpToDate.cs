@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using Quartz;
+using System.Threading.Tasks;
 
 namespace Stocks_Data_Processing.Utilities
 {
-    public interface IMaintainPredictionsUpToDate
+    public interface IMaintainPredictionsUpToDate : IJob
     {
         Task UpdatePredictionsAsync();
     }

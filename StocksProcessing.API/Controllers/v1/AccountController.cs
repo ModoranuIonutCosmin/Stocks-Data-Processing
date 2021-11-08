@@ -8,21 +8,17 @@ using StocksProcessing.API.Auth;
 using StocksProcessing.API.Auth.Dtos;
 using StocksProcessing.API.Email.Interfaces;
 using StocksProcessing.API.Payloads;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace StocksProcessing.API.Controllers
+namespace StocksProcessing.API.Controllers.v1
 {
-    [Route("api/v1/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    [ApiVersion("1.0")]
+    public class AccountController : BaseController
     {
 
         private const string EmailNotConfirmedErrorMessage = "Email is not confirmed yet!";
