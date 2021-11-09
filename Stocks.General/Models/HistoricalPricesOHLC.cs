@@ -2,7 +2,7 @@
 
 namespace Stocks.General.Models
 {
-    public class AllStocksHistoricalPricesDaily
+    public class HistoricalPricesOHLC
     {
         public string Ticker { get; set; }
         public string Name { get; set; }

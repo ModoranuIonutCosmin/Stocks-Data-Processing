@@ -36,6 +36,8 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
             await _dbContext.PricesData.AddRangeAsync(elements);
         }
 
+        
+
         public void RemoveAllPricePredictionsForTicker(string ticker)
         {
             _dbContext.PricesData.RemoveRange(_dbContext.PricesData.Where(k => k.Prediction

@@ -33,5 +33,7 @@ namespace StocksProccesing.Relational.Model
 
         [MaxLength(10)]
         public string CompanyTicker { get; set; }
+
+        public Company Company { get; set; }
     }
 }

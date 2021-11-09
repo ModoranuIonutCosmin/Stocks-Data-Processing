@@ -1,5 +1,7 @@
 ﻿using StocksProccesing.Relational.Model;
 using System;
+using System.Collections.Generic;
+using Stocks.General.ExtensionMethods;
 using System.Linq;
 
 namespace StocksProccesing.Relational.DataAccess.V1.Repositories
@@ -22,6 +24,12 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
                 .LastOrDefault(e => e.CompanyTicker == ticker && e.Period == interval.Ticks);
 
             return result;
+        }
+
+        public List<StocksOHLC> GetLastSummaryEntryForAll(TimeSpan interval)
+        {
+            return TickersHelpers.GatherAllTickers()
+                .Select(t => GetLastSummaryEntry(t, interval)).ToList();
         }
     }
 }

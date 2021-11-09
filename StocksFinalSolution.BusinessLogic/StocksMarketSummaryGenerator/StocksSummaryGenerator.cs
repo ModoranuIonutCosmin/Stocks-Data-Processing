@@ -75,7 +75,9 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                 Ticker = ticker,
                 UrlLogo = companyInfo.UrlLogo,
                 Name = companyInfo.Name,
-                Trend = stocksTrendCalculator.CalculateTrend(groupedChunks.Last()),
+                Description = companyInfo.Description,
+                Period = interval.Ticks,
+                Trend = stocksTrendCalculator.CalculateTrendFromList(groupedChunks.Last()),
                 SellPrice = priceCalculator.CalculateSellPrice(currentPrice),
                 BuyPrice = priceCalculator.CalculateBuyPrice(currentPrice, 1),
                 Timepoints = groupedChunks.Select(e => new OHLCPriceValue()

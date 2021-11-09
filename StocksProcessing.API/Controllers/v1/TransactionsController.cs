@@ -56,7 +56,7 @@ namespace StocksProcessing.API.Controllers.v1
                 return response;
             }
 
-            List<CompanyTransactionsSummary> transactionsSummary;
+            List<TransactionSummary> transactionsSummary;
 
             try
             {
@@ -86,7 +86,6 @@ namespace StocksProcessing.API.Controllers.v1
         public async Task<ApiResponse<AllTransactionsDetailed>> GatherTransactionsParticularTicker(string ticker)
         {
             var response = new ApiResponse<AllTransactionsDetailed>();
-
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 

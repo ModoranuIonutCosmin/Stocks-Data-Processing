@@ -1,4 +1,5 @@
-﻿using StocksProccesing.Relational.Model;
+﻿using Stocks.General.Models;
+using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {
     public class StocksTrendCalculator : IStocksTrendCalculator
     {
-        public decimal CalculateTrend(List<StocksPriceData> lastRangePricesData)
+        public decimal CalculateTrendFromList(List<StocksPriceData> lastRangePricesData)
         {
             if (lastRangePricesData is null || lastRangePricesData.Count == 0)
             {
@@ -21,6 +22,16 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             }
 
             return 100 * (lastRangePricesData.Last().Price / lastRangePricesData.First().Price - 1);
+        }
+
+        public decimal CalculateTrendFromOHLC(OHLCPriceValue stocksOHLC)
+        {
+            return 100 * (stocksOHLC.CloseValue / stocksOHLC.OpenValue - 1);
+        }
+
+        public decimal CalculateTrendFromOHLC(StocksOHLC stocksOHLC)
+        {
+            return 100 * (stocksOHLC.CloseValue / stocksOHLC.OpenValue - 1);
         }
     }
 }

@@ -15,7 +15,8 @@ namespace Stocks_Data_Processing.Utilities
         private readonly IStocksSummaryGenerator stocksSummaryGenerator;
         private readonly IStockSummariesRepository stockSummariesRepository;
 
-        private List<TimeSpan> periods { get; set; } = new List<TimeSpan>{ TimeSpan.FromDays(1)};
+        private List<TimeSpan> periods { get; set; } = new List<TimeSpan>{ TimeSpan.FromMinutes(5), TimeSpan.FromDays(1),
+            TimeSpan.FromDays(7) };
        
         public MaintainPeriodicalSummaries(
             IStocksSummaryGenerator stocksSummaryGenerator,

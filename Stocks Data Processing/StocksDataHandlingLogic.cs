@@ -1,13 +1,5 @@
-﻿using Quartz;
-using Quartz.Impl.Triggers;
-using Stocks.General.ConstantsConfig;
-using Stocks_Data_Processing.Utilities;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
-using StocksProccesing.Relational.Model;
-using System;
+﻿using Stocks_Data_Processing.Utilities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
