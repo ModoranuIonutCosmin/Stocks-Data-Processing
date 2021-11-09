@@ -2,7 +2,6 @@
 using Quartz;
 using Stocks.General;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
 using StocksProccesing.Relational.Repositories;
 using StocksProcessing.ML;

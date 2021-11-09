@@ -35,9 +35,9 @@ namespace Stocks_Data_Processing
 
         public async Task StartAllFunctions()
         {
-            await Task.WhenAll(new List<Task> { _maintainCurrentStockData.Execute(), 
-                //StartPredictionEngine(),
-                StartTaxesCollecting(), StartTransactionsMonitoring() });
+            //await Task.WhenAll(new List<Task> { _maintainCurrentStockData.Execute(), 
+            //    //StartPredictionEngine(),
+            //    StartTaxesCollecting(), StartTransactionsMonitoring() });
 
             await Task.Delay(Timeout.InfiniteTimeSpan);
         }

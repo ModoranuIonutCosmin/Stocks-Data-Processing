@@ -3,6 +3,7 @@ using Quartz;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
+using StocksProccesing.Relational.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,11 +16,11 @@ namespace Stocks_Data_Processing.Utilities
     /// <returns></returns>
     public class MaintainCurrentStockData : IMaintainCurrentStockData
     {
+        private readonly ICompaniesRepository companiesRepository;
         #region Private members
+        private readonly IStockPricesRepository stockPricesRepository;
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
-        private readonly StockContextFactory _stocksContextFactory;
         private readonly ILogger<MaintainCurrentStockData> _logger;
-        private readonly StocksMarketContext _stocksContext;
         #endregion
 
         #region Constructor
@@ -31,14 +32,15 @@ namespace Stocks_Data_Processing.Utilities
         /// si returneaza rezultate legate de pretul stock-urilor</param>
         /// <param name="stocksContext">Context-ul bazei de date aferent aplicatiei.</param>
         public MaintainCurrentStockData(
+            ICompaniesRepository companiesRepository,
+            IStockPricesRepository stockPricesRepository,
             ICurrentStockInfoDataScraperService currentStockInfoDataScraper,
-            StockContextFactory stocksContextFactory,
             ILogger<MaintainCurrentStockData> logger)
         {
+            this.companiesRepository = companiesRepository;
+            this.stockPricesRepository = stockPricesRepository;
             _currentStockInfoDataScraper = currentStockInfoDataScraper;
-            _stocksContextFactory = stocksContextFactory;
             _logger = logger;
-            _stocksContext = _stocksContextFactory.Create();
         }
 
 
@@ -60,7 +62,7 @@ namespace Stocks_Data_Processing.Utilities
         {
             _logger.LogWarning($"[Current prices maintain task] Starting to update current stock data {DateTimeOffset.UtcNow}");
 
-            _stocksContext.EnsureCompaniesDataExists();
+            companiesRepository.EnsureCompaniesDataExists();
 
             //Obtine date despre stock-urile companiilor urmarite.
             var stockData = await _currentStockInfoDataScraper.GatherAllAsync();
@@ -76,14 +78,10 @@ namespace Stocks_Data_Processing.Utilities
                 }).ToList();
 
             //Adauga aceste randuri in tabel.
-            await _stocksContext.AddRangeAsync(stocksTableEntries);
+            await stockPricesRepository.AddRangeAsync(stocksTableEntries);
 
-            var oldPredictions = _stocksContext.PricesData
-                .Where(p => (p.Prediction && p.Date < DateTimeOffset.UtcNow));
+            await stockPricesRepository.DeleteWhereAsync(p => p.Prediction && p.Date < DateTimeOffset.UtcNow);
 
-            _stocksContext.PricesData.RemoveRange(oldPredictions);
-
-            _stocksContext.SaveChanges();
             _logger.LogWarning($"[Current prices maintain task] Done to update current stock data {DateTimeOffset.UtcNow}");
 
         }

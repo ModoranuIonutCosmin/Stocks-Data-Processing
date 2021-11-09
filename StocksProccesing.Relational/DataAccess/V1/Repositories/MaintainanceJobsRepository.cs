@@ -1,4 +1,5 @@
-﻿using Stocks.General.ConstantsConfig;
+﻿using Microsoft.EntityFrameworkCore;
+using Stocks.General.ConstantsConfig;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 
         public async Task<MaintenanceAction> GetByTypeAsync(string type)
         {
-            return _dbContext.Actions.SingleOrDefault(e => e.Type == type);
+            return await _dbContext.Actions.SingleOrDefaultAsync(e => e.Type == type);
         }
 
 

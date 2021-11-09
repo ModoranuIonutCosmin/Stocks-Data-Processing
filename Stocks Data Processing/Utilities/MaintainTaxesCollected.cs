@@ -69,10 +69,10 @@ namespace Stocks_Data_Processing.Utilities
 
                 requestingUser.Capital -= weekDays * weekdayTax + weekendDays * weekendTax;
 
-                await _dbContext.SaveChangesAsync();
             }
 
             //Flaw aici 
+            await _dbContext.SaveChangesAsync();
 
             _logger.LogWarning($"[Tax collection task] Done collecting taxes! {DateTimeOffset.UtcNow}");
         }
