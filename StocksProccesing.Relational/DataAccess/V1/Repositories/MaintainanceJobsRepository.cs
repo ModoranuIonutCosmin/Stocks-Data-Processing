@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Stocks.General.ConstantsConfig;
 using StocksProccesing.Relational.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.DataAccess.V1.Repositories

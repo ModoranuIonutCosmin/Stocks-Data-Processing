@@ -4,7 +4,7 @@ using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Repositories;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

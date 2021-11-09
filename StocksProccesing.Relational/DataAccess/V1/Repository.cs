@@ -3,6 +3,7 @@ using StocksProccesing.Relational.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.DataAccess.V1
@@ -56,6 +57,13 @@ namespace StocksProccesing.Relational.DataAccess.V1
             return await _dbContext.Set<TEntity>().ToListAsync();
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllWhereAsync
+            (Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbContext.Set<TEntity>()
+                .Where(predicate).ToListAsync();
+        }
+
         public async Task<TEntity> GetByIdAsync(TKey id)
         {
             return await _dbContext.FindAsync<TEntity>(id);
@@ -83,5 +91,6 @@ namespace StocksProccesing.Relational.DataAccess.V1
             return entity;
         }
 
+        
     }
 }

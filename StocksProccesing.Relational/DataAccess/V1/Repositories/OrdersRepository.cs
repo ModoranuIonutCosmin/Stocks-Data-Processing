@@ -1,10 +1,7 @@
-﻿using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1;
-using StocksProccesing.Relational.Model;
-using System.Collections.Generic;
+﻿using StocksProccesing.Relational.Model;
 using System.Threading.Tasks;
 
-namespace StocksProccesing.Relational.Repositories
+namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 {
     public class OrdersRepository : Repository<Order, int>, IOrdersRepository
     {

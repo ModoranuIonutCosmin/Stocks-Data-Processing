@@ -1,5 +1,5 @@
-﻿using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
+﻿using StocksProccesing.Relational.DataAccess.V1.Repositories;
+using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {

@@ -18,26 +18,26 @@ namespace Stocks_Data_Processing
 
         private readonly IMaintainPredictionsUpToDate _maintainPredictionsUpToDate;
         private readonly IMaintainTaxesCollected _maintainTaxesCollected;
-        private readonly IMaintenanceJobsRepository _maintenanceJobsRepository;
         private readonly IMaintainCurrentStockData _maintainCurrentStockData;
+        private readonly IMaintainPeriodicalSummaries maintainPeriodicalSummaries;
 
         public StocksDataHandlingLogic(IMaintainPredictionsUpToDate maintainPredictionsUpToDate,
             IMaintainTaxesCollected maintainTaxesCollected,
-            IMaintenanceJobsRepository maintenanceJobsRepository,
-            IMaintainCurrentStockData maintainCurrentStockData
+            IMaintainCurrentStockData maintainCurrentStockData,
+            IMaintainPeriodicalSummaries maintainPeriodicalSummaries
             )
         {
             _maintainPredictionsUpToDate = maintainPredictionsUpToDate;
             _maintainTaxesCollected = maintainTaxesCollected;
-            _maintenanceJobsRepository = maintenanceJobsRepository;
             _maintainCurrentStockData = maintainCurrentStockData;
+            this.maintainPeriodicalSummaries = maintainPeriodicalSummaries;
         }
 
         public async Task StartAllFunctions()
         {
-            //await Task.WhenAll(new List<Task> { _maintainCurrentStockData.Execute(), 
-            //    //StartPredictionEngine(),
-            //    StartTaxesCollecting(), StartTransactionsMonitoring() });
+            await Task.WhenAll(new List<Task> { maintainPeriodicalSummaries.Execute(default),
+                //_maintainCurrentStockData.Execute(default)
+            });
 
             await Task.Delay(Timeout.InfiniteTimeSpan);
         }

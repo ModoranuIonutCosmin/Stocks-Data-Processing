@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace StocksProccesing.Relational.Interfaces
@@ -12,6 +13,7 @@ namespace StocksProccesing.Relational.Interfaces
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<TEntity> DeleteAsync(TEntity entity);
         Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetAllWhereAsync(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> GetByIdAsync(TKey id);
         Task DeleteWhereAsync(Func<TEntity, bool> predicate);
     }

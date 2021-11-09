@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

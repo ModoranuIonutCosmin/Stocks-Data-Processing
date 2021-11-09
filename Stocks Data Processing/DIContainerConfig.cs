@@ -5,8 +5,9 @@ using Quartz.Impl;
 using Stocks_Data_Processing.QuartzDI;
 using Stocks_Data_Processing.Utilities;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Repositories;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -54,6 +55,11 @@ namespace Stocks_Data_Processing
 
             /// Repositories, calculators
             /// 
+
+            builder.RegisterType<StocksSummaryGenerator>().As<IStocksSummaryGenerator>();
+            builder.RegisterType<StockSummariesRepository>().As<IStockSummariesRepository>();
+            builder.RegisterType<StocksSummaryGenerator>().As<IStocksSummaryGenerator>();
+            builder.RegisterType<StocksTrendCalculator>().As<IStocksTrendCalculator>();
 
 
             builder.RegisterType<UsersRepository>().As<IUsersRepository>();

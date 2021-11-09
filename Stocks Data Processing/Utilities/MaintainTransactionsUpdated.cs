@@ -2,7 +2,7 @@
 using Quartz;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Repositories;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Threading.Tasks;
 

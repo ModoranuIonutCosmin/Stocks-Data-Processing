@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Auth;
 using StocksProcessing.API.Auth.ExtensionMethods;
 using StocksProcessing.API.Payloads;

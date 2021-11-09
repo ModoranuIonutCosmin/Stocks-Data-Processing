@@ -11,6 +11,7 @@ namespace StocksProccesing.Relational.DataAccess
         public DbSet<Company> Companies { get; set; }
         public DbSet<StocksTransaction> Transactions { get; set; }
         public DbSet<MaintenanceAction> Actions { get; set; }
+        public DbSet<StocksOHLC> Summaries { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 
@@ -52,6 +53,9 @@ namespace StocksProccesing.Relational.DataAccess
 
             modelBuilder.Entity<StocksTransaction>().HasIndex(p => p.UniqueActionStamp)
                 .IsUnique();
+
+            modelBuilder.Entity<StocksOHLC>()
+                .HasAlternateKey(c => new { c.Date, c.Period, c.CompanyTicker });
         }
 
     }

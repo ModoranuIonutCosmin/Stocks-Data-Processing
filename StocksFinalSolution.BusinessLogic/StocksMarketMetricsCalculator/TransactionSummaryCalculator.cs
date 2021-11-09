@@ -1,7 +1,7 @@
 ﻿using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

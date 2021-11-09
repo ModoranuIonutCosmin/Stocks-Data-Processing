@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20211109105630_addedSummariesTable")]
+    partial class addedSummariesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -308,7 +310,6 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("decimal(20,4)");
 
                     b.Property<string>("CompanyTicker")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -329,11 +330,9 @@ namespace StocksProccesing.Relational.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Date", "Period", "CompanyTicker");
-
                     b.HasIndex("CompanyTicker");
 
-                    b.ToTable("Summaries");
+                    b.ToTable("StocksOHLC");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
@@ -475,9 +474,7 @@ namespace StocksProccesing.Relational.Migrations
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", null)
                         .WithMany("SummariesData")
-                        .HasForeignKey("CompanyTicker")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyTicker");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>

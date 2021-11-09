@@ -1,10 +1,8 @@
-﻿using StocksProccesing.Relational.DataAccess;
-using System.Linq;
+﻿using StocksProccesing.Relational.Model;
 using System.Collections.Generic;
-using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.DataAccess.V1;
+using System.Linq;
 
-namespace StocksProccesing.Relational.Repositories
+namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 {
     public class TransactionsRepository : Repository<StocksTransaction, int>,
         ITransactionsRepository
@@ -17,7 +15,7 @@ namespace StocksProccesing.Relational.Repositories
         => _dbContext.Transactions
                 .Where(e => e.Open)
                 .ToList();
-        
+
 
         public bool ExistsTransaction(string uniqueTransactionToken)
         {

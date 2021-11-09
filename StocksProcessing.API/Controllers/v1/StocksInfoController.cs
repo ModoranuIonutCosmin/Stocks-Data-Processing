@@ -59,11 +59,11 @@ namespace StocksProcessing.API.Controllers.v1
         }
 
         [HttpGet("report")]
-        public async Task<ApiResponse<IList<StocksCurrentDaySummary>>> GetReportsAllCompanies()
+        public async Task<ApiResponse<IList<StocksSummary>>> GetReportsAllCompanies()
         {
             var fromDate = DateTimeOffset.UtcNow.AddDays(-30).SetTime(8, 0);
 
-            var response = new ApiResponse<IList<StocksCurrentDaySummary>>();
+            var response = new ApiResponse<IList<StocksSummary>>();
 
             //try
             //{
@@ -72,7 +72,7 @@ namespace StocksProcessing.API.Controllers.v1
                     .LoadStoredProcedure("dbo.spGetDailyStockSummary")
                     .WithSqlParams(
                     (nameof(fromDate), fromDate))
-                    .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
+                    .ExecuteStoredProcedureAsync<StocksSummary>();
 
                 response.Response = result;
             //}
@@ -101,12 +101,12 @@ namespace StocksProcessing.API.Controllers.v1
 
 
         [HttpGet("report/{ticker}")]
-        public async Task<ApiResponse<StocksCurrentDaySummary>> GetReportsByCompany([NotNull] string ticker)
+        public async Task<ApiResponse<StocksSummary>> GetReportsByCompany([NotNull] string ticker)
         {
             //TODO: Remove this
             var fromDate = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
 
-            var response = new ApiResponse<StocksCurrentDaySummary>();
+            var response = new ApiResponse<StocksSummary>();
 
             if (!Enum.IsDefined(typeof(StocksTicker), ticker))
             {
@@ -123,7 +123,7 @@ namespace StocksProcessing.API.Controllers.v1
                 .WithSqlParams(
                 (nameof(fromDate), fromDate),
                 (nameof(ticker), ticker))
-                .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
+                .ExecuteStoredProcedureAsync<StocksSummary>();
 
                 response.Response = result.FirstOrDefault();
             }
