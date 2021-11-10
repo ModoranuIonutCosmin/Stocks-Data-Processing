@@ -9,10 +9,13 @@ namespace StocksProccesing.Relational.Model
         [Key]
         public int Id { get; set; }
         [MaxLength(100)]
-        public string Type { get; set; }
+        public string Name { get; set; }
+
+        [MaxLength(100)]
+        public string Schedule { get; set; }
 
         [Column(TypeName = "bigint")]
-        public int ReccurencyTimeSpanTicks { get; set; }
+        public long Interval { get; set; }
         public DateTimeOffset LastFinishedDate { get; set; }
     }
 }

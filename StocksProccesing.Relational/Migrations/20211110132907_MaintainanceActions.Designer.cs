@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StocksProccesing.Relational.DataAccess;
 
 namespace StocksProccesing.Relational.Migrations
 {
     [DbContext(typeof(StocksMarketContext))]
-    partial class StocksMarketContextModelSnapshot : ModelSnapshot
+    [Migration("20211110132907_MaintainanceActions")]
+    partial class MaintainanceActions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,10 +274,6 @@ namespace StocksProccesing.Relational.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasFilter("[Name] IS NOT NULL");
-
                     b.ToTable("Actions");
                 });
 
@@ -316,6 +314,7 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("decimal(20,4)");
 
                     b.Property<string>("CompanyTicker")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -336,9 +335,9 @@ namespace StocksProccesing.Relational.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyTicker");
+                    b.HasAlternateKey("Date", "Period", "CompanyTicker");
 
-                    b.HasIndex("Period");
+                    b.HasIndex("CompanyTicker");
 
                     b.ToTable("Summaries");
                 });
@@ -482,7 +481,9 @@ namespace StocksProccesing.Relational.Migrations
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
                         .WithMany("SummariesData")
-                        .HasForeignKey("CompanyTicker");
+                        .HasForeignKey("CompanyTicker")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });

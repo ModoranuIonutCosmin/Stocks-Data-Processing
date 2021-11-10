@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using StocksProccesing.Relational.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         where TEntity : class
     {
         protected readonly StocksMarketContext _dbContext;
+        protected IDbContextTransaction dbContextTransaction;
 
         public Repository(StocksMarketContext context)
         {
@@ -91,6 +93,24 @@ namespace StocksProccesing.Relational.DataAccess.V1
             return entity;
         }
 
-        
+        public void StartNewTransaction()
+        {
+            dbContextTransaction = _dbContext.Database.BeginTransaction();
+        }
+
+        public async Task EndLastTransactionAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+
+            if (dbContextTransaction != null)
+                dbContextTransaction.Commit();
+
+            dbContextTransaction = null;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

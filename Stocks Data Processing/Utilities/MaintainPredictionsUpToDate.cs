@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using Stocks.General;
+using Stocks_Data_Processing.Actions;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
@@ -18,6 +19,7 @@ namespace Stocks_Data_Processing.Utilities
         private readonly IPredictionsService _predictionsService;
         private readonly IStockPricesRepository stockPricesRepository;
         private readonly ICompaniesRepository companiesRepository;
+        private readonly IMaintainanceJobsRepository jobsRepository;
         private readonly ILogger<MaintainPredictionsUpToDate> _logger;
             
         #region Private members - Variables
@@ -32,16 +34,17 @@ namespace Stocks_Data_Processing.Utilities
                                                 .Select(s => s.ToString()).ToList();
         #endregion
 
-        public MaintainPredictionsUpToDate(StockContextFactory stockContextFactory,
+        public MaintainPredictionsUpToDate(
             IPredictionsService predictionsService,
             IStockPricesRepository stockPricesRepository,
             ICompaniesRepository companiesRepository,
+            IMaintainanceJobsRepository jobsRepository,
             ILogger<MaintainPredictionsUpToDate> logger)
         {
-            _stocksContext = stockContextFactory.Create();
             _predictionsService = predictionsService;
             this.stockPricesRepository = stockPricesRepository;
             this.companiesRepository = companiesRepository;
+            this.jobsRepository = jobsRepository;
             _logger = logger;
         }
 
@@ -73,9 +76,9 @@ namespace Stocks_Data_Processing.Utilities
                 stockPricesRepository.RemoveAllPricePredictionsForTicker(ticker);
 
                 await stockPricesRepository.AddPricesDataAsync(predictions);
-
-                await _stocksContext.SaveChangesAsync();
             }
+
+            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob);
             _logger.LogWarning($"[Predictions maintan task] Done prediction refreshing! { DateTimeOffset.UtcNow }");
 
         }

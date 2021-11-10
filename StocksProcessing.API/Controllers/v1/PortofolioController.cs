@@ -194,10 +194,12 @@ namespace StocksProcessing.API.Controllers.v1
                 ApplicationUserId = userRequesting.Id
             };
 
-            if (!(await usersRepository.OpenUserTransaction(userRequesting, transaction)))
+            if (!await usersRepository.OpenUserTransaction(userRequesting, transaction))
+            {
                 return this.FailedApiOperationResponse<PlaceMarketOrderRequest>
                     (reason: $"Can't place the order. Try again later. OpenUserTransaction ->");
-
+            }
+                
             response.Response = marketOrder;
 
             return response;

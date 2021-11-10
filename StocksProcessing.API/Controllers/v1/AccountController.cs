@@ -175,10 +175,9 @@ namespace StocksProcessing.API.Controllers.v1
             }
 
 
-            // Return token to user
+            //Returneaza token-ul
             return new ApiResponse<UserProfileDetailsApiModel>
             {
-                // Pass back the user details and the token
                 Response = new UserProfileDetailsApiModel
                 {
                     FirstName = user.FirstName,

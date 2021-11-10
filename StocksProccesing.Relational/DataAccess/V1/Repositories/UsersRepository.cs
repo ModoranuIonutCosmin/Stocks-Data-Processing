@@ -60,5 +60,15 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
+
+        public void SubtractCapital(string userId, decimal amount, bool transactional)
+        {
+            var user = GetByIdAsync(userId).Result;
+
+            user.Capital -= amount;
+
+            if(transactional)
+                _dbContext.SaveChanges();
+        }
     }
 }

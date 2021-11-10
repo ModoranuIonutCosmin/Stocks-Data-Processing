@@ -12,5 +12,6 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
         List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user);
         List<StocksTransaction> GetTransactionsListForUserByTicker(ApplicationUser user, string ticker);
         Task<bool> OpenUserTransaction(ApplicationUser user, StocksTransaction transaction);
+        void SubtractCapital(string userId, decimal amount, bool transactional);
     }
 }

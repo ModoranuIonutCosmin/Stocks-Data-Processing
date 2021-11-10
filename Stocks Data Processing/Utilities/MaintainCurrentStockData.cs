@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
+using Stocks_Data_Processing.Actions;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Extension_Methods;
@@ -20,6 +21,7 @@ namespace Stocks_Data_Processing.Utilities
         #region Private members
         private readonly IStockPricesRepository stockPricesRepository;
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
+        private readonly IMaintainanceJobsRepository jobsRepository;
         private readonly ILogger<MaintainCurrentStockData> _logger;
         #endregion
 
@@ -35,11 +37,13 @@ namespace Stocks_Data_Processing.Utilities
             ICompaniesRepository companiesRepository,
             IStockPricesRepository stockPricesRepository,
             ICurrentStockInfoDataScraperService currentStockInfoDataScraper,
+            IMaintainanceJobsRepository jobsRepository,
             ILogger<MaintainCurrentStockData> logger)
         {
             this.companiesRepository = companiesRepository;
             this.stockPricesRepository = stockPricesRepository;
             _currentStockInfoDataScraper = currentStockInfoDataScraper;
+            this.jobsRepository = jobsRepository;
             _logger = logger;
         }
 
@@ -81,6 +85,8 @@ namespace Stocks_Data_Processing.Utilities
             await stockPricesRepository.AddRangeAsync(stocksTableEntries);
 
             await stockPricesRepository.DeleteWhereAsync(p => p.Prediction && p.Date < DateTimeOffset.UtcNow);
+
+            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.CurrentStocksJob);
 
             _logger.LogWarning($"[Current prices maintain task] Done to update current stock data {DateTimeOffset.UtcNow}");
 

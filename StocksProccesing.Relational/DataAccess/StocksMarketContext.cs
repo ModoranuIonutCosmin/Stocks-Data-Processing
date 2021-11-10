@@ -29,7 +29,8 @@ namespace StocksProccesing.Relational.DataAccess
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(DatabaseSettings.ConnectionString);
+            optionsBuilder.UseSqlServer(DatabaseSettings.ConnectionString,
+                sqlOptions => sqlOptions.CommandTimeout(12000));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,7 +47,7 @@ namespace StocksProccesing.Relational.DataAccess
             .IsUnique();
 
             modelBuilder.Entity<StocksPriceData>()
-            .HasIndex(p => p.CompanyTicker);
+                .HasIndex(p => p.CompanyTicker);
 
             modelBuilder.Entity<StocksPriceData>()
                 .HasIndex(p => p.Date);
@@ -54,8 +55,12 @@ namespace StocksProccesing.Relational.DataAccess
             modelBuilder.Entity<StocksTransaction>().HasIndex(p => p.UniqueActionStamp)
                 .IsUnique();
 
-            modelBuilder.Entity<StocksOHLC>()
-                .HasAlternateKey(c => new { c.Date, c.Period, c.CompanyTicker });
+            modelBuilder.Entity<MaintenanceAction>().HasIndex(p => p.Name)
+                .IsUnique();
+            modelBuilder.Entity<StocksOHLC>().HasIndex(p => p.Period);
+
+            //modelBuilder.Entity<StocksOHLC>()
+            //    .HasAlternateKey(c => new { c.Date, c.Period, c.CompanyTicker });
         }
 
     }

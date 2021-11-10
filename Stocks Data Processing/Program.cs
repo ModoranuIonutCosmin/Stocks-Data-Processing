@@ -1,7 +1,5 @@
 ﻿using Autofac;
-using System;
 using System.Threading.Tasks;
-using Stocks.General.ExtensionMethods;
 
 namespace Stocks_Data_Processing
 {
@@ -12,7 +10,9 @@ namespace Stocks_Data_Processing
             var DIContainer = DIContainerConfig.Configure();
 
             using var scope = DIContainer.BeginLifetimeScope();
+            DIContainerConfig.Scope = scope;
             var application = scope.Resolve<IApplication>();
+
 
             await application.Run();
         }

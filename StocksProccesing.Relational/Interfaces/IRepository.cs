@@ -16,5 +16,8 @@ namespace StocksProccesing.Relational.Interfaces
         Task<IEnumerable<TEntity>> GetAllWhereAsync(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> GetByIdAsync(TKey id);
         Task DeleteWhereAsync(Func<TEntity, bool> predicate);
+        void StartNewTransaction();
+        Task EndLastTransactionAsync();
+        Task SaveChangesAsync();
     }
 }

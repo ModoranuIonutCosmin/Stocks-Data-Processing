@@ -68,11 +68,11 @@ namespace StocksProcessing.API.Controllers.v1
                         Period = TimeSpan.FromDays(1).Ticks,
                         Timepoint = new OHLCPriceValue
                         {
-                            CloseValue = summary.CloseValue,
                             Date = summary.Date,
                             High = summary.High,
                             Low = summary.Low,
-                            OpenValue = summary.OpenValue
+                            OpenValue = summary.OpenValue,
+                            CloseValue = summary.CloseValue,
                         }
                     };
                 }).ToList();
@@ -87,6 +87,16 @@ namespace StocksProcessing.API.Controllers.v1
         [HttpGet("historicalData")]
         public async Task<ApiResponse<StocksSummary>> GetHistoricalData([NotNull]string ticker, [NotNull]string interval)
         {
+            if (string.IsNullOrEmpty(ticker))
+            {
+                throw new ArgumentException($"'{nameof(ticker)}' cannot be null or empty.", nameof(ticker));
+            }
+
+            if (string.IsNullOrEmpty(interval))
+            {
+                throw new ArgumentException($"'{nameof(interval)}' cannot be null or empty.", nameof(interval));
+            }
+
             Company company = companiesRepository.GetCompanyData(ticker);
             long intervalTicks = TimespanParser.ParseTimeSpanTicks(interval);
             var dataPoints = (await stockSummariesRepository
@@ -125,6 +135,11 @@ namespace StocksProcessing.API.Controllers.v1
         public async Task<ApiResponse<AllStocksPricePredictionsModel>> GetPredictions
                                                         ([NotNull] string ticker)
         {
+            if (string.IsNullOrWhiteSpace(ticker))
+            {
+                throw new ArgumentException($"'{nameof(ticker)}' cannot be null or whitespace.", nameof(ticker));
+            }
+
             var response = new ApiResponse<AllStocksPricePredictionsModel>();
 
             if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))

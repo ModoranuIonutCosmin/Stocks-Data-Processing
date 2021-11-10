@@ -2,12 +2,14 @@
 using Quartz;
 using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
+using Stocks_Data_Processing.Actions;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Stocks_Data_Processing.Utilities
 {
@@ -15,18 +17,21 @@ namespace Stocks_Data_Processing.Utilities
     {
         private readonly StocksMarketContext _dbContext;
         private readonly IStockMarketOrderTaxesCalculator taxesCalculator;
+        private readonly IMaintainanceJobsRepository jobsRepository;
         private readonly IUsersRepository usersRepository;
         private readonly ITransactionsRepository transactionsRepository;
         private readonly ILogger<MaintainTaxesCollected> _logger;
 
-        public MaintainTaxesCollected(StockContextFactory contextFactory,
+        public MaintainTaxesCollected(
             IStockMarketOrderTaxesCalculator taxesCalculator,
+            IMaintainanceJobsRepository jobsRepository,
             IUsersRepository usersRepository,
             ITransactionsRepository transactionsRepository,
             ILogger<MaintainTaxesCollected> logger)
         {
-            _dbContext = contextFactory.Create();
+            //_dbContext = contextFactory.Create();
             this.taxesCalculator = taxesCalculator;
+            this.jobsRepository = jobsRepository;
             this.usersRepository = usersRepository;
             this.transactionsRepository = transactionsRepository;
             _logger = logger;
@@ -36,17 +41,10 @@ namespace Stocks_Data_Processing.Utilities
         {
             _logger.LogWarning($"[Tax collection task] Started charging taxes {DateTimeOffset.UtcNow}!");
 
-            var maintananceActionsData = _dbContext.Actions
-                .Where(e => e.Type == MaintananceJobsName.TaxesCollectingJob)
-                .ToList();
+            var taskInfo = jobsRepository
+                .GetMaintenanceActionByName(MaintainanceTasksSchedulerHelpers.TaxesCollectJob);
 
-            var currentDate = DateTimeOffset.UtcNow;
-            var lastGlobalUpdate = DateTimeOffset.FromUnixTimeSeconds(0);
-
-            if (maintananceActionsData.Count > 0)
-            {
-                lastGlobalUpdate = maintananceActionsData.Last().LastFinishedDate;
-            }
+            var lastGlobalUpdate = taskInfo.LastFinishedDate;
 
             var allTaxableTransactions = transactionsRepository.GetOpenTransactions()
                 .Where(e => !e.IsBuy || e.Leverage > 1)
@@ -54,25 +52,14 @@ namespace Stocks_Data_Processing.Utilities
 
             foreach (var transaction in allTaxableTransactions)
             {
-                var dateTransactionUpdated = lastGlobalUpdate < transaction.Date ? transaction.Date
-                                                                                 : lastGlobalUpdate;
-
-                var weekDays = DateTimeOffsetHelpers.GetBusinessDays(dateTransactionUpdated, currentDate);
-                var weekendDays = (decimal)currentDate.Subtract(dateTransactionUpdated).TotalDays - weekDays;
-
-                var borrowedMoney = transaction.Leverage * transaction.InvestedAmount - transaction.InvestedAmount;
-
-                var weekdayTax = taxesCalculator.CalculateWeekDayTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
-                var weekendTax = taxesCalculator.CalculateWeekEndTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
-
-                var requestingUser = await usersRepository.GetByIdAsync(transaction.ApplicationUserId);
-
-                requestingUser.Capital -= weekDays * weekdayTax + weekendDays * weekendTax;
-
+                var taxesOwed = taxesCalculator.CalculateTaxes(transaction, lastGlobalUpdate);
+                    
+                usersRepository.SubtractCapital(transaction.ApplicationUserId, taxesOwed, false);
             }
 
-            //Flaw aici 
-            await _dbContext.SaveChangesAsync();
+            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.TaxesCollectJob);
+
+            await usersRepository.SaveChangesAsync();
 
             _logger.LogWarning($"[Tax collection task] Done collecting taxes! {DateTimeOffset.UtcNow}");
         }
