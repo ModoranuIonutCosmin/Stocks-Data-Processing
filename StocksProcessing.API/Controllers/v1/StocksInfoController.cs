@@ -58,9 +58,9 @@ namespace StocksProcessing.API.Controllers.v1
 
                     return new StockReportSingle()
                     {
-                        BuyPrice = buyPrice,
-                        SellPrice = sellPrice,
-                        Trend = trend,
+                        BuyPrice = buyPrice.TruncateToDecimalPlaces(3),
+                        SellPrice = sellPrice.TruncateToDecimalPlaces(3),
+                        Trend = trend.TruncateToDecimalPlaces(3),
                         Name = company.Name,
                         Ticker = company.Ticker,
                         Description = company.Description,
@@ -108,7 +108,9 @@ namespace StocksProcessing.API.Controllers.v1
                         High = e.High,
                         Low = e.Low,
                         OpenValue = e.OpenValue
-                    }).ToList();
+                    })
+                    .OrderBy(e => e.Date)
+                    .ToList();
 
             var trend = dataPoints.Count == 0 ? 0m
                 : stocksTrendCalculator.CalculateTrendFromOHLC(dataPoints[^1]);

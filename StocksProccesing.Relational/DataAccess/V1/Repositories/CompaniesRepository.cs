@@ -29,7 +29,8 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
             return await _dbContext.Companies
                 .Where(e => e.Ticker == ticker)
                 .Include(e => e.PricesData
-                              .Where(e => e.Prediction))
+                              .Where(e => e.Prediction)
+                              .OrderBy(e => e.Date))
                 .FirstOrDefaultAsync();
         }
 

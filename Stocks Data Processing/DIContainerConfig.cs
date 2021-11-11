@@ -51,6 +51,9 @@ namespace Stocks_Data_Processing
                    .As(typeof(ILogger<>))
                    .SingleInstance();
 
+            builder.RegisterType<StockContextFactory>()
+                   .SingleInstance();
+
             builder.RegisterType<StdSchedulerFactory>()
                 .SingleInstance()
                 .AutoActivate();

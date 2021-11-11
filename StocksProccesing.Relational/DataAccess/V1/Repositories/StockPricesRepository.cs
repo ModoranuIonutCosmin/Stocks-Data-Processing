@@ -34,14 +34,16 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
         public async Task AddPricesDataAsync(List<StocksPriceData> elements)
         {
             await _dbContext.PricesData.AddRangeAsync(elements);
+            await SaveChangesAsync();
         }
 
         
 
-        public void RemoveAllPricePredictionsForTicker(string ticker)
+        public async void RemoveAllPricePredictionsForTicker(string ticker)
         {
             _dbContext.PricesData.RemoveRange(_dbContext.PricesData.Where(k => k.Prediction
             && k.CompanyTicker == ticker));
+            await SaveChangesAsync();
         }
     }
 }

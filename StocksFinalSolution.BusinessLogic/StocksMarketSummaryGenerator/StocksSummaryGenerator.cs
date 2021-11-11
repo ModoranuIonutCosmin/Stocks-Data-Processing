@@ -1,4 +1,5 @@
-﻿using Stocks.General.Models;
+﻿using Stocks.General.ExtensionMethods;
+using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
@@ -41,7 +42,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                                                       ?? DateTimeOffset.FromUnixTimeMilliseconds(0);
 
             var pricesData = (await stockPricesRepository
-                .GetAllWhereAsync(e => e.CompanyTicker == ticker && e.Date > lastUpdatedDate))
+                .GetAllWhereAsync(e => e.CompanyTicker == ticker && e.Date > lastUpdatedDate && e.Prediction == false))
                 .OrderByDescending(e => e.Date)
                 .ToList();
 
@@ -78,15 +79,15 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                 Description = companyInfo.Description,
                 Period = interval.Ticks,
                 Trend = stocksTrendCalculator.CalculateTrendFromList(groupedChunks.Last()),
-                SellPrice = priceCalculator.CalculateSellPrice(currentPrice),
-                BuyPrice = priceCalculator.CalculateBuyPrice(currentPrice, 1),
+                SellPrice = priceCalculator.CalculateSellPrice(currentPrice).TruncateToDecimalPlaces(3),
+                BuyPrice = priceCalculator.CalculateBuyPrice(currentPrice, 1).TruncateToDecimalPlaces(3),
                 Timepoints = groupedChunks.Select(e => new OHLCPriceValue()
                 {
-                    CloseValue = e.First().Price,
-                    OpenValue = e.Last().Price,
+                    CloseValue = e.First().Price.TruncateToDecimalPlaces(3),
+                    OpenValue = e.Last().Price.TruncateToDecimalPlaces(3),
                     Date = e.First().Date,
-                    High = e.Max(k => k.Price),
-                    Low = e.Min(k => k.Price)
+                    High = e.Max(k => k.Price).TruncateToDecimalPlaces(3),
+                    Low = e.Min(k => k.Price).TruncateToDecimalPlaces(3)
                 }).ToList()
             };
         }
