@@ -20,6 +20,6 @@ namespace StocksProccesing.Relational.Model
         public string UrlLogo { get; set; }
 
         public List<StocksPriceData> PricesData { get; set; } = new List<StocksPriceData>();
-        public List<StocksOHLC> SummariesData { get; set; } = new List<StocksOHLC>();
+        public List<StocksOhlc> SummariesData { get; set; } = new List<StocksOhlc>();
     }
 }

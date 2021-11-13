@@ -26,7 +26,7 @@ namespace Stocks_Data_Processing.Utilities
 
         /// <summary/>
         /// <param name="httpClient">Client ce face diverse request-uri HTTP</param>
-        public CurrentStockInfoYahooScraperService(HttpClient httpClient,
+        public CurrentStockInfoYahooScraperService(
             IScraperService scraper)
         {
             this.scraper = scraper;
@@ -42,10 +42,11 @@ namespace Stocks_Data_Processing.Utilities
         /// <returns>Obiect indicand success-ul si rezultatul metodei</returns>
         public async Task<StockCurrentInfoResponse> GatherAsync(string ticker)
         {
-            var stocksInfoResponse = new StockCurrentInfoResponse();
-
-            //Asociaza situatiei simbolul companiei pentru care este observata.
-            stocksInfoResponse.Ticker = ticker;
+            var stocksInfoResponse = new StockCurrentInfoResponse
+            {
+                //Asociaza situatiei simbolul companiei pentru care este observata.
+                Ticker = ticker
+            };
 
             try
             {

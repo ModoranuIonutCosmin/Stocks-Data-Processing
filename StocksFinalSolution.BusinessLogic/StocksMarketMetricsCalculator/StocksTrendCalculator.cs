@@ -24,12 +24,12 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             return 100 * (lastRangePricesData.Last().Price / lastRangePricesData.First().Price - 1);
         }
 
-        public decimal CalculateTrendFromOHLC(OHLCPriceValue stocksOHLC)
+        public decimal CalculateTrendFromOHLC(OhlcPriceValue stocksOHLC)
         {
             return 100 * (stocksOHLC.CloseValue / stocksOHLC.OpenValue - 1);
         }
 
-        public decimal CalculateTrendFromOHLC(StocksOHLC stocksOHLC)
+        public decimal CalculateTrendFromOHLC(StocksOhlc stocksOHLC)
         {
             return 100 * (stocksOHLC.CloseValue / stocksOHLC.OpenValue - 1);
         }

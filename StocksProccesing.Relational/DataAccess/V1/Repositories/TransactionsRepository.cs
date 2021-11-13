@@ -24,13 +24,12 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
                 if (_dbContext.Transactions
                     .Any(e => e.UniqueActionStamp == uniqueTransactionToken))
                     return true;
+                else return false;
             }
             catch
             {
-
+                return false;
             }
-
-            return false;
         }
     }
 }

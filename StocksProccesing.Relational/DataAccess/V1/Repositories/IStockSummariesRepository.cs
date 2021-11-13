@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 {
-    public interface IStockSummariesRepository : IRepository<StocksOHLC, int>
+    public interface IStockSummariesRepository : IRepository<StocksOhlc, int>
     {
-        StocksOHLC GetLastSummaryEntry(string ticker, TimeSpan interval);
-        List<StocksOHLC> GetLastSummaryEntryForAll(TimeSpan interval);
+        StocksOhlc GetLastSummaryEntry(string ticker, TimeSpan interval);
+        List<StocksOhlc> GetLastSummaryEntryForAll(TimeSpan interval);
     }
 }

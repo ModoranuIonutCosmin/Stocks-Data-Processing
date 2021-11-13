@@ -55,8 +55,6 @@ namespace Stocks_Data_Processing.Utilities
 
         public async Task UpdatePredictionsAsync()
         {
-            //var tasks = new List<Task<List<PredictionResult>>>();
-
             _logger.LogWarning($"[Predictions maintan task] Started prediction refreshing! {DateTimeOffset.UtcNow}");
 
             companiesRepository.EnsureCompaniesDataExists();

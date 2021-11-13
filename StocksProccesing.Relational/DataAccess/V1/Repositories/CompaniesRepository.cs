@@ -36,11 +36,6 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 
         public void EnsureCompaniesDataExists()
         {
-            ///Obtine lista acestor companii din enumul <see cref="StocksTicker"/>
-            var companies = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                    .Select(s => s.ToString()).ToList();
-
-
             if (!_dbContext.Companies.Any())
             //Daca tabelul companiilor (din BD) nu contine nicio companie...
             {

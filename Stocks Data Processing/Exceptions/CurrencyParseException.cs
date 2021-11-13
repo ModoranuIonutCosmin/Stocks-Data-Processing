@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Stocks_Data_Processing.Exceptions
 {
+    [Serializable]
     public class CurrencyParseException : Exception
     {
         public CurrencyParseException()

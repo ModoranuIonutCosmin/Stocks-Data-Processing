@@ -26,14 +26,5 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             return currentPrice + currentPrice * TaxesConfig.SpreadFee;
         }
 
-        //public double CalculatePriceTrend(List<>)
-        //{
-        //    var buyPrice = sellPrice;
-
-        //    buyPrice += sellPrice * (_pricesDisparitySim.ComputeSpreadAmount() + TaxesConfig.SpreadFee);
-
-        //    return buyPrice;
-        //}
-
     }
 }

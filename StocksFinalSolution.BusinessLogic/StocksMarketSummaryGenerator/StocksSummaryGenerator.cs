@@ -42,7 +42,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                                                       ?? DateTimeOffset.FromUnixTimeMilliseconds(0);
 
             var pricesData = (await stockPricesRepository
-                .GetAllWhereAsync(e => e.CompanyTicker == ticker && e.Date > lastUpdatedDate && e.Prediction == false))
+                .GetAllWhereAsync(e => e.CompanyTicker == ticker && e.Date > lastUpdatedDate && !e.Prediction))
                 .OrderByDescending(e => e.Date)
                 .ToList();
 
@@ -81,7 +81,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                 Trend = stocksTrendCalculator.CalculateTrendFromList(groupedChunks.Last()),
                 SellPrice = priceCalculator.CalculateSellPrice(currentPrice).TruncateToDecimalPlaces(3),
                 BuyPrice = priceCalculator.CalculateBuyPrice(currentPrice, 1).TruncateToDecimalPlaces(3),
-                Timepoints = groupedChunks.Select(e => new OHLCPriceValue()
+                Timepoints = groupedChunks.Select(e => new OhlcPriceValue()
                 {
                     CloseValue = e.First().Price.TruncateToDecimalPlaces(3),
                     OpenValue = e.Last().Price.TruncateToDecimalPlaces(3),

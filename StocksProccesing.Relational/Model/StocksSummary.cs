@@ -14,6 +14,6 @@ namespace StocksProcessing.API.Models
         public decimal SellPrice { get; set; }
         public decimal BuyPrice { get; set; }
         public long Period { get; set; }
-        public List<OHLCPriceValue> Timepoints { get; set; } = new List<OHLCPriceValue>();
+        public List<OhlcPriceValue> Timepoints { get; set; } = new List<OhlcPriceValue>();
     }
 }

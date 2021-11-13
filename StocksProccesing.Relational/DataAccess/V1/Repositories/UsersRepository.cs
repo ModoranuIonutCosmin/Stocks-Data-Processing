@@ -20,7 +20,7 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
         public List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user)
         {
             return _dbContext.Transactions
-                    .Where(e => e.ApplicationUserId == user.Id && e.Open == true)
+                    .Where(e => e.ApplicationUserId == user.Id && e.Open)
                     .AsNoTracking()
                     .ToList();
         }
@@ -28,7 +28,7 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
         public List<StocksTransaction> GetTransactionsListForUserByTicker(ApplicationUser user, string ticker)
         {
             return _dbContext.Transactions
-                    .Where(e => e.ApplicationUserId == user.Id && e.Open == true
+                    .Where(e => e.ApplicationUserId == user.Id && e.Open
                     && e.Ticker == ticker)
                     .ToList();
         }
@@ -67,7 +67,7 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 
             user.Capital -= amount;
 
-            if(transactional)
+            if (transactional)
                 _dbContext.SaveChanges();
         }
     }

@@ -11,6 +11,6 @@ namespace Stocks.General.ConstantsConfig
         public const decimal SpreadFee = 0.0009m; //per unit * price
         public const decimal StopLossMaxPercent = 0.5m;
         public static decimal FullSpreadFees => AverageStockMarketSpread + SpreadFee;
-        public static List<int> Leverages = new List<int> { 1, 2, 5 };
+        public static IReadOnlyCollection<int> Leverages = new List<int> { 1, 2, 5 };
     }
 }

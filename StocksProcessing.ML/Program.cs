@@ -10,18 +10,18 @@ namespace StocksProcessing.ML
 {
     static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var ticker = "TSLA";
 
-            MLContext mlContext = new MLContext();
+            MLContext mlContext = new();
 
             DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<PriceDataInputModel>();
 
             string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
                            $"PricesData WHERE CompanyTicker = '{ticker}' ORDER BY Date asc";
 
-            DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance,
+            DatabaseSource dbSource = new(SqlClientFactory.Instance,
                                             DatabaseSettings.ConnectionString,
                                             query);
 

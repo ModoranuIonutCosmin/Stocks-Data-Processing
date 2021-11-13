@@ -14,8 +14,7 @@ namespace Stocks_Data_Processing.Quartz_Helpers
             MaintenanceAction jobDetails)
         {
             MethodInfo method = typeof(JobBuilder).GetMethods()
-                .Where(method => method.ContainsGenericParameters && method.GetParameters().Count() == 0)
-                .First();
+                .First(method => method.ContainsGenericParameters && !method.GetParameters().Any());
 
             MethodInfo generic = method.MakeGenericMethod(job.GetType());
 
