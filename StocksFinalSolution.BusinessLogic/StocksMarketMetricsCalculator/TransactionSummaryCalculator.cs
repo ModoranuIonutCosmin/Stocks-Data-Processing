@@ -1,7 +1,7 @@
 ﻿using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             this.displayPriceCalculator = displayPriceCalculator;
         }
 
-        public async Task<List<CompanyTransactionsSummary>> AggregateOpenTransactionsDataByCompaniesInfoAsync(List<StocksTransaction> transactions)
+        public async Task<List<TransactionSummary>> AggregateOpenTransactionsDataByCompaniesInfoAsync(List<StocksTransaction> transactions)
         {
             var companiesData = await companiesRepository.GetAllAsync();
 
@@ -39,10 +39,8 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
                     (!e.IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
                     var profitOrLossPercentage = (profitOrLoss / (initialPrice * unitsPurchased)).TruncateToDecimalPlaces(3);
 
-                    return new TransactionSummary()
+                    return new TransactionFullInfo()
                     {
-                        CurrentSellPrice = sellPrice,
-                        CurrentBuyPrice = buyPrice,
                         CurrentPrice = currentPrice,
                         InitialPrice = initialPrice,
                         InvestedAmount = e.InvestedAmount,
@@ -54,7 +52,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
                     };
                 })
                 .GroupBy(c => c.Ticker)
-                .Select(g => new CompanyTransactionsSummary()
+                .Select(g => new TransactionSummary()
                 {
                     Ticker = g.Key,
                     AverageInitial = (g.Average(e => e.InitialPrice)).TruncateToDecimalPlaces(3),

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Auth;
 using StocksProcessing.API.Auth.ExtensionMethods;
 using StocksProcessing.API.Exceptions;
@@ -57,7 +57,7 @@ namespace StocksProcessing.API.Controllers.v1
                 return response;
             }
 
-            List<CompanyTransactionsSummary> transactionsSummary;
+            List<TransactionSummary> transactionsSummary;
 
             try
             {
@@ -84,7 +84,6 @@ namespace StocksProcessing.API.Controllers.v1
         public async Task<ApiResponse<AllTransactionsDetailed>> GatherTransactionsParticularTicker(string ticker)
         {
             var response = new ApiResponse<AllTransactionsDetailed>();
-
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 

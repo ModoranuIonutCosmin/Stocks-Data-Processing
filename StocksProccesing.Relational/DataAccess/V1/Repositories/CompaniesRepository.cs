@@ -1,12 +1,12 @@
-﻿using Stocks.General;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1;
+﻿using Microsoft.EntityFrameworkCore;
+using Stocks.General;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace StocksProccesing.Relational.Repositories
+namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 {
     public class CompaniesRepository : Repository<Company, int>, ICompaniesRepository
     {
@@ -22,6 +22,16 @@ namespace StocksProccesing.Relational.Repositories
         public List<Company> GetAllStocksCompanies()
         {
             return _dbContext.Companies.ToList();
+        }
+
+        public async Task<Company> GetPredictionsByTicker(string ticker)
+        {
+            return await _dbContext.Companies
+                .Where(e => e.Ticker == ticker)
+                .Include(e => e.PricesData
+                              .Where(e => e.Prediction)
+                              .OrderBy(e => e.Date))
+                .FirstOrDefaultAsync();
         }
 
         public void EnsureCompaniesDataExists()

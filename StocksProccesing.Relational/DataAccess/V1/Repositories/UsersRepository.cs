@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1;
 using StocksProccesing.Relational.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StocksProccesing.Relational.Repositories
+namespace StocksProccesing.Relational.DataAccess.V1.Repositories
 {
     public class UsersRepository : Repository<ApplicationUser, string>, IUsersRepository
     {
@@ -62,6 +59,16 @@ namespace StocksProccesing.Relational.Repositories
             transaction.Open = false;
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public void SubtractCapital(string userId, decimal amount, bool transactional)
+        {
+            var user = GetByIdAsync(userId).Result;
+
+            user.Capital -= amount;
+
+            if(transactional)
+                _dbContext.SaveChanges();
         }
     }
 }

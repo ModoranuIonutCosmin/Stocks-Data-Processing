@@ -1,20 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using StocksProccesing.Relational.DataAccess;
-using StocksProcessing.API.Models;
-using StocksProccesing.Relational.Extension_Methods;
-using StocksProcessing.API.Payloads;
-using StocksProccesing.Relational.Model;
 using Stocks.General;
 using Stocks.General.ExtensionMethods;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using StocksProcessing.API.Auth;
 using Stocks.General.Models;
+using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
+using StocksProccesing.Relational.Model;
+using StocksProcessing.API.Models;
+using StocksProcessing.API.Payloads;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,223 +22,125 @@ namespace StocksProcessing.API.Controllers.v1
     [ApiController]
     public class StocksInfoController : BaseController
     {
-        private readonly StocksMarketContext _dbContext;
+        private readonly IStockSummariesRepository stockSummariesRepository;
+        private readonly ICompaniesRepository companiesRepository;
+        private readonly IStockPricesRepository stockPricesRepository;
+        private readonly IStockMarketDisplayPriceCalculator priceCalculator;
+        private readonly IStocksTrendCalculator stocksTrendCalculator;
 
-        public StocksInfoController(StocksMarketContext context)
+        public StocksInfoController(IStockSummariesRepository stockSummariesRepository,
+            ICompaniesRepository companiesRepository,
+            IStockPricesRepository stockPricesRepository,
+            IStocksTrendCalculator stocksTrendCalculator,
+            IStockMarketDisplayPriceCalculator priceCalculator)
         {
-            _dbContext = context;
+            this.stockSummariesRepository = stockSummariesRepository;
+            this.companiesRepository = companiesRepository;
+            this.stockPricesRepository = stockPricesRepository;
+            this.stocksTrendCalculator = stocksTrendCalculator;
+            this.priceCalculator = priceCalculator;
         }
 
-        [HttpGet("companyInfo/{ticker}")]
-        public async Task<ApiResponse<Company>> GetDescriptionByTicker(string ticker)
-        {
-            var response = new ApiResponse<Company>();
-
-            try
-            {
-                var companyList = await _dbContext.Companies
-                    .Where(e => e.Ticker.ToUpper() == ticker)
-                    .AsNoTracking().ToListAsync();
-
-                if(companyList.Count == 0)
-                {
-                    throw new Exception("Couldn't find company data!");
-                }
-
-                response.Response = companyList.First();
-            }
-
-            catch(Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response;
-        }
 
         [HttpGet("report")]
-        public async Task<ApiResponse<IList<StocksCurrentDaySummary>>> GetReportsAllCompanies()
+        public async Task<ApiResponse<List<StockReportSingle>>> GetReportsAllCompanies()
         {
-            var fromDate = DateTimeOffset.UtcNow.AddDays(-30).SetTime(8, 0);
+            var companies = await companiesRepository.GetAllAsync();
+            var summaries = stockSummariesRepository.GetLastSummaryEntryForAll(TimeSpan.FromDays(1));
 
-            var response = new ApiResponse<IList<StocksCurrentDaySummary>>();
-
-            //try
-            //{
-
-                var result = await _dbContext
-                    .LoadStoredProcedure("dbo.spGetDailyStockSummary")
-                    .WithSqlParams(
-                    (nameof(fromDate), fromDate))
-                    .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
-
-                response.Response = result;
-            //}
-
-            //catch (Exception ex)
-            //{
-                //response.ErrorMessage = ex.Message;
-            //}
-
-            return response;
-
-            //.Join(_dbContext.Companies,
-            //priceData => priceData.CompanyTicker,
-            //companyData => companyData.Ticker,
-            //(priceData, companyData) =>
-            //new StocksDailySummaryModel()
-            //{
-            //    Ticker = priceData.CompanyTicker,
-            //    UrlLogo = companyData.UrlLogo,
-            //    Name = companyData.Name,
-            //    Date = priceData.Date,
-            //    Price = priceData.Price,
-            //})
-
-        }
-
-
-        [HttpGet("report/{ticker}")]
-        public async Task<ApiResponse<StocksCurrentDaySummary>> GetReportsByCompany([NotNull] string ticker)
-        {
-            //TODO: Remove this
-            var fromDate = DateTimeOffset.UtcNow.AddDays(-6).SetTime(8, 0);
-
-            var response = new ApiResponse<StocksCurrentDaySummary>();
-
-            if (!Enum.IsDefined(typeof(StocksTicker), ticker))
-            {
-                response.ErrorMessage = "Provide a known stock market ticker!";
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                return response;
-            }
-
-            try
-            {
-                var result = await _dbContext
-                .LoadStoredProcedure("dbo.spGetDailyStockSummarySingleCompany")
-                .WithSqlParams(
-                (nameof(fromDate), fromDate),
-                (nameof(ticker), ticker))
-                .ExecuteStoredProcedureAsync<StocksCurrentDaySummary>();
-
-                response.Response = result.FirstOrDefault();
-            }
-
-            catch (Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response;
-        }
-
-        [HttpGet("dailyData/{ticker}")]
-        public async Task<ApiResponse<AllStocksHistoricalPricesDaily>>
-            GetTickerDailyData([NotNull] string ticker)
-        {
-            var startDate = new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
-            var response = new ApiResponse<AllStocksHistoricalPricesDaily>();
-
-            var result = new AllStocksHistoricalPricesDaily();
-
-            try
-            {
-                var ohlcPrices = await _dbContext
-                    .LoadStoredProcedure("dbo.spGetPeriodicalSummary")
-                    .WithSqlParams(
-                    (nameof(startDate), startDate),
-                    (nameof(ticker), ticker))
-                    .ExecuteStoredProcedureAsync<OHLCPriceValue>();
-
-                var companyData = await _dbContext
-                    .Companies.Where(e => e.Ticker == ticker)
-                    .FirstOrDefaultAsync();
-
-                result.HistoricalPrices = ohlcPrices;
-                result.Name = companyData.Name;
-                result.Ticker = companyData.Ticker;
-                result.UrlLogo = companyData.UrlLogo;
-                result.Description = companyData.Description;
-
-                response.Response = result;
-            }
-
-            catch (Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response;
-        }
-
-        
-
-        [HttpGet("historicalData/{ticker}")]
-        public ApiResponse<AllStocksPriceHistoryModel> GetAllMinutelyHistoricalData
-                                                            ([NotNull] string ticker)
-        {
-            var result = new AllStocksPriceHistoryModel();
-
-            var response = new ApiResponse<AllStocksPriceHistoryModel>();
-
-            if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
-            {
-                response.ErrorMessage = "Provide a known stock market ticker!";
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                return response;
-            }
-
-            var historicalData = new List<TimestampPrices>();
-
-            var companyInfo = default(Company);
-
-            try
-            {
-                historicalData = _dbContext.PricesData
-                .Where(e => e.CompanyTicker == ticker && e.Prediction == false)
-                .Select(e => new TimestampPrices()
+            var result = companies.Join(summaries, c => c.Ticker, s => s.CompanyTicker,
+                (company, summary) =>
                 {
-                    Prediction = false,
-                    Price = e.Price,
-                    Date = e.Date
-                })
-                .OrderBy(e => e.Date)
-                .AsNoTracking()
-                .ToList();
+                    var trend = stocksTrendCalculator.CalculateTrendFromOHLC(summary);
+                    var price = stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(company.Ticker);
+                    var sellPrice = priceCalculator.CalculateSellPrice(price);
+                    var buyPrice = priceCalculator.CalculateBuyPrice(price, 1);
 
-                _dbContext.EnsureCompaniesDataExists();
+                    return new StockReportSingle()
+                    {
+                        BuyPrice = buyPrice.TruncateToDecimalPlaces(3),
+                        SellPrice = sellPrice.TruncateToDecimalPlaces(3),
+                        Trend = trend.TruncateToDecimalPlaces(3),
+                        Name = company.Name,
+                        Ticker = company.Ticker,
+                        Description = company.Description,
+                        UrlLogo = company.UrlLogo,
+                        Period = TimeSpan.FromDays(1).Ticks,
+                        Timepoint = new OHLCPriceValue
+                        {
+                            Date = summary.Date,
+                            High = summary.High,
+                            Low = summary.Low,
+                            OpenValue = summary.OpenValue,
+                            CloseValue = summary.CloseValue,
+                        }
+                    };
+                }).ToList();
 
-                companyInfo = _dbContext.Companies
-                    .Where(e => e.Ticker == ticker)
-                    .FirstOrDefault();
-            }
-
-            catch (Exception ex)
+            return new()
             {
-                response.ErrorMessage = ex.Message;
-                return response;
-            }
-
-            result.Ticker = companyInfo.Ticker;
-            result.Name = companyInfo.Name;
-            result.Description = companyInfo.Description;
-            result.UrlLogo = companyInfo.UrlLogo;
-            result.HistoricalPrices = historicalData;
-
-            response.Response = result;
-
-            return response;
+                Response = result
+            };
         }
 
-        [HttpGet("forecastData/{ticker}")]
-        public ApiResponse<AllStocksPricePredictionsModel> GetMinutelyForecasts
+
+        [HttpGet("historicalData")]
+        public async Task<ApiResponse<StocksSummary>> GetHistoricalData([NotNull]string ticker, [NotNull]string interval)
+        {
+            if (string.IsNullOrEmpty(ticker))
+            {
+                throw new ArgumentException($"'{nameof(ticker)}' cannot be null or empty.", nameof(ticker));
+            }
+
+            if (string.IsNullOrEmpty(interval))
+            {
+                throw new ArgumentException($"'{nameof(interval)}' cannot be null or empty.", nameof(interval));
+            }
+
+            Company company = companiesRepository.GetCompanyData(ticker);
+            long intervalTicks = TimespanParser.ParseTimeSpanTicks(interval);
+            var dataPoints = (await stockSummariesRepository
+                    .GetAllWhereAsync(p => p.CompanyTicker == ticker && p.Period == intervalTicks))
+                    .Select(e => new OHLCPriceValue()
+                    {
+                        CloseValue = e.CloseValue,
+                        Date = e.Date,
+                        High = e.High,
+                        Low = e.Low,
+                        OpenValue = e.OpenValue
+                    })
+                    .OrderBy(e => e.Date)
+                    .ToList();
+
+            var trend = dataPoints.Count == 0 ? 0m
+                : stocksTrendCalculator.CalculateTrendFromOHLC(dataPoints[^1]);
+            var currentBasePrice = stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(ticker);
+
+            return new ApiResponse<StocksSummary>()
+            {
+                Response = new StocksSummary()
+                {
+                    Period = intervalTicks,
+                    UrlLogo = company.UrlLogo,
+                    Name = company.Name,
+                    Description = company.Description,
+                    Ticker = ticker,
+                    Trend = trend,
+                    SellPrice = priceCalculator.CalculateSellPrice(currentBasePrice),
+                    BuyPrice = priceCalculator.CalculateBuyPrice(currentBasePrice, 1),
+                    Timepoints = dataPoints
+                }
+            };
+        }
+
+        [HttpGet("forecastData")]
+        public async Task<ApiResponse<AllStocksPricePredictionsModel>> GetPredictions
                                                         ([NotNull] string ticker)
         {
-            var result = new AllStocksPricePredictionsModel();
+            if (string.IsNullOrWhiteSpace(ticker))
+            {
+                throw new ArgumentException($"'{nameof(ticker)}' cannot be null or whitespace.", nameof(ticker));
+            }
 
             var response = new ApiResponse<AllStocksPricePredictionsModel>();
 
@@ -252,41 +152,38 @@ namespace StocksProcessing.API.Controllers.v1
                 return response;
             }
 
-            var forecastData = new List<TimestampPrices>();
-
-            var companyInfo = default(Company);
+            Company companyInfo;
 
             try
             {
-                forecastData = _dbContext.PricesData
-                .Where(e => e.CompanyTicker == ticker && e.Prediction == true)
-                .Select(e => new TimestampPrices()
-                {
-                    Prediction = true,
-                    Price = e.Price,
-                    Date = e.Date
-                })
-                .OrderBy(e => e.Date)
-                .AsNoTracking()
-                .ToList();
+                companyInfo = await companiesRepository
+                    .GetPredictionsByTicker(ticker);
 
-                _dbContext.EnsureCompaniesDataExists();
-
-                companyInfo = _dbContext.Companies
-                    .Where(e => e.Ticker == ticker)
-                    .FirstOrDefault();
+                if (companyInfo == null)
+                    throw new Exception("No company goes by that name!");
             }
 
             catch (Exception ex)
             {
                 response.ErrorMessage = ex.Message;
+
+                return response;
             }
 
-            result.Ticker = companyInfo.Ticker;
-            result.Name = companyInfo.Name;
-            result.Description = companyInfo.Description;
-            result.UrlLogo = companyInfo.UrlLogo;
-            result.Predictions = forecastData;
+            var result = new AllStocksPricePredictionsModel
+            {
+                Ticker = companyInfo.Ticker,
+                Name = companyInfo.Name,
+                Description = companyInfo.Description,
+                UrlLogo = companyInfo.UrlLogo,
+                Predictions = companyInfo.PricesData
+                            .Select(e => new TimestampPrices()
+                            {
+                                Date = e.Date,
+                                Prediction = true,
+                                Price = e.Price
+                            }).ToList()
+            };
 
             response.Response = result;
 

@@ -7,7 +7,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {
     public interface ITransactionSummaryCalculator
     {
-        Task<List<CompanyTransactionsSummary>> AggregateOpenTransactionsDataByCompaniesInfoAsync(List<StocksTransaction> transactions);
+        Task<List<TransactionSummary>> AggregateOpenTransactionsDataByCompaniesInfoAsync(List<StocksTransaction> transactions);
         AllTransactionsDetailed AggregateOpenTransactionsDataForSingleCompany(List<StocksTransaction> transactions,
             string ticker);
     }

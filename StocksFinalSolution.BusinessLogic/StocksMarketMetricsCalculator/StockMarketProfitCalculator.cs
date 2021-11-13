@@ -1,25 +1,24 @@
-﻿using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Helpers;
+﻿using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {
     public class StockMarketProfitCalculator : IStockMarketProfitCalculator
     {
+        private readonly IStockPricesRepository _stockPricesRepository;
         private readonly IStockMarketDisplayPriceCalculator _stockDisplayPriceCalculator;
 
-        public StockMarketProfitCalculator(StocksMarketContext dbContext,
+        public StockMarketProfitCalculator(
+            IStockPricesRepository stockPricesRepository,
             IStockMarketDisplayPriceCalculator stockDisplayPriceCalculator)
         {
-            _dbContext = dbContext;
+            _stockPricesRepository = stockPricesRepository;
             _stockDisplayPriceCalculator = stockDisplayPriceCalculator;
         }
 
-        public StocksMarketContext _dbContext { get; }
-
         public decimal CalculateTransactionProfit(StocksTransaction transaction)
         {
-            var currentSellPrice = _dbContext.GatherCurrentPriceByCompany(transaction.Ticker);
+            var currentSellPrice = _stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(transaction.Ticker);
 
             var currentBuyPrice = _stockDisplayPriceCalculator.CalculateBuyPrice(currentSellPrice, transaction.Leverage);
 

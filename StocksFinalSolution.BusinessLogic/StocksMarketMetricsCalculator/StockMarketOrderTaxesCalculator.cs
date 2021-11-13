@@ -1,5 +1,7 @@
 ﻿using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
+using StocksProccesing.Relational.Model;
+using System;
 
 namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
 {
@@ -19,6 +21,24 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
         public decimal CalculateWeekEndTax(decimal leverage, decimal effectiveMoney, bool isBuy)
         {
             return CalculateWeekDayTax(leverage, effectiveMoney, isBuy) * 3;
+        }
+
+        public decimal CalculateTaxes(StocksTransaction transaction, DateTimeOffset lastCollected)
+        {
+            var currentDate = DateTimeOffset.UtcNow;
+
+            var dateTransactionUpdated = lastCollected < transaction.Date ? transaction.Date
+                                                                                 : lastCollected;
+
+            var weekDays = DateTimeOffsetHelpers.GetBusinessDays(dateTransactionUpdated, currentDate);
+            var weekendDays = (decimal)currentDate.Subtract(dateTransactionUpdated).TotalDays - weekDays;
+
+            var borrowedMoney = transaction.Leverage * transaction.InvestedAmount - transaction.InvestedAmount;
+
+            var weekdayTax = CalculateWeekDayTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
+            var weekendTax = CalculateWeekEndTax(transaction.Leverage, borrowedMoney, transaction.IsBuy);
+
+            return weekDays * weekdayTax + weekendDays * weekendTax;
         }
     }
 }

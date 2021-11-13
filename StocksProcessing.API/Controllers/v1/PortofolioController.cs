@@ -10,8 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Stocks.General.ConstantsConfig;
-using StocksProccesing.Relational.Repositories;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 
 // For more information on enabling Web API for empty
 // projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -133,45 +133,45 @@ namespace StocksProcessing.API.Controllers.v1
 
 
         [HttpPost("placeOrder")]
-        public async Task<ApiResponse<MarketOrder>> PlaceOrder([FromBody] MarketOrder marketOrder)
+        public async Task<ApiResponse<PlaceMarketOrderRequest>> PlaceOrder([FromBody] PlaceMarketOrderRequest marketOrder)
         {
 
-            var response = new ApiResponse<MarketOrder>();
-            var result = new MarketOrder();
+            var response = new ApiResponse<PlaceMarketOrderRequest>();
+            var result = new PlaceMarketOrderRequest();
 
             if (!DateTimeOffset.UtcNow.IsDayTimeBetweenStockTradingRange())
-                return this.FailedApiOperationResponse<MarketOrder>(reason: "Stock market is closed right now!");
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(reason: "Stock market is closed right now!");
 
             var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 
             if (userRequesting is null)
-                return this.FailedApiOperationResponse<MarketOrder>(reason: "User is unauthorized!",
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(reason: "User is unauthorized!",
                            statusCode: HttpStatusCode.Unauthorized);
 
             if (transactionsRepository.ExistsTransaction(marketOrder.Token))
-                return this.FailedApiOperationResponse<MarketOrder>
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>
                         (reason: "An error occured. You've already placed this order!");
 
             if (marketOrder.InvestedAmount > userRequesting.Capital ||
                 marketOrder.InvestedAmount == 0
                 )
-                return this.FailedApiOperationResponse<MarketOrder>(
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(
                     reason: "You can't afford to place this investment!");
 
             if (!TaxesConfig.Leverages.Contains(marketOrder.Leverage))
-                return this.FailedApiOperationResponse<MarketOrder>(
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(
                     reason: "Invalid leverage value!");
 
             if (marketOrder.Leverage > 1 &&
                 marketOrder.StopLossAmount > marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent ||
                 marketOrder.StopLossAmount < 0 || marketOrder.TakeProfitAmount < 0)
-                return this.FailedApiOperationResponse<MarketOrder>(
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(
                    reason: "Either stop loss or take profit can't have such values!");
 
             var todaysPrices = pricesRepository.GetTodaysPriceEvolution(marketOrder.Ticker);
 
             if (todaysPrices.Count == 0)
-                return this.FailedApiOperationResponse<MarketOrder>
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>
                     (reason: "An error occured. No records for current day!");
 
             var currentPrice = pricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(marketOrder.Ticker);
@@ -194,10 +194,12 @@ namespace StocksProcessing.API.Controllers.v1
                 ApplicationUserId = userRequesting.Id
             };
 
-            if (!(await usersRepository.OpenUserTransaction(userRequesting, transaction)))
-                return this.FailedApiOperationResponse<MarketOrder>
+            if (!await usersRepository.OpenUserTransaction(userRequesting, transaction))
+            {
+                return this.FailedApiOperationResponse<PlaceMarketOrderRequest>
                     (reason: $"Can't place the order. Try again later. OpenUserTransaction ->");
-
+            }
+                
             response.Response = marketOrder;
 
             return response;
