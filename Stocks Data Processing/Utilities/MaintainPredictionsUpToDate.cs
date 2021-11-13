@@ -15,7 +15,6 @@ namespace Stocks_Data_Processing.Utilities
 {
     public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
     {
-        private readonly StocksMarketContext _stocksContext;
         private readonly IPredictionsService _predictionsService;
         private readonly IStockPricesRepository stockPricesRepository;
         private readonly ICompaniesRepository companiesRepository;
