@@ -13,7 +13,7 @@ namespace StocksProcessing.ML
 {
     public class PredictionEngine
     {
-        public MLContext mlContext;
+        private MLContext mlContext;
         public PredictionEngine()
         {
             mlContext = new MLContext();

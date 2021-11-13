@@ -1,0 +1,14 @@
+﻿C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\IPricesDisparitySimulator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\IStockMarketDisplayPriceCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\IStockMarketOrderTaxesCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\IStockMarketProfitCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\IStocksTrendCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\ITransactionSummaryCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\PricesDisparitySimulator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\StockMarketDisplayPriceCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\StockMarketOrderTaxesCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\StockMarketProfitCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\StocksTrendCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketMetricsCalculator\TransactionSummaryCalculator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketSummaryGenerator\IStocksSummaryGenerator.cs
+C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StocksFinalSolution.BusinessLogic\StocksMarketSummaryGenerator\StocksSummaryGenerator.cs

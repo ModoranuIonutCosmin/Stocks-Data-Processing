@@ -124,9 +124,7 @@ namespace Stocks.General.ExtensionMethods
 
         public static string ExtractDate(this DateTimeOffset dto)
         {
-            return dto != null
-                        ? dto.Date.ToShortDateString()
-                        : null;// 7/24/2014
+            return dto.Date.ToShortDateString();
         }
 
         public static long GetTicksDifference(this DateTimeOffset from, DateTimeOffset to)

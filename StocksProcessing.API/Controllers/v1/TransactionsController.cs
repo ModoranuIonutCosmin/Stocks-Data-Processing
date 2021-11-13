@@ -6,6 +6,7 @@ using StocksProccesing.Relational.Model;
 using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Auth;
 using StocksProcessing.API.Auth.ExtensionMethods;
+using StocksProcessing.API.Exceptions;
 using StocksProcessing.API.Payloads;
 using System;
 using System.Collections.Generic;
@@ -60,12 +61,9 @@ namespace StocksProcessing.API.Controllers.v1
 
             try
             {
-                List<StocksTransaction> openTransactionsList = _userRepository
-                    .GetTransactionsListForUser(userRequesting);
-
-
                 transactionsSummary = await _transactionSummaryCalculator
-                    .AggregateOpenTransactionsDataByCompaniesInfoAsync(openTransactionsList);
+                    .AggregateOpenTransactionsDataByCompaniesInfoAsync(_userRepository
+                    .GetTransactionsListForUser(userRequesting));
             }
             catch (Exception e)
             {
@@ -95,7 +93,7 @@ namespace StocksProcessing.API.Controllers.v1
                     statusCode: HttpStatusCode.Unauthorized);
 
 
-            var result = default(AllTransactionsDetailed);
+            AllTransactionsDetailed result;
 
             try
             {
@@ -130,7 +128,7 @@ namespace StocksProcessing.API.Controllers.v1
                 var transaction = _userRepository.GetTransactionInfo(request.Id);
 
                 if (transaction is null)
-                    throw new NullReferenceException(nameof(transaction));
+                    throw new InvalidTransactionException(nameof(transaction) + "transaction were not found!");
 
                 var userRequesting = await _userManager.GetUserAsync(HttpContext.User);
 

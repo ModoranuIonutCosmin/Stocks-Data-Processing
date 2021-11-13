@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StocksProcessing.ML
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
