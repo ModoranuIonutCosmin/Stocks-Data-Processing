@@ -16,7 +16,7 @@ namespace StocksProccesing.Relational.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.9")
+                .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -256,14 +256,25 @@ namespace StocksProccesing.Relational.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long>("Interval")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTimeOffset>("LastFinishedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Schedule")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Actions");
                 });
@@ -292,6 +303,44 @@ namespace StocksProccesing.Relational.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOHLC", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("CloseValue")
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<string>("CompanyTicker")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("High")
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<decimal>("Low")
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<decimal>("OpenValue")
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<long>("Period")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyTicker");
+
+                    b.HasIndex("Period");
+
+                    b.ToTable("Summaries");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
@@ -429,6 +478,15 @@ namespace StocksProccesing.Relational.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOHLC", b =>
+                {
+                    b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
+                        .WithMany("SummariesData")
+                        .HasForeignKey("CompanyTicker");
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
@@ -453,6 +511,8 @@ namespace StocksProccesing.Relational.Migrations
             modelBuilder.Entity("StocksProccesing.Relational.Model.Company", b =>
                 {
                     b.Navigation("PricesData");
+
+                    b.Navigation("SummariesData");
                 });
 #pragma warning restore 612, 618
         }

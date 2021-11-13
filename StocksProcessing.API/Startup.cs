@@ -8,10 +8,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProccesing.Relational.Repositories;
 using StocksProcessing.API.Email;
 using StocksProcessing.API.Email.Interfaces;
 using System;
@@ -109,10 +110,13 @@ namespace StocksProcessing.API
                 .AddTransient<ITransactionsRepository, TransactionsRepository>()
                 .AddTransient<IStockPricesRepository, StockPricesRepository>()
                 .AddTransient<ICompaniesRepository, CompaniesRepository>()
+                .AddTransient<IStockSummariesRepository, StockSummariesRepository>()
                 .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
                 .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
                 .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
+                .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
                 .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
+                .AddTransient<IStocksTrendCalculator, StocksTrendCalculator>()
                 .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>();
         }
 

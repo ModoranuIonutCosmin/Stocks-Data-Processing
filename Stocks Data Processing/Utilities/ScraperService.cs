@@ -1,7 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Exceptions;
-using Stocks_Data_Processing.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

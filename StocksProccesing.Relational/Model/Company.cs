@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace StocksProccesing.Relational.Model
 {
     public class Company
     {
-
         [Key]
         [MaxLength(10)]
         public string Ticker { get; set; }
@@ -23,5 +20,6 @@ namespace StocksProccesing.Relational.Model
         public string UrlLogo { get; set; }
 
         public List<StocksPriceData> PricesData { get; set; } = new List<StocksPriceData>();
+        public List<StocksOHLC> SummariesData { get; set; } = new List<StocksOHLC>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Stocks.General.Models
 {
-    public class MarketOrder
+    public class PlaceMarketOrderRequest
     {
         public string Token { get; set; }
         public bool IsBuy { get; set; }

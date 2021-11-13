@@ -175,10 +175,9 @@ namespace StocksProcessing.API.Controllers.v1
             }
 
 
-            // Return token to user
+            //Returneaza token-ul
             return new ApiResponse<UserProfileDetailsApiModel>
             {
-                // Pass back the user details and the token
                 Response = new UserProfileDetailsApiModel
                 {
                     FirstName = user.FirstName,
@@ -216,9 +215,7 @@ namespace StocksProcessing.API.Controllers.v1
                                     : failedResponse;
         }
 
-
-
-        [HttpPost("ForgotPasswordRequest")]
+        [HttpPost("ForgotPassword")]
         public async Task<ApiResponse> ForgotPasswordRequest([FromBody] ModifyPasswordRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
@@ -257,14 +254,14 @@ namespace StocksProcessing.API.Controllers.v1
             };
         }
 
-        [HttpPost("ModifyPasswordRequest")]
+        [HttpPut("ModifyPassword")]
         public async Task<ApiResponse> ModifyPasswordRequest([FromBody] ModifyPasswordRequest request)
         {
             return await ForgotPasswordRequest(request);
         }
 
 
-        [HttpPost("ResetPassword")]
+        [HttpPut("ResetPassword")]
         public async Task<ApiResponse> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);

@@ -6,6 +6,8 @@ namespace Stocks.General.Models
     {
         public int Id { get; set; }
 
+        public string Ticker { get; set; }
+
         public bool IsBuy { get; set; }
 
         public decimal UnitsPurchased { get; set; }
