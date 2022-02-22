@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StocksProccesing.Relational.Model
 {
-    public class StocksOHLC
+    public class StocksOhlc
     {
         [Key]
         public int Id { get; set; }

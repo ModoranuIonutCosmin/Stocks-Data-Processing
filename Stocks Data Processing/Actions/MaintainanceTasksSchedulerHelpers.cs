@@ -11,7 +11,7 @@ namespace Stocks_Data_Processing.Actions
         public const string CurrentStocksJob = "currentStocks";
         public const string TransactionMonitorJob = "transactionsMonitor";
 
-        public static List<string> allTasksNames = new List<string>() { TaxesCollectJob, PredictionsRefreshJob,
+        public static List<string> allTasksNames = new() { TaxesCollectJob, PredictionsRefreshJob,
             CurrentSummariesJob, CurrentStocksJob, TransactionMonitorJob };
     }
 }

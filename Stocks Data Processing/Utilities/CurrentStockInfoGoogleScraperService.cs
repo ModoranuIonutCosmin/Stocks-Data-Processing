@@ -26,7 +26,7 @@ namespace Stocks_Data_Processing.Utilities
         /// 
         /// </summary>
         /// <param name="httpClient">Client ce face diverse request-uri HTTP</param>
-        public CurrentStockInfoGoogleScraperService(HttpClient httpClient,
+        public CurrentStockInfoGoogleScraperService(
             IScraperService scraper)
         {
             this.scraper = scraper;
@@ -45,9 +45,10 @@ namespace Stocks_Data_Processing.Utilities
         public async Task<StockCurrentInfoResponse> GatherAsync(string ticker)
         {
 
-            var stocksInfoResponse = new StockCurrentInfoResponse();
-
-            stocksInfoResponse.Ticker = ticker;
+            var stocksInfoResponse = new StockCurrentInfoResponse
+            {
+                Ticker = ticker
+            };
 
             try
             {

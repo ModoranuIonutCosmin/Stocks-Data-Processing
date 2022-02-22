@@ -32,7 +32,7 @@ namespace Stocks_Data_Processing
         {
             var builder = new ContainerBuilder();
 
-            ServiceCollection serviceCollection = new ServiceCollection();
+            ServiceCollection serviceCollection = new();
 
             serviceCollection.AddDbContext<StocksMarketContext>();
 

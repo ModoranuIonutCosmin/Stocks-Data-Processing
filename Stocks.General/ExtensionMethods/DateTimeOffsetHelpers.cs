@@ -127,9 +127,5 @@ namespace Stocks.General.ExtensionMethods
             return dto.Date.ToShortDateString();
         }
 
-        public static long GetTicksDifference(this DateTimeOffset from, DateTimeOffset to)
-        {
-            return Math.Abs(DateTimeOffset.UtcNow.Subtract(to).Ticks);
-        }
     }
 }

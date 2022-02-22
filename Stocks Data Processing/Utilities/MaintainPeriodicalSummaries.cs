@@ -54,7 +54,7 @@ namespace Stocks_Data_Processing.Utilities
 
             await stockSummariesRepository
                 .AddRangeAsync(lastRangeSummary.Timepoints
-                .Select(k => new StocksOHLC()
+                .Select(k => new StocksOhlc()
                 {
                     CloseValue = k.CloseValue,
                     CompanyTicker = ticker,

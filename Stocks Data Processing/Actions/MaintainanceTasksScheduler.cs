@@ -11,9 +11,9 @@ namespace Stocks_Data_Processing.Actions
     public class MaintainanceTasksScheduler : IMaintainanceTasksScheduler
     {
         private readonly IScheduler scheduler;
-        public Dictionary<string, IJob> PeriodicalTasks = new Dictionary<string, IJob>();
+        private readonly Dictionary<string, IJob> PeriodicalTasks = new();
 
-        public Dictionary<string, IJob> AllTasks = new Dictionary<string, IJob>();
+        private readonly Dictionary<string, IJob> AllTasks = new();
 
 
         public MaintainanceTasksScheduler(IScheduler scheduler)

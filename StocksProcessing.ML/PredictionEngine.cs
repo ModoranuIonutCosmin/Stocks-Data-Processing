@@ -13,7 +13,7 @@ namespace StocksProcessing.ML
 {
     public class PredictionEngine
     {
-        private MLContext mlContext;
+        private readonly MLContext mlContext;
         public PredictionEngine()
         {
             mlContext = new MLContext();
@@ -85,7 +85,7 @@ namespace StocksProcessing.ML
 
             string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
                            $"PricesData WHERE CompanyTicker = '{ticker}' AND Prediction = 0 ORDER BY Date asc";
-            DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance,
+            DatabaseSource dbSource = new(SqlClientFactory.Instance,
                                             DatabaseSettings.ConnectionString,
                                             query);
 

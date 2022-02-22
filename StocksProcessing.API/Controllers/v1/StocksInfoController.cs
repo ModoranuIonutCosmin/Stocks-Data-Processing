@@ -5,6 +5,7 @@ using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
+using StocksProcessing.API.Exceptions;
 using StocksProcessing.API.Models;
 using StocksProcessing.API.Payloads;
 using System;
@@ -66,7 +67,7 @@ namespace StocksProcessing.API.Controllers.v1
                         Description = company.Description,
                         UrlLogo = company.UrlLogo,
                         Period = TimeSpan.FromDays(1).Ticks,
-                        Timepoint = new OHLCPriceValue
+                        Timepoint = new OhlcPriceValue
                         {
                             Date = summary.Date,
                             High = summary.High,
@@ -101,7 +102,7 @@ namespace StocksProcessing.API.Controllers.v1
             long intervalTicks = TimespanParser.ParseTimeSpanTicks(interval);
             var dataPoints = (await stockSummariesRepository
                     .GetAllWhereAsync(p => p.CompanyTicker == ticker && p.Period == intervalTicks))
-                    .Select(e => new OHLCPriceValue()
+                    .Select(e => new OhlcPriceValue()
                     {
                         CloseValue = e.CloseValue,
                         Date = e.Date,
@@ -160,7 +161,7 @@ namespace StocksProcessing.API.Controllers.v1
                     .GetPredictionsByTicker(ticker);
 
                 if (companyInfo == null)
-                    throw new Exception("No company goes by that name!");
+                    throw new InvalidCompanyException("No company goes by that name!");
             }
 
             catch (Exception ex)

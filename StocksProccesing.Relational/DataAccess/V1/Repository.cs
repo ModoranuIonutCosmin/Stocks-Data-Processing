@@ -23,7 +23,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         {
             if (entity == null)
             {
-                throw new ArgumentNullException($"{nameof(AddAsync)} entity must not be null");
+                throw new ArgumentNullException(nameof(entity));
             }
 
             await _dbContext.AddAsync(entity);
@@ -35,7 +35,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         {
             if (entities == null)
             {
-                throw new ArgumentNullException($"{nameof(AddRangeAsync)} list of entity must not be null");
+                throw new ArgumentNullException(nameof(entities));
             }
 
             await _dbContext.AddRangeAsync(entities);
@@ -46,7 +46,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         {
             if (entity == null)
             {
-                throw new ArgumentNullException($"{nameof(DeleteAsync)} entity mult not be null");
+                throw new ArgumentNullException(nameof(entity));
             }
 
             _dbContext.Remove(entity);
@@ -74,7 +74,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         public async Task DeleteWhereAsync(Func<TEntity, bool> predicate)
         {
             if(predicate == null)
-                throw new ArgumentNullException($"{nameof(predicate)} null in {nameof(DeleteWhereAsync)}");
+                throw new ArgumentNullException(nameof(predicate));
 
             _dbContext.RemoveRange(_dbContext.Set<TEntity>().Where(predicate));
 
@@ -85,7 +85,7 @@ namespace StocksProccesing.Relational.DataAccess.V1
         {
             if (entity == null)
             {
-                throw new ArgumentNullException($"{nameof(UpdateAsync)} entity must not be null");
+                throw new ArgumentNullException(nameof(entity));
             }
 
             _dbContext.Update(entity);

@@ -1,21 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
-using Stocks.General.ConstantsConfig;
-using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Actions;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Stocks_Data_Processing.Utilities
 {
     public class MaintainTaxesCollected : IMaintainTaxesCollected
     {
-        private readonly StocksMarketContext _dbContext;
         private readonly IStockMarketOrderTaxesCalculator taxesCalculator;
         private readonly IMaintainanceJobsRepository jobsRepository;
         private readonly IUsersRepository usersRepository;
@@ -29,7 +24,6 @@ namespace Stocks_Data_Processing.Utilities
             ITransactionsRepository transactionsRepository,
             ILogger<MaintainTaxesCollected> logger)
         {
-            //_dbContext = contextFactory.Create();
             this.taxesCalculator = taxesCalculator;
             this.jobsRepository = jobsRepository;
             this.usersRepository = usersRepository;

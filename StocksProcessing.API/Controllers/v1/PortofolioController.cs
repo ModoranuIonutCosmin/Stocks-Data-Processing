@@ -137,7 +137,6 @@ namespace StocksProcessing.API.Controllers.v1
         {
 
             var response = new ApiResponse<PlaceMarketOrderRequest>();
-            var result = new PlaceMarketOrderRequest();
 
             if (!DateTimeOffset.UtcNow.IsDayTimeBetweenStockTradingRange())
                 return this.FailedApiOperationResponse<PlaceMarketOrderRequest>(reason: "Stock market is closed right now!");

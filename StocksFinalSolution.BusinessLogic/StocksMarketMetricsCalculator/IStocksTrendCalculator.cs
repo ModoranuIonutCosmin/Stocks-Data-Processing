@@ -7,8 +7,8 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
     public interface IStocksTrendCalculator
     {
         decimal CalculateTrendFromList(List<StocksPriceData> lastRangePricesData);
-        decimal CalculateTrendFromOHLC(OHLCPriceValue stocksOHLC);
-        decimal CalculateTrendFromOHLC(StocksOHLC stocksOHLC);
+        decimal CalculateTrendFromOHLC(OhlcPriceValue stocksOHLC);
+        decimal CalculateTrendFromOHLC(StocksOhlc stocksOHLC);
 
     }
 }

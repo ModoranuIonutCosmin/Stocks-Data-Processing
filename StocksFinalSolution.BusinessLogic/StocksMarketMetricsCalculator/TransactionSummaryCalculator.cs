@@ -79,42 +79,43 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
             string ticker)
         {
             var companyData = companiesRepository.GetCompanyData(ticker);
-            var result = new AllTransactionsDetailed();
-
-            result.Transactions = transactions.Select(e =>
+            var result = new AllTransactionsDetailed
             {
-                var currentSellPrice = pricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(ticker);
-
-                var currentPrice = e.IsBuy ? currentSellPrice : displayPriceCalculator.CalculateBuyPrice(currentSellPrice, e.Leverage);
-                var isCFD = e.Leverage > 1 || !e.IsBuy;
-                var initialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen;
-                var unitsPurchased = e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen);
-                var profitOrLoss = ((currentPrice - initialPrice) * unitsPurchased *
-                    (!e.IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
-                var profitOrLossPercentage = (profitOrLoss / (initialPrice * unitsPurchased)).TruncateToDecimalPlaces(3);
-
-                return new TransactionFullInfo()
+                Transactions = transactions.Select(e =>
                 {
-                    Id = e.Id,
-                    CurrentPrice = (currentPrice).TruncateToDecimalPlaces(3),
-                    InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
-                    IsBuy = e.IsBuy,
-                    Leverage = e.Leverage,
-                    InvestedAmount = e.InvestedAmount,
-                    UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)).TruncateToDecimalPlaces(3),
-                    StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
-                    TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
-                    Date = e.Date,
-                    IsCFD = isCFD,
-                    ProfitOrLoss = profitOrLoss,
-                    ProfitOrLossPercentage = profitOrLossPercentage
-                };
-            }).ToList();
+                    var currentSellPrice = pricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(ticker);
 
-            result.UrlLogo = companyData.UrlLogo;
-            result.Name = companyData.Name;
-            result.Description = companyData.Description;
-            result.Ticker = ticker;
+                    var currentPrice = e.IsBuy ? currentSellPrice : displayPriceCalculator.CalculateBuyPrice(currentSellPrice, e.Leverage);
+                    var isCFD = e.Leverage > 1 || !e.IsBuy;
+                    var initialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen;
+                    var unitsPurchased = e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen);
+                    var profitOrLoss = ((currentPrice - initialPrice) * unitsPurchased *
+                        (!e.IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
+                    var profitOrLossPercentage = (profitOrLoss / (initialPrice * unitsPurchased)).TruncateToDecimalPlaces(3);
+
+                    return new TransactionFullInfo()
+                    {
+                        Id = e.Id,
+                        CurrentPrice = (currentPrice).TruncateToDecimalPlaces(3),
+                        InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
+                        IsBuy = e.IsBuy,
+                        Leverage = e.Leverage,
+                        InvestedAmount = e.InvestedAmount,
+                        UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen)).TruncateToDecimalPlaces(3),
+                        StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
+                        TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
+                        Date = e.Date,
+                        IsCFD = isCFD,
+                        ProfitOrLoss = profitOrLoss,
+                        ProfitOrLossPercentage = profitOrLossPercentage
+                    };
+                }).ToList(),
+
+                UrlLogo = companyData.UrlLogo,
+                Name = companyData.Name,
+                Description = companyData.Description,
+                Ticker = ticker
+            };
 
             return result;
         }

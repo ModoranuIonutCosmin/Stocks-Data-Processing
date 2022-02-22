@@ -58,11 +58,9 @@ namespace StocksProccesing.Relational.Extension_Methods
 					await command.Connection.OpenAsync();
 				try
 				{
-					using (var reader = command.ExecuteReader())
-					{
-						return reader.MapToList<T>();
-					}
-				}
+                    using var reader = command.ExecuteReader();
+                    return reader.MapToList<T>();
+                }
 				finally
 				{
 					command.Connection.Close();

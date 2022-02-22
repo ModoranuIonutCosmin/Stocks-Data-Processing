@@ -22,9 +22,8 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
         public List<StocksPriceData> GetTodaysPriceEvolution(string ticker)
         {
             var currentDateUTC = DateTimeOffset.UtcNow.SetTime(8, 0);
-            var todaysPrices = new List<StocksPriceData>();
 
-            return todaysPrices = _dbContext.PricesData
+            return _dbContext.PricesData
                             .Where(e => e.Date >= currentDateUTC && e.CompanyTicker == ticker.ToUpper())
                             .OrderBy(e => e.Date)
                             .AsNoTracking()

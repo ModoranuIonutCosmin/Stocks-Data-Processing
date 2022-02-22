@@ -10,6 +10,6 @@
         public decimal SellPrice { get; set; }
         public decimal BuyPrice { get; set; }
         public long Period { get; set; }
-        public OHLCPriceValue Timepoint { get; set; }
+        public OhlcPriceValue Timepoint { get; set; }
     }
 }

@@ -49,9 +49,8 @@ namespace Stocks_Data_Processing.Utilities
                     $" to scrape found");
 
             var valueString = htmlElements.First().InnerText;
-            decimal valueNumeric;
 
-            if (!valueString.ParseCurrency(out valueNumeric))
+            if (!valueString.ParseCurrency(out decimal valueNumeric))
                 throw new CurrencyParseException($"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : Couldn't parse currency!");
 
             return valueNumeric;
