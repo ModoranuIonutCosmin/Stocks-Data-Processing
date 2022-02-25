@@ -6,8 +6,8 @@ using StocksProcessing.ML.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using Stocks.General.ExtensionMethods;
+using System.Linq;
 
 namespace StocksProcessing.ML
 {
@@ -55,7 +55,7 @@ namespace StocksProcessing.ML
         }
 
         public List<SingleTimepointPredictionComparePair> EvaluateModel(
-        IEnumerable<PriceDataInputModel> data, double testFraction = 0.2,
+        IEnumerable<PriceDataInputModel> data, double testFraction = 0.1,
         int horizon = 14400)
         {
             var splitData = data.SeparateDataSet(testFraction);
@@ -107,11 +107,11 @@ namespace StocksProcessing.ML
             var forecastingPipeline = mlContext.Forecasting.ForecastBySsa(
                outputColumnName: "ForecastedPrices",
                inputColumnName: "Price",
-               windowSize: 5 * 16 * 60,
+               windowSize: 60 * 16,
                seriesLength: trainDataLength,
                trainSize: trainDataLength,
                horizon: horizon,
-               confidenceLevel: 0.95f,
+               confidenceLevel: 0.99f,
                confidenceLowerBoundColumn: "LowerBoundPrices",
                confidenceUpperBoundColumn: "UpperBoundPrices");
 

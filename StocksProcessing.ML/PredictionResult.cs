@@ -5,8 +5,6 @@ namespace StocksProcessing.ML
     public class PredictionResult : IComparable<PredictionResult>
     {
         public DateTimeOffset Date { get; set; }
-
-
         public float LowerBoundPrice { get; set; }
         public float UpperBoundPrice { get; set; }
         public float Price { get; set; }

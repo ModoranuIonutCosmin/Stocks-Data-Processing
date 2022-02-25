@@ -20,7 +20,7 @@ namespace StockBulkGatherer
             = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
                                     .Select(s => s.ToString()).ToList();
         private static readonly object syncLock = new();
-        private static readonly ICompaniesRepository companiesRepository;
+        private static ICompaniesRepository companiesRepository;
         private static readonly HttpClient httpClient = new();
         private static StocksMarketContext _dbContext;
 
@@ -142,7 +142,7 @@ namespace StockBulkGatherer
 
 
             _dbContext = scope.Resolve<StockContextFactory>().Create();
-
+            companiesRepository = scope.Resolve<ICompaniesRepository>();
             var api_key = "ItDQkGgz7847ipgJ_e11TpgPrSBDkVJr";
             var chunksNo = 1;
             var limitPerMinute = 5;

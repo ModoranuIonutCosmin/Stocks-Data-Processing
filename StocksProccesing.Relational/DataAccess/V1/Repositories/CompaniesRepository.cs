@@ -92,7 +92,7 @@ namespace StocksProccesing.Relational.DataAccess.V1.Repositories
                         Description = ""
                     },
                 });
-
+                _dbContext.SaveChanges();
             }
         }
     }

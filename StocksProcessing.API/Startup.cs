@@ -16,6 +16,7 @@ using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Email;
 using StocksProcessing.API.Email.Interfaces;
 using System;
+using System.Reflection;
 using System.Text;
 
 namespace StocksProcessing.API
@@ -47,8 +48,10 @@ namespace StocksProcessing.API
             });
 
             services.AddDbContext<StocksMarketContext>(options =>
-                options.UseSqlServer(DatabaseSettings.ConnectionString)
-                );
+                options.UseSqlServer(DatabaseSettings.ConnectionString,
+                    ma => 
+                        ma.MigrationsAssembly(typeof(StocksMarketContext).Assembly.FullName)
+                ));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<StocksMarketContext>()
