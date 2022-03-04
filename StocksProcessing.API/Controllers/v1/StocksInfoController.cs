@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Stocks.General;
 using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Exceptions;
 using StocksProcessing.API.Models;
 using StocksProcessing.API.Payloads;
 using System;
@@ -14,6 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksFinalSolution.BusinessLogic.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,18 +25,21 @@ namespace StocksProcessing.API.Controllers.v1
         private readonly IStockSummariesRepository stockSummariesRepository;
         private readonly ICompaniesRepository companiesRepository;
         private readonly IStockPricesRepository stockPricesRepository;
+        private readonly IPredictionsDataService _predictionsDataService;
         private readonly IStockMarketDisplayPriceCalculator priceCalculator;
         private readonly IStocksTrendCalculator stocksTrendCalculator;
 
         public StocksInfoController(IStockSummariesRepository stockSummariesRepository,
             ICompaniesRepository companiesRepository,
             IStockPricesRepository stockPricesRepository,
+            IPredictionsDataService predictionsDataService,
             IStocksTrendCalculator stocksTrendCalculator,
             IStockMarketDisplayPriceCalculator priceCalculator)
         {
             this.stockSummariesRepository = stockSummariesRepository;
             this.companiesRepository = companiesRepository;
             this.stockPricesRepository = stockPricesRepository;
+            _predictionsDataService = predictionsDataService;
             this.stocksTrendCalculator = stocksTrendCalculator;
             this.priceCalculator = priceCalculator;
         }
@@ -135,60 +137,22 @@ namespace StocksProcessing.API.Controllers.v1
         }
 
         [HttpGet("forecastData")]
-        public async Task<ApiResponse<AllStocksPricePredictionsModel>> GetPredictions
-                                                        ([NotNull] string ticker)
+        public async Task<ApiResponse<StocksPredictionsPaginatedDTO>> GetPredictions
+                                                        ([NotNull] string ticker,
+                                                            string algorithm = "T_FTO",
+                                                            int page = 0, int count = 1000)
         {
             if (string.IsNullOrWhiteSpace(ticker))
             {
                 throw new ArgumentException($"'{nameof(ticker)}' cannot be null or whitespace.", nameof(ticker));
             }
 
-            var response = new ApiResponse<AllStocksPricePredictionsModel>();
-
-            if (!Enum.IsDefined(typeof(StocksTicker), ticker.ToUpper()))
+            return new ApiResponse<StocksPredictionsPaginatedDTO>()
             {
-                response.ErrorMessage = "Provide a known stock market ticker!";
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
-
-                return response;
-            }
-
-            Company companyInfo;
-
-            try
-            {
-                companyInfo = await companiesRepository
-                    .GetPredictionsByTicker(ticker);
-
-                if (companyInfo == null)
-                    throw new InvalidCompanyException("No company goes by that name!");
-            }
-
-            catch (Exception ex)
-            {
-                response.ErrorMessage = ex.Message;
-
-                return response;
-            }
-
-            var result = new AllStocksPricePredictionsModel
-            {
-                Ticker = companyInfo.Ticker,
-                Name = companyInfo.Name,
-                Description = companyInfo.Description,
-                UrlLogo = companyInfo.UrlLogo,
-                Predictions = companyInfo.PricesData
-                            .Select(e => new TimestampPrices()
-                            {
-                                Date = e.Date,
-                                Prediction = true,
-                                Price = e.Price
-                            }).ToList()
+                Response = await _predictionsDataService.GatherPredictions(algorithm,
+                    ticker, page, count)
             };
 
-            response.Response = result;
-
-            return response;
         }
 
     }

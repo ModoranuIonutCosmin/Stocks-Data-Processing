@@ -1,7 +1,8 @@
 ﻿using Microsoft.ML;
 using Microsoft.ML.Trainers.FastTree;
+using TabularML.Algorithms.Base;
 
-namespace TabularML;
+namespace TabularML.Algorithms.TabularReduction;
 
 public class TabularFastForestRegressionPredictionEngine : TabularPredictionEngine
 {
@@ -9,8 +10,7 @@ public class TabularFastForestRegressionPredictionEngine : TabularPredictionEngi
         base(dataset)
     {
     }
-
-    public override async Task SetupPipeline()
+    public override async Task SetupPipeline(int horizon)
     {
         string featuresColumnName = "Features";
         // Data process configuration with pipeline data transformations

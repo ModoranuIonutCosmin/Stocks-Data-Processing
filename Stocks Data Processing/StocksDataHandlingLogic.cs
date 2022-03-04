@@ -1,10 +1,9 @@
 ﻿using Stocks_Data_Processing.Actions;
 using Stocks_Data_Processing.ConfigHelpers;
-using Stocks_Data_Processing.Utilities;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 
 namespace Stocks_Data_Processing
 {

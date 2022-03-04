@@ -1,7 +1,6 @@
 ﻿using System;
 
-
-namespace Stocks_Data_Processing.QuartzDI
+namespace Stocks_Data_Processing.Quartz_Helpers
 {
 
     public interface IScopedDependency

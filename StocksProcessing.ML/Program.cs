@@ -5,6 +5,7 @@ using StocksProcessing.ML.Models;
 using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using StocksProcessing.ML.Models.TimeSeries;
 
 namespace StocksProcessing.ML
 {
@@ -16,7 +17,7 @@ namespace StocksProcessing.ML
 
             MLContext mlContext = new();
 
-            DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<PriceDataInputModel>();
+            DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<TimestampPriceInputModel>();
 
             // string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
             //                $"PricesData WHERE CompanyTicker = '{ticker}' ORDER BY Date asc";
@@ -30,7 +31,7 @@ namespace StocksProcessing.ML
             IDataView dataView = loader.Load(dbSource);
 
 
-            var allData = mlContext.Data.CreateEnumerable<PriceDataInputModel>(dataView, false);
+            var allData = mlContext.Data.CreateEnumerable<TimestampPriceInputModel>(dataView, false);
             Console.WriteLine("starting to tabularize");
             var result = allData.Tabularize(1440);
             await result.WriteDatasetToFile("./dataset.csv");

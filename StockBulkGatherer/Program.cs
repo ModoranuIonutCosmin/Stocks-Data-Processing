@@ -2,7 +2,6 @@
 using Stocks.General;
 using Stocks_Data_Processing;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 
 namespace StockBulkGatherer
 {

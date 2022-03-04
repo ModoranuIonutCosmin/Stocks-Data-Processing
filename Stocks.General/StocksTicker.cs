@@ -9,9 +9,7 @@
         MS,
         TSLA,
         INTC,
-        PFE,
         MSFT,
-        T,
         VOO,
     }
 }

@@ -11,13 +11,17 @@ using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Email;
-using StocksProcessing.API.Email.Interfaces;
 using System;
-using System.Reflection;
+using System.Net;
 using System.Text;
+using Hellang.Middleware.ProblemDetails;
+using StocksFinalSolution.BusinessLogic.Features.Authentication;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksFinalSolution.BusinessLogic.Services;
+using StocksProccesing.Relational.Extension_Methods.DI;
+using StocksProcessing.API.Middleware;
+using StocksProcessing.General.Exceptions;
 
 namespace StocksProcessing.API
 {
@@ -104,23 +108,40 @@ namespace StocksProcessing.API
                         builder.AllowAnyMethod();
                     });
             });
-
-            services.AddTransient<IDirectEmailSender, DirectEmailSender>()
-                .AddTransient<ITemplatedEmailSender, TemplatedEmailSender>()
-                .AddTransient<IGeneralPurposeEmailService, GeneralPurposeEmailService>()
-                .AddTransient<IUsersRepository, UsersRepository>()
-                .AddTransient<IOrdersRepository, OrdersRepository>()
-                .AddTransient<ITransactionsRepository, TransactionsRepository>()
-                .AddTransient<IStockPricesRepository, StockPricesRepository>()
-                .AddTransient<ICompaniesRepository, CompaniesRepository>()
-                .AddTransient<IStockSummariesRepository, StockSummariesRepository>()
+            
+            services.AddPersistence();
+            services.AddEmailServices();
+            
+            services
+                .AddScoped<IUserAuthenticationService, UserAuthenticationService>()
+                .AddScoped<IUserPasswordResetService, UserPasswordResetService>()
                 .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
                 .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
                 .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
                 .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
                 .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
                 .AddTransient<IStocksTrendCalculator, StocksTrendCalculator>()
-                .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>();
+                .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
+                .AddTransient<IPredictionsDataService, PredictionsDataService>();
+            
+            
+            services.AddProblemDetails(options =>
+            {
+                options.Map<NullReferenceException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<ArgumentException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<NullReferenceException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+
+                options.Map<InvalidCompanyException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<InvalidTransactionException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                
+                options.Map<UnauthorizedAccessException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Unauthorized));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -140,7 +161,7 @@ namespace StocksProcessing.API
             app.UseAuthorization();
             app.UseAuthentication();
 
-
+            app.UseProblemDetails();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,35 +1,13 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using Microsoft.ML;
+﻿using Microsoft.ML;
 using StocksProcessing.ML;
 using StocksProcessing.ML.Models;
 
-namespace TabularML;
+namespace TabularML.Algorithms.Base;
 
-public abstract class TabularPredictionEngine : PredictionEngineBase<TabularModelInput>
+public abstract class TabularPredictionEngine : PredictionEngineBase<TabularModelInput, TabularModelOutput>
 {
-    protected PredictionEngine<TabularModelInput, TabularModelOutput> PredictionEngine;
     protected TabularPredictionEngine(IEnumerable<TabularModelInput> dataset) : base(dataset)
     {
-    }
-    public override async Task TrainModel(int horizon, double testFraction)
-    {
-        SeparatedDataset<TabularModelInput> separatedDataset = _dataset.SeparateDataSet(testFraction);
-
-        TrainData = MlContext.Data.LoadFromEnumerable(separatedDataset.TrainData);
-        TestData = MlContext.Data.LoadFromEnumerable(separatedDataset.TestData);
-        dynamic model;
-        await SetupPipeline();
-        try
-        {
-            model = TrainPipeline.Fit(TrainData);
-            PredictionEngine = MlContext.Model.CreatePredictionEngine<TabularModelInput, TabularModelOutput>(model);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
     }
 
     public override async Task<List<PredictionResult>> ComputePredictionsForNextPeriod(int horizon,

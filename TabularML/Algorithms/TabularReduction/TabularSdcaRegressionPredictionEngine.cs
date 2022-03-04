@@ -1,10 +1,7 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Trainers.FastTree;
-using StocksProcessing.ML;
-using StocksProcessing.ML.Models;
+using TabularML.Algorithms.Base;
 
-namespace TabularML;
+namespace TabularML.Algorithms.TabularReduction;
 
 public class TabularSdcaRegressionPredictionEngine : TabularPredictionEngine
 {
@@ -13,7 +10,7 @@ public class TabularSdcaRegressionPredictionEngine : TabularPredictionEngine
     {
     }
 
-    public override async Task SetupPipeline()
+    public override async Task SetupPipeline(int horizon)
     {
         var pipeline = MlContext.Regression.Trainers
                 .Sdca(labelColumnName: @"Label", featureColumnName: @"Features");

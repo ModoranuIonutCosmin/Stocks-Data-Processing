@@ -305,7 +305,7 @@ namespace StocksProccesing.Relational.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOHLC", b =>
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOhlc", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -349,6 +349,10 @@ namespace StocksProccesing.Relational.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AlgorithmUsed")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CompanyTicker")
                         .HasMaxLength(10)
@@ -478,7 +482,7 @@ namespace StocksProccesing.Relational.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOHLC", b =>
+            modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOhlc", b =>
                 {
                     b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
                         .WithMany("SummariesData")
@@ -489,11 +493,9 @@ namespace StocksProccesing.Relational.Migrations
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>
                 {
-                    b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
+                    b.HasOne("StocksProccesing.Relational.Model.Company", null)
                         .WithMany("PricesData")
                         .HasForeignKey("CompanyTicker");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksTransaction", b =>

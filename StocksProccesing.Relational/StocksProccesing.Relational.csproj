@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,20 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Stocks.General\Stocks.General.csproj" />
+    <ProjectReference Include="..\StocksFinalSolution.BusinessLogic\StocksFinalSolution.BusinessLogic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Email\Template\contactMessage.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Email\Template\message.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

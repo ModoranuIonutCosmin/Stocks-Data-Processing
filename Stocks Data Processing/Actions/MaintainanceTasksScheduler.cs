@@ -1,10 +1,10 @@
 ﻿using Quartz;
 using Stocks_Data_Processing.Quartz_Helpers;
-using Stocks_Data_Processing.Utilities;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Stocks_Data_Processing.Interfaces.Jobs;
 
 namespace Stocks_Data_Processing.Actions
 {
@@ -43,7 +43,7 @@ namespace Stocks_Data_Processing.Actions
                 {
                     pendingTasks.Add(implementation.Execute(default));
                 }
-
+                
                 await scheduler.ScheduleJobAsync(implementation, job);
             }
 

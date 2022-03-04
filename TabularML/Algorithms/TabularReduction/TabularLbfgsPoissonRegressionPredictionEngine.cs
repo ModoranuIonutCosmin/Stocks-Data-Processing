@@ -1,7 +1,7 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Trainers.FastTree;
+using TabularML.Algorithms.Base;
 
-namespace TabularML;
+namespace TabularML.Algorithms.TabularReduction;
 
 public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEngine
 {
@@ -10,7 +10,7 @@ public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEn
     {
     }
 
-    public override async Task SetupPipeline()
+    public override async Task SetupPipeline(int horizon)
     {
         // Data process configuration with pipeline data transformations
         

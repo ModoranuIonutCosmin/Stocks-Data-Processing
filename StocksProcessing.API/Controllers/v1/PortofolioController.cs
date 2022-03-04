@@ -10,8 +10,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Stocks.General.ConstantsConfig;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 
 // For more information on enabling Web API for empty
 // projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

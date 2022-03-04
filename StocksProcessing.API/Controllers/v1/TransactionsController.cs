@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stocks.General.Models;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Auth;
 using StocksProcessing.API.Auth.ExtensionMethods;
-using StocksProcessing.API.Exceptions;
 using StocksProcessing.API.Payloads;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProcessing.General.Exceptions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

@@ -1,10 +1,7 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.ML.Trainers.FastTree;
-using StocksProcessing.ML;
-using StocksProcessing.ML.Models;
+using TabularML.Algorithms.Base;
 
-namespace TabularML;
+namespace TabularML.Algorithms.TabularReduction;
 
 public class TabularFastTreeRegressionPredictionEngine : TabularPredictionEngine
 {
@@ -13,7 +10,7 @@ public class TabularFastTreeRegressionPredictionEngine : TabularPredictionEngine
     {
     }
 
-    public override async Task SetupPipeline()
+    public override async Task SetupPipeline(int horizon)
     {
         string featuresColumnName = "Features";
         // Data process configuration with pipeline data transformations

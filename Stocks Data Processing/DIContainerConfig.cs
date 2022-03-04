@@ -5,16 +5,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz.Impl;
 using Stocks_Data_Processing.Actions;
-using Stocks_Data_Processing.QuartzDI;
-using Stocks_Data_Processing.Utilities;
 using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.DataAccess.V1.Repositories;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using Stocks_Data_Processing.Jobs;
+using Stocks_Data_Processing.Quartz_Helpers;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProccesing.Relational.DataAccess.V1;
 
 namespace Stocks_Data_Processing
 {
@@ -63,8 +65,6 @@ namespace Stocks_Data_Processing
                    .SingleInstance();
 
             /// Repositories, calculators, schedulers
-            /// 
-
 
             builder.RegisterType<MaintainanceTasksScheduler>().As<IMaintainanceTasksScheduler>();
             builder.RegisterType<StocksSummaryGenerator>().As<IStocksSummaryGenerator>();
@@ -109,11 +109,11 @@ namespace Stocks_Data_Processing
             builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainTaxesCollected).Assembly));
             builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainTransactionsUpdated).Assembly));
             ///
-
-            builder.RegisterAssemblyTypes(Assembly.Load(nameof(Stocks_Data_Processing).Replace('_', ' ')))
-                .Where(t => t.Namespace.Contains("Utilities"))
-                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
-
+            
+            
+            ///Services
+            
+            
             return builder.Build();
         }
 

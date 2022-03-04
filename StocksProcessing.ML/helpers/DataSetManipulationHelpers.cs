@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StocksProcessing.ML.Models.TimeSeries;
 
 namespace StocksProcessing.ML
 {
@@ -25,10 +26,10 @@ namespace StocksProcessing.ML
             };
         }
 
-        public static List<List<float>> Tabularize(this IEnumerable<PriceDataInputModel> allData, int windowSize)
+        public static List<List<float>> Tabularize(this IEnumerable<TimestampPriceInputModel> allData, int windowSize)
         {
             int datasetOffset = 0;
-            List<PriceDataInputModel> dataset = new List<PriceDataInputModel>(allData);
+            List<TimestampPriceInputModel> dataset = new List<TimestampPriceInputModel>(allData);
             List<List<float>> features = new List<List<float>>();
 
             List<float> chunk = new List<float>();
