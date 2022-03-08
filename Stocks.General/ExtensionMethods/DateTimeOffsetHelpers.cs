@@ -110,7 +110,7 @@ namespace Stocks.General.ExtensionMethods
             return date.SetTime(8, 0);
         }
 
-        public static double GetBusinessDays(DateTimeOffset startD, DateTimeOffset endD)
+        public static decimal GetBusinessDays(DateTimeOffset startD, DateTimeOffset endD)
         {
             double calcBusinessDays =
                 1 + ((endD - startD).TotalDays * 5 -
@@ -119,14 +119,13 @@ namespace Stocks.General.ExtensionMethods
             if (endD.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
             if (startD.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
 
-            return calcBusinessDays;
+            return (decimal) calcBusinessDays;
         }
 
         public static string ExtractDate(this DateTimeOffset dto)
         {
-            return dto != null
-                        ? dto.Date.ToShortDateString()
-                        : null;// 7/24/2014
+            return dto.Date.ToShortDateString();
         }
+
     }
 }

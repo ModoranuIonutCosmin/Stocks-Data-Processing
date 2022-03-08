@@ -1,30 +1,33 @@
 ﻿using Autofac;
 using Stocks.General;
 using Stocks_Data_Processing;
-using Stocks_Data_Processing.Models;
 using StocksProccesing.Relational.DataAccess;
-using StocksProccesing.Relational.Extension_Methods;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 
 namespace StockBulkGatherer
 {
-    class Program
+    static class Program
     {
-        public static List<string> WatchList
+        private static readonly IReadOnlyList<string> WatchList
             = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
                                     .Select(s => s.ToString()).ToList();
-        private static readonly object syncLock = new object();
-        public static HttpClient httpClient = new();
-        public static StocksMarketContext _dbContext;
+        private static readonly object syncLock = new();
+        private static ICompaniesRepository companiesRepository;
+        private static readonly HttpClient httpClient = new();
+        private static StocksMarketContext _dbContext;
+
+        static Program()
+        {
+            companiesRepository = DIContainerConfig.Resolve<ICompaniesRepository>();
+        }
 
 
         static List<StocksPriceData> GetJsonEntries(string jsonText, string ticker)
@@ -103,17 +106,13 @@ namespace StockBulkGatherer
                 if (currentDt.Day == nextDt.Day)
                 {
                     TimeSpan deltaTime = nextDt - currentDt;
-                    double source, target;
+                    decimal source;
 
                     source = current.Price;
-                    target = next.Price;
 
                     for (int j = 1; j < deltaTime.TotalMinutes; ++j)
                     {
                         ++i;
-
-                        //source = (source + target) / 2;
-                        //source = Math.Round(source, 2);
 
                         var fillingRow = new StocksPriceData()
                         {
@@ -143,13 +142,12 @@ namespace StockBulkGatherer
 
 
             _dbContext = scope.Resolve<StockContextFactory>().Create();
-
-            //var ticker = "VOO";
+            companiesRepository = scope.Resolve<ICompaniesRepository>();
             var api_key = "ItDQkGgz7847ipgJ_e11TpgPrSBDkVJr";
             var chunksNo = 1;
             var limitPerMinute = 5;
 
-            _dbContext.EnsureCompaniesDataExists();
+            companiesRepository.EnsureCompaniesDataExists();
 
             var tasks = new List<Task>();
 

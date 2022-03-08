@@ -1,7 +1,7 @@
 ﻿namespace Stocks.General.ConstantsConfig
 {
-    public class BankExchangeConsts
+    public static class BankExchangeConsts
     {
-        public const double LiborOneMonthRatio = 0.10;
+        public const decimal LiborOneMonthRatio = 0.10m;
     }
 }

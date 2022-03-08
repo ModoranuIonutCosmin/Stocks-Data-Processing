@@ -48,5 +48,10 @@
         /// The API response object as T
         /// </summary>
         public new T Response { get => (T)base.Response; set => base.Response = value; }
+
+        public static ApiResponse<T> Of<T>(T contents) => new ApiResponse<T>
+        {
+            Response = contents
+        };
     }
 }

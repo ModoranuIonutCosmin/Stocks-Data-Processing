@@ -1,26 +1,27 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Email;
-using StocksProcessing.API.Email.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using Hellang.Middleware.ProblemDetails;
+using StocksFinalSolution.BusinessLogic.Features.Authentication;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksFinalSolution.BusinessLogic.Services;
+using StocksProccesing.Relational.Extension_Methods.DI;
+using StocksProcessing.API.Middleware;
+using StocksProcessing.General.Exceptions;
 
 namespace StocksProcessing.API
 {
@@ -43,9 +44,18 @@ namespace StocksProcessing.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
             });
 
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+            });
+
             services.AddDbContext<StocksMarketContext>(options =>
-                options.UseSqlServer(DatabaseSettings.ConnectionString)
-                );
+                options.UseSqlServer(DatabaseSettings.ConnectionString,
+                    ma => 
+                        ma.MigrationsAssembly(typeof(StocksMarketContext).Assembly.FullName)
+                ));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<StocksMarketContext>()
@@ -98,10 +108,40 @@ namespace StocksProcessing.API
                         builder.AllowAnyMethod();
                     });
             });
+            
+            services.AddPersistence();
+            services.AddEmailServices();
+            
+            services
+                .AddScoped<IUserAuthenticationService, UserAuthenticationService>()
+                .AddScoped<IUserPasswordResetService, UserPasswordResetService>()
+                .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
+                .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
+                .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
+                .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
+                .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
+                .AddTransient<IStocksTrendCalculator, StocksTrendCalculator>()
+                .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
+                .AddTransient<IPredictionsDataService, PredictionsDataService>();
+            
+            
+            services.AddProblemDetails(options =>
+            {
+                options.Map<NullReferenceException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<ArgumentException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<NullReferenceException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
 
-            services.AddTransient<IDirectEmailSender, DirectEmailSender>()
-                .AddTransient<ITemplatedEmailSender, TemplatedEmailSender>()
-                .AddTransient<IGeneralPurposeEmailService, GeneralPurposeEmailService>();
+                options.Map<InvalidCompanyException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<InvalidTransactionException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                
+                options.Map<UnauthorizedAccessException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Unauthorized));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,6 +160,8 @@ namespace StocksProcessing.API
 
             app.UseAuthorization();
             app.UseAuthentication();
+
+            app.UseProblemDetails();
 
             app.UseEndpoints(endpoints =>
             {

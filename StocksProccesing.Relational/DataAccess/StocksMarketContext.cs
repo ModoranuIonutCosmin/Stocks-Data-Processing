@@ -9,8 +9,9 @@ namespace StocksProccesing.Relational.DataAccess
     {
         public DbSet<StocksPriceData> PricesData { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<PortofolioOpenTransaction> Transactions { get; set; }
+        public DbSet<StocksTransaction> Transactions { get; set; }
         public DbSet<MaintenanceAction> Actions { get; set; }
+        public DbSet<StocksOhlc> Summaries { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 
@@ -28,30 +29,33 @@ namespace StocksProccesing.Relational.DataAccess
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(DatabaseSettings.ConnectionString);
+            optionsBuilder.UseSqlServer(DatabaseSettings.ConnectionString,
+                sqlOptions => sqlOptions.CommandTimeout(12000));
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
             //Instante doar ca rezultat fara tabel - rezultate din stored procedures
-            //modelBuilder.Entity<StocksDailySummaryModel>
-            //    ().HasNoKey().ToView(null);
 
             //Indexi
-            modelBuilder.Entity<Company>()
+            builder.Entity<Company>()
             .HasIndex(d => d.Ticker)
             .IsUnique();
 
-            modelBuilder.Entity<StocksPriceData>()
-            .HasIndex(p => p.CompanyTicker);
+            builder.Entity<StocksPriceData>()
+                .HasIndex(p => p.CompanyTicker);
 
-            modelBuilder.Entity<StocksPriceData>()
+            builder.Entity<StocksPriceData>()
                 .HasIndex(p => p.Date);
 
-            modelBuilder.Entity<PortofolioOpenTransaction>().HasIndex(p => p.UniqueActionStamp)
+            builder.Entity<StocksTransaction>().HasIndex(p => p.UniqueActionStamp)
                 .IsUnique();
+
+            builder.Entity<MaintenanceAction>().HasIndex(p => p.Name)
+                .IsUnique();
+            builder.Entity<StocksOhlc>().HasIndex(p => p.Period);
         }
 
     }
