@@ -7,9 +7,9 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'MaintananceJobs'
-      - 'Maintainance.ScraperFunc'
+#   paths:
+#     - 'MaintananceJobs'
+#     - 'Maintainance.ScraperFunc'
   workflow_dispatch:
 
 env:
