@@ -25,7 +25,6 @@ namespace StocksProcessing.API.Controllers.v1
         private readonly IUsersRepository _userRepository;
         private readonly ITransactionSummaryCalculator _transactionSummaryCalculator;
         protected readonly UserManager<ApplicationUser> _userManager;
-        protected readonly SignInManager<ApplicationUser> _signInManager;
 
         public readonly IStockMarketProfitCalculator _stockMarketProfitCalculator;
 
@@ -96,7 +95,7 @@ namespace StocksProcessing.API.Controllers.v1
 
             try
             {
-                var openTransactionsList = new List<StocksTransaction>();
+                List<StocksTransaction> openTransactionsList;
 
                 openTransactionsList = _userRepository
                     .GetTransactionsListForUserByTicker(userRequesting, ticker);

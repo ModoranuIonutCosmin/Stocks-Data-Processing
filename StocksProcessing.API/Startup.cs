@@ -14,9 +14,15 @@ using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
 using System;
 using System.Net;
+using System.Reflection;
+using System.Security.Authentication;
 using System.Text;
 using Hellang.Middleware.ProblemDetails;
+using Stocks.General.Exceptions;
 using StocksFinalSolution.BusinessLogic.Features.Authentication;
+using StocksFinalSolution.BusinessLogic.Features.Portofolio;
+using StocksFinalSolution.BusinessLogic.Features.Companies;
+using StocksFinalSolution.BusinessLogic.Features.Stocks;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksFinalSolution.BusinessLogic.Services;
 using StocksProccesing.Relational.Extension_Methods.DI;
@@ -27,17 +33,21 @@ namespace StocksProcessing.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment hostingEnvironment;
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+        
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -51,11 +61,22 @@ namespace StocksProcessing.API
                 config.ReportApiVersions = true;
             });
 
+            string connectionString = Configuration.GetConnectionString("MyConnection");
+
+            if (hostingEnvironment.IsProduction())
+            {
+                connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ?? connectionString;
+            }
+
             services.AddDbContext<StocksMarketContext>(options =>
-                options.UseSqlServer(DatabaseSettings.ConnectionString,
-                    ma => 
+            {
+                options.UseSqlServer(connectionString,
+                    ma =>
                         ma.MigrationsAssembly(typeof(StocksMarketContext).Assembly.FullName)
-                ));
+                );
+                options.EnableSensitiveDataLogging();
+            });
+                
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<StocksMarketContext>()
@@ -65,6 +86,9 @@ namespace StocksProcessing.API
             services.AddAuthentication().AddJwtBearer(options =>
 
             {
+                var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ??
+                                Configuration["Jwt:Secret"];
+                
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     //Valideaza faptul ca payload-ul din Token a fost semnat cu secretul 
@@ -75,8 +99,8 @@ namespace StocksProcessing.API
                     ValidateLifetime = true,
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"]))
+                    IssuerSigningKey = 
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
                 };
             });
 
@@ -91,7 +115,7 @@ namespace StocksProcessing.API
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
                 options.Lockout.MaxFailedAccessAttempts = 3;
 
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
             });
 
             services.Configure<DataProtectionTokenProviderOptions>(e =>
@@ -108,20 +132,26 @@ namespace StocksProcessing.API
                         builder.AllowAnyMethod();
                     });
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddPersistence();
             services.AddEmailServices();
             
             services
+                .AddScoped<IPortofolioService, PortofolioService>()
+                .AddScoped<ICompanyService, CompanyService>()
+                .AddScoped<IStocksService, StocksService>()
                 .AddScoped<IUserAuthenticationService, UserAuthenticationService>()
                 .AddScoped<IUserPasswordResetService, UserPasswordResetService>()
                 .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
                 .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
-                .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
-                .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
                 .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
                 .AddTransient<IStocksTrendCalculator, StocksTrendCalculator>()
                 .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
+                .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
+                .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
+                
                 .AddTransient<IPredictionsDataService, PredictionsDataService>();
             
             
@@ -133,10 +163,36 @@ namespace StocksProcessing.API
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
                 options.Map<NullReferenceException>(details =>
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<InsufficientFundsException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<InvalidLeverageValue>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<InvalidStopLossValueForLeveragedTrade>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+                options.Map<InvalidTakeProfitValue>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.BadRequest));
+
+                options.Map<AuthenticationException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
+                options.Map<InvalidTransactionException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
+                options.Map<OrderAlreadySubmitted>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
+                options.Map<StockMarketClosedException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
+
 
                 options.Map<InvalidCompanyException>(details =>
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<InvalidConfirmationLinkException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<InvalidPasswordResetLink>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
                 options.Map<InvalidTransactionException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<NoStockPricesRecordedException>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
+                options.Map<UserNotFoundException>(details =>
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
                 
                 options.Map<UnauthorizedAccessException>(details =>

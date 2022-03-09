@@ -25,7 +25,9 @@ namespace StocksProccesing.Relational.DataAccess.V1
             var currentDateUTC = DateTimeOffset.UtcNow.SetTime(8, 0);
 
             return _dbContext.PricesData
-                            .Where(e => e.Date >= currentDateUTC && e.CompanyTicker == ticker.ToUpper())
+                            .Where(e => e.Date >= currentDateUTC &&
+                                        e.CompanyTicker == ticker.ToUpper() &&
+                                        e.Prediction == false)
                             .OrderBy(e => e.Date)
                             .AsNoTracking()
                             .ToList();

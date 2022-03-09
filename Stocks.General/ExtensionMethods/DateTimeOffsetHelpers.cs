@@ -27,9 +27,12 @@ namespace Stocks.General.ExtensionMethods
             return (dto.DayOfWeek != DayOfWeek.Sunday) && (dto.DayOfWeek != DayOfWeek.Saturday);
         }
 
-        public static bool IsDayTimeBetweenStockTradingRange(this DateTimeOffset dto)
+        public static bool IsDateDuringStockMarketOpenTimeframe(this DateTimeOffset dto)
         {
-            return dto.TimeOfDay >= new TimeSpan(8, 0, 0) && dto.TimeOfDay <= new TimeSpan(23, 59, 59);
+            return  dto.DayOfWeek < DayOfWeek.Saturday &&
+                    dto.DayOfWeek > DayOfWeek.Sunday &&
+                    dto.TimeOfDay >= new TimeSpan(8, 0, 0) &&
+                    dto.TimeOfDay <= new TimeSpan(23, 59, 59);
         }
 
         /// <summary>
@@ -65,7 +68,7 @@ namespace Stocks.General.ExtensionMethods
             DateTimeOffset dt = dto.Add(minimumDelay);
 
             var isWorkDay = dt.IsWorkDay();
-            var betweenTradingHours = dt.IsDayTimeBetweenStockTradingRange();
+            var betweenTradingHours = dt.IsDateDuringStockMarketOpenTimeframe();
             var stockMarketOpen = isWorkDay && betweenTradingHours;
 
 

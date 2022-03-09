@@ -1,13 +1,10 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Auth.Dtos;
 using StocksProcessing.API.Payloads;
 using System.Threading.Tasks;
 using StocksFinalSolution.BusinessLogic.Features.Authentication;
-using StocksFinalSolution.BusinessLogic.Interfaces.Email;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,27 +30,26 @@ namespace StocksProcessing.API.Controllers.v1
         }
 
         [HttpPost("register")]
-        public async Task<ApiResponse<RegisterUserDataModelResponse>> RegisterAsync(
+        public async Task<RegisterUserDataModelResponse> RegisterAsync(
             [FromBody] RegisterUserDataModelRequest registerData)
         {
             string frontEndUrl = (Environment.GetEnvironmentVariable("FrontEndUrl") ??
                                   _configuration["FrontEnd:URL"]) +
                                  _configuration["FrontEnd:ConfirmationRoute"];
 
-            return ApiResponse<RegisterUserDataModelResponse>
-                .Of(await _userAuthenticationService.RegisterAsync(registerData, frontEndUrl));
+            return await _userAuthenticationService.RegisterAsync(registerData, frontEndUrl);
         }
 
         [HttpPost("login")]
-        public async Task<ApiResponse<UserProfileDetailsApiModel>> LoginAsync(
+        public async Task<UserProfileDetailsApiModel> LoginAsync(
             [FromBody] LoginUserDataModel loginData)
         {
             string issuer = Environment.GetEnvironmentVariable("JwtIssuer") ?? _configuration["Jwt:Issuer"];
             string audience = Environment.GetEnvironmentVariable("JwtAudience") ?? _configuration["Jwt:Audience"];
             string secret = Environment.GetEnvironmentVariable("JwtSecret") ?? _configuration["Jwt:Secret"];
 
-            return ApiResponse<UserProfileDetailsApiModel>.Of(
-                await _userAuthenticationService.LoginAsync(loginData, secret, issuer, audience));
+            return 
+                await _userAuthenticationService.LoginAsync(loginData, secret, issuer, audience);
         }
 
         [HttpPost("ConfirmEmail")]

@@ -49,6 +49,7 @@ namespace StocksFinalSolution.BusinessLogic.Services
                 Algorithm = predictionEngine,
                 Count = predictions.Count,
                 Page = page,
+                Ticker = ticker,
                 TotalCount = await _stockPricesRepository
                     .GetPredictionsCountForTickerAndAlgorithm(ticker, predictionEngine)
             };

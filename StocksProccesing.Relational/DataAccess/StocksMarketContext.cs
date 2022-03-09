@@ -25,14 +25,6 @@ namespace StocksProccesing.Relational.DataAccess
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseSqlServer(DatabaseSettings.ConnectionString,
-                sqlOptions => sqlOptions.CommandTimeout(12000));
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
