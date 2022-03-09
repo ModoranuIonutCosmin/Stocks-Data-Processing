@@ -21,11 +21,7 @@ namespace StocksProccesing.Relational.Email
         public async Task<SendEmailResponse> SendEmailAsync(SendEmailDetails sendEmailDetails,
             string templateName, Dictionary<string, string> substitutions)
         {
-            string solutionDir = Directory.GetParent(
-                Directory.GetCurrentDirectory()).FullName;
-            
-            string templatePath = Path.Combine(solutionDir, 
-                "StocksProccesing.Relational",
+            string templatePath = Path.Combine(".",
                 "Email", "Template",
                 $"{templateName}.html");
 

@@ -13,12 +13,11 @@ namespace StocksProccesing.Relational.Model
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(100000)]
         public string Description { get; set; }
 
         [Column(TypeName = "VARCHAR(128)")]
         public string UrlLogo { get; set; }
-
         public List<StocksPriceData> PricesData { get; set; } = new List<StocksPriceData>();
         public List<StocksOhlc> SummariesData { get; set; } = new List<StocksOhlc>();
     }

@@ -9,11 +9,12 @@ public static class DIPersistence
     public static void AddPersistence(this IServiceCollection builder)
     {
         builder
-            .AddTransient<IUsersRepository, UsersRepository>()
-            .AddTransient<IOrdersRepository, OrdersRepository>()
-            .AddTransient<ITransactionsRepository, TransactionsRepository>()
-            .AddTransient<IStockPricesRepository, StockPricesRepository>()
-            .AddTransient<ICompaniesRepository, CompaniesRepository>()
-            .AddTransient<IStockSummariesRepository, StockSummariesRepository>();
+            .AddScoped<IUsersRepository, UsersRepository>()
+            .AddScoped<IOrdersRepository, OrdersRepository>()
+            .AddScoped<ITransactionsRepository, TransactionsRepository>()
+            .AddScoped<IStockPricesRepository, StockPricesRepository>()
+            .AddScoped<ICompaniesRepository, CompaniesRepository>()
+            .AddScoped<IStockSummariesRepository, StockSummariesRepository>()
+            .AddScoped<IMaintainanceJobsRepository, MaintainanceJobsRepository>();
     }
 }

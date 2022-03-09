@@ -12,8 +12,11 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using Stocks_Data_Processing.Interfaces.Jobs;
+using Stocks_Data_Processing.Interfaces.Services;
 using Stocks_Data_Processing.Jobs;
 using Stocks_Data_Processing.Quartz_Helpers;
+using Stocks_Data_Processing.Services;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.DataAccess.V1;
@@ -108,11 +111,22 @@ namespace Stocks_Data_Processing
             builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainCurrentStockData).Assembly));
             builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainTaxesCollected).Assembly));
             builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainTransactionsUpdated).Assembly));
+            builder.RegisterModule(new QuartzAutofacJobsModule(typeof(MaintainPeriodicalSummaries).Assembly));
             ///
             
             
-            ///Services
+            ///Jobs
+            builder.RegisterType<MaintainPredictionsUpToDate>().As<IMaintainPredictionsUpToDate>();
+            builder.RegisterType<MaintainCurrentStockData>().As<IMaintainCurrentStockData>();
+            builder.RegisterType<MaintainTaxesCollected>().As<IMaintainTaxesCollected>();
+            builder.RegisterType<MaintainTransactionsUpdated>().As<IMaintainTransactionsUpdated>();
+            builder.RegisterType<MaintainPeriodicalSummaries>().As<IMaintainPeriodicalSummaries>();
             
+            builder.RegisterType<CurrentStockInfoDataScraperService>().As<ICurrentStockInfoDataScraperService>();
+            builder.RegisterType<CurrentStockInfoYahooScraperService>().As<ICurrentStockInfoYahooScraperService>();
+            builder.RegisterType<CurrentStockInfoGoogleScraperService>().As<ICurrentStockInfoGoogleScraperService>();
+            builder.RegisterType<ScraperService>().As<IScraperService>();
+
             
             return builder.Build();
         }
