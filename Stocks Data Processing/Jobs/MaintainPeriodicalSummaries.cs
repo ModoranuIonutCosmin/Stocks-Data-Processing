@@ -47,9 +47,12 @@ namespace Stocks_Data_Processing.Jobs
         {
             var lastSummary = stockSummariesRepository.GetLastSummaryEntry(ticker, period);
 
-            //Sterge ultimul range
-            await stockSummariesRepository
-                .DeleteAsync(lastSummary);
+            if (lastSummary != null)
+            {
+                //Sterge ultimul range
+                await stockSummariesRepository
+                    .DeleteAsync(lastSummary);
+            }
 
             var lastRangeSummary = await stocksSummaryGenerator.GenerateSummary(ticker, period);
 
