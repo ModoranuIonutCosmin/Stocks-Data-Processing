@@ -24,8 +24,9 @@ namespace StocksProccesing.Relational.DataAccess.V1
 
             return _dbContext.Summaries
                 .OrderBy(e => e.Date)
+                .Where(e => e.CompanyTicker == ticker && e.Period == interval.Ticks)
                 .AsNoTracking()
-                .LastOrDefault(e => e.CompanyTicker == ticker && e.Period == interval.Ticks);
+                .LastOrDefault();
         }
 
         public async Task<StocksOhlc> GetLastSummaryEntryForTickerAndInterval(string ticker,

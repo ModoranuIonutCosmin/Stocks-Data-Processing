@@ -45,7 +45,7 @@ namespace Stocks_Data_Processing.Jobs
 
         public async Task UpdateLastPeriod(string ticker, TimeSpan period)
         {
-            var lastSummary = stockSummariesRepository.GetLastSummaryEntry(ticker, period);
+            StocksOhlc lastSummary = stockSummariesRepository.GetLastSummaryEntry(ticker, period);
 
             if (lastSummary != null)
             {
