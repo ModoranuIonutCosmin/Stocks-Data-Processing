@@ -44,7 +44,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
 
             var pricesData = (await stockPricesRepository
                 .GetAllWhereAsync(e => e.CompanyTicker == ticker &&
-                                       e.Date > lastUpdatedDate && !e.Prediction))
+                                       e.Date > lastUpdatedDate.Add(interval) && !e.Prediction))
                 .OrderBy(e => e.Date)
                 .ToList();
 
