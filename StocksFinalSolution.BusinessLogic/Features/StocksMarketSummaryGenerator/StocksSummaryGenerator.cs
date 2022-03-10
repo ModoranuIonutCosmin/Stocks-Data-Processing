@@ -43,11 +43,10 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                                                       ?? DateTimeOffset.FromUnixTimeMilliseconds(0);
 
             var pricesData = (await stockPricesRepository
-                .GetAllWhereAsync(e => e.CompanyTicker == ticker && e.Date > lastUpdatedDate && !e.Prediction))
-                .OrderByDescending(e => e.Date)
+                .GetAllWhereAsync(e => e.CompanyTicker == ticker &&
+                                       e.Date > lastUpdatedDate && !e.Prediction))
+                .OrderBy(e => e.Date)
                 .ToList();
-
-            var companyInfo = companiesRepository.GetCompanyData(ticker);
 
             List<List<StocksPriceData>> groupedChunks = new List<List<StocksPriceData>>();
 
@@ -59,7 +58,7 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
 
             foreach (var timePoint in pricesData)
             {
-                if (currentTimePoint.Subtract(timePoint.Date) > interval)
+                if (timePoint.Date.Subtract(currentTimePoint) > interval)
                 {
                     groupedChunks.Add(currentGroup);
                     currentGroup = new List<StocksPriceData>();
@@ -72,6 +71,8 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
             groupedChunks.Add(currentGroup);
 
             var currentPrice = currentGroup.Last().Price;
+            var companyInfo = companiesRepository.GetCompanyData(ticker);
+
             return new StocksSummary()
             {
                 Ticker = ticker,
@@ -84,8 +85,8 @@ namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
                 BuyPrice = priceCalculator.CalculateBuyPrice(currentPrice, 1).TruncateToDecimalPlaces(3),
                 Timepoints = groupedChunks.Select(e => new OhlcPriceValue()
                 {
-                    CloseValue = e.First().Price.TruncateToDecimalPlaces(3),
-                    OpenValue = e.Last().Price.TruncateToDecimalPlaces(3),
+                    CloseValue = e.Last().Price.TruncateToDecimalPlaces(3),
+                    OpenValue = e.First().Price.TruncateToDecimalPlaces(3),
                     Date = e.First().Date,
                     High = e.Max(k => k.Price).TruncateToDecimalPlaces(3),
                     Low = e.Min(k => k.Price).TruncateToDecimalPlaces(3)
