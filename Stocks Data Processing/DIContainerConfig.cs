@@ -20,6 +20,8 @@ using Stocks_Data_Processing.Services;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.DataAccess.V1;
+using Microsoft.EntityFrameworkCore;
+using StocksProccesing.Relational;
 
 namespace Stocks_Data_Processing
 {
@@ -39,7 +41,8 @@ namespace Stocks_Data_Processing
 
             ServiceCollection serviceCollection = new();
 
-            serviceCollection.AddDbContext<StocksMarketContext>();
+            serviceCollection.AddDbContext<StocksMarketContext>(opt =>
+            opt.UseSqlServer(DatabaseSettings.ConnectionString));
 
             builder.Populate(serviceCollection);
 

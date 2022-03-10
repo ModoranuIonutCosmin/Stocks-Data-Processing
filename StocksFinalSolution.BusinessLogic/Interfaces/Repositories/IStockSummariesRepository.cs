@@ -11,7 +11,6 @@ namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories
         StocksOhlc GetLastSummaryEntry(string ticker, TimeSpan interval);
         Task<List<StocksOhlc>> GetLastSummaryEntryForAll(TimeSpan interval);
         Task<List<StocksOhlc>> GetAllByTickerAndPeriod(string ticker, TimeSpan period);
-
         Task<StocksOhlc> GetLastSummaryEntryForTickerAndInterval(string ticker,
             TimeSpan interval);
     }

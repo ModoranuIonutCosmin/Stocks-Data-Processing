@@ -18,8 +18,9 @@ namespace Stocks_Data_Processing.Jobs
         private readonly IStockSummariesRepository stockSummariesRepository;
         private readonly IMaintainanceJobsRepository jobsRepository;
 
-        private List<TimeSpan> periods { get; set; } = new List<TimeSpan>{ TimeSpan.FromMinutes(5), TimeSpan.FromDays(1),
-            TimeSpan.FromDays(7) };
+        private List<TimeSpan> periods { get; set; } = new List<TimeSpan>{ TimeSpan.FromMinutes(5),
+         TimeSpan.FromHours(1),
+         TimeSpan.FromDays(1), TimeSpan.FromDays(7) };
        
         public MaintainPeriodicalSummaries(
             IStocksSummaryGenerator stocksSummaryGenerator,
@@ -44,12 +45,11 @@ namespace Stocks_Data_Processing.Jobs
 
         public async Task UpdateLastPeriod(string ticker, TimeSpan period)
         {
-            var startingRange = DateTime.UtcNow.Subtract(period);
+            var lastSummary = stockSummariesRepository.GetLastSummaryEntry(ticker, period);
 
             //Sterge ultimul range
             await stockSummariesRepository
-                .DeleteWhereAsync(e => e.CompanyTicker == ticker &&
-                e.Date >= startingRange && e.Period == period.Ticks);
+                .DeleteAsync(lastSummary);
 
             var lastRangeSummary = await stocksSummaryGenerator.GenerateSummary(ticker, period);
 

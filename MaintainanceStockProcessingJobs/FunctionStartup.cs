@@ -24,6 +24,8 @@ namespace MaintainanceStockProcessingJobs
         {
             string databaseConnectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
+            Console.WriteLine(databaseConnectionUrl);
+
             builder.Services.AddDbContext<StocksMarketContext>(options =>
             {
                 options.UseSqlServer(databaseConnectionUrl ?? DatabaseSettings.ConnectionString);
