@@ -6,6 +6,8 @@ using Stocks.General.ConstantsConfig;
 using Stocks.General.Exceptions;
 using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
+using Stocks.General.Models.Funds;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;

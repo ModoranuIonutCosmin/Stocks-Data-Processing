@@ -1,4 +1,4 @@
-﻿namespace StocksProccesing.Relational.Email
+﻿namespace Stocks.General.Models
 {
     public class SendEmailResponse
     {

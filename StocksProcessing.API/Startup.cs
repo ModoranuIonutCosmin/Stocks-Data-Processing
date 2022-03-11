@@ -22,6 +22,7 @@ using Stocks.General.Exceptions;
 using StocksFinalSolution.BusinessLogic.Features.Authentication;
 using StocksFinalSolution.BusinessLogic.Features.Portofolio;
 using StocksFinalSolution.BusinessLogic.Features.Companies;
+using StocksFinalSolution.BusinessLogic.Features.MyProfile;
 using StocksFinalSolution.BusinessLogic.Features.Stocks;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksFinalSolution.BusinessLogic.Services;
@@ -49,9 +50,32 @@ namespace StocksProcessing.API
         {
         
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(opt =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+                opt.AddSecurityRequirement(new()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
 
             services.AddApiVersioning(config =>
@@ -139,6 +163,7 @@ namespace StocksProcessing.API
             services.AddEmailServices();
             
             services
+                .AddScoped<IProfileService, ProfileService>()
                 .AddScoped<IPortofolioService, PortofolioService>()
                 .AddScoped<ICompanyService, CompanyService>()
                 .AddScoped<IStocksService, StocksService>()
@@ -151,7 +176,6 @@ namespace StocksProcessing.API
                 .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
                 .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
                 .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
-                
                 .AddTransient<IPredictionsDataService, PredictionsDataService>();
             
             

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using StocksProcessing.API.Auth.Dtos;
 using StocksProcessing.API.Payloads;
 using System.Threading.Tasks;
+using Stocks.General.Models.Authentication;
 using StocksFinalSolution.BusinessLogic.Features.Authentication;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

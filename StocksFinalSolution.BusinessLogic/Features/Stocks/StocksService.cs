@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;

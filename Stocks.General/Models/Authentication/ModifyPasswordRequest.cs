@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StocksProcessing.API.Auth.Dtos
+namespace Stocks.General.Models.Authentication
 {
     public class ModifyPasswordRequest
     {

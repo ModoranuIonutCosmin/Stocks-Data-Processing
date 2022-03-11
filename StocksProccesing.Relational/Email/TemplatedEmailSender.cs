@@ -4,8 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
-using StocksProccesing.Relational.Email.Dtos;
 
 namespace StocksProccesing.Relational.Email
 {
@@ -21,7 +21,7 @@ namespace StocksProccesing.Relational.Email
         public async Task<SendEmailResponse> SendEmailAsync(SendEmailDetails sendEmailDetails,
             string templateName, Dictionary<string, string> substitutions)
         {
-            string templatePath = Path.Combine(".",
+            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 "Email", "Template",
                 $"{templateName}.html");
 

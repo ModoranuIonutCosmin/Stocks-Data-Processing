@@ -21,9 +21,11 @@ namespace StocksProccesing.Relational.Model
         /// </summary>
         [Column(TypeName = "VARCHAR(50)")]
         public string LastName { get; set; }
+        
 
         [Column(TypeName = "decimal(20, 4)")]
         public decimal Capital { get; set; }
+        
 
         public List<StocksTransaction> OpenTransactions { get; set; }
 

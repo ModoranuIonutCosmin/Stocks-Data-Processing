@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Stocks.General.Models;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.Interfaces.Services
