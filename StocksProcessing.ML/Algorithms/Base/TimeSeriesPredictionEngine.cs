@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
-using StocksProcessing.ML.Models;
 using StocksProcessing.ML.Models.TimeSeries;
 
 namespace StocksProcessing.ML.Algorithms.Base;
