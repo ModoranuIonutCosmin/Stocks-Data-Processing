@@ -5,10 +5,10 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Stocks.General.Models.Authentication;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Auth;
-using StocksProcessing.API.Auth.Dtos;
 using StocksProcessing.General.Exceptions;
 
 namespace StocksFinalSolution.BusinessLogic.Features.Authentication

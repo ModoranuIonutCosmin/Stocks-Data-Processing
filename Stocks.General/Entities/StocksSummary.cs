@@ -1,5 +1,6 @@
 ﻿using Stocks.General.Models;
 using System.Collections.Generic;
+using Stocks.General.Models.StocksInfoAggregates;
 
 namespace StocksProcessing.API.Models
 {

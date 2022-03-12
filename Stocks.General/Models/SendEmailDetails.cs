@@ -1,4 +1,4 @@
-﻿namespace StocksProccesing.Relational.Email.Dtos
+﻿namespace Stocks.General.Models
 {
     /// <summary>
     /// The details about the email to send

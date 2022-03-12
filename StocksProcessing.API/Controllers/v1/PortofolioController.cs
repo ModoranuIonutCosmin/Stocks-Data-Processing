@@ -10,6 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Stocks.General.ConstantsConfig;
+using Stocks.General.Models.Funds;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Features.Portofolio;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;

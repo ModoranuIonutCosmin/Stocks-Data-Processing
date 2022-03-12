@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using StocksProcessing.API.Auth.Dtos;
+using Stocks.General.Models.Authentication;
 
 namespace StocksFinalSolution.BusinessLogic.Features.Authentication;
 

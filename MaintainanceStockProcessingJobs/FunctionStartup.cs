@@ -29,7 +29,6 @@ namespace MaintainanceStockProcessingJobs
             builder.Services.AddDbContext<StocksMarketContext>(options =>
             {
                 options.UseSqlServer(databaseConnectionUrl ?? DatabaseSettings.ConnectionString);
-                options.EnableSensitiveDataLogging();
             });
 
             builder.Services.AddPersistence();

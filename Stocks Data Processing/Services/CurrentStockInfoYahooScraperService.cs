@@ -12,21 +12,14 @@ namespace Stocks_Data_Processing.Services
     /// </summary>
     public class CurrentStockInfoYahooScraperService : ICurrentStockInfoYahooScraperService
     {
-        #region Private members
         private readonly IScraperService scraper;
         private const string YAHOO_FINANCE_LINK = "https://finance.yahoo.com/quote/";
-        #endregion
 
-        #region Constructor
-
-        /// <summary/>
-        /// <param name="httpClient">Client ce face diverse request-uri HTTP</param>
         public CurrentStockInfoYahooScraperService(
             IScraperService scraper)
         {
             this.scraper = scraper;
         }
-        #endregion
 
         #region Main functionality - Actual WebScraping
         /// <summary>

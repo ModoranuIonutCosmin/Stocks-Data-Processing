@@ -3,8 +3,8 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
-using StocksProccesing.Relational.Email.Dtos;
 
 namespace StocksProccesing.Relational.Email
 {

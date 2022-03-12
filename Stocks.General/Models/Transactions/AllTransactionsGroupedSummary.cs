@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Stocks.General.Models
+namespace Stocks.General.Models.Transactions
 {
     public class AllTransactionsGroupedSummary
     {

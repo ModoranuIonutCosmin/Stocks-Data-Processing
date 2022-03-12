@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Stocks.General.Models;
+using Stocks.General.Models.Funds;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.Features.Portofolio;

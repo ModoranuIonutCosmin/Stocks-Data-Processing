@@ -1,4 +1,6 @@
-﻿namespace Stocks.General.Models
+﻿using Stocks.General.Models.StocksInfoAggregates;
+
+namespace Stocks.General.Models
 {
     public class StockReportSingle
     {

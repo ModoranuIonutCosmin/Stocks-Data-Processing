@@ -138,8 +138,6 @@ namespace StockBulkGatherer
             var DIContainer = DIContainerConfig.Configure();
 
             using var scope = DIContainer.BeginLifetimeScope();
-            var application = scope.Resolve<IApplication>();
-
 
             _dbContext = scope.Resolve<StockContextFactory>().Create();
             companiesRepository = scope.Resolve<ICompaniesRepository>();

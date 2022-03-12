@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using StocksProccesing.Relational.Email;
+using Stocks.General.Models;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.Interfaces.Email

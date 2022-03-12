@@ -1,4 +1,4 @@
-﻿namespace Stocks.General.Models
+﻿namespace Stocks.General.Models.Funds
 {
     public class BalanceRefillOrder
     {

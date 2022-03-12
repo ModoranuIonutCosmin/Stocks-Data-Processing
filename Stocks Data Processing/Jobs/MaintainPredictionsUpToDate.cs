@@ -26,13 +26,6 @@ namespace Stocks_Data_Processing.Jobs
         private readonly IMaintainanceJobsRepository jobsRepository;
         private readonly ILogger<MaintainPredictionsUpToDate> _logger;
             
-        #region Private members - Variables
-
-        /// <summary>
-        /// Tine intr-o variabila statica lista companiilor pe care le
-        /// urmarim spre a le updata datele in BD.
-        /// See creaza pornind de la toate field-urile enumeratiei <see cref="StocksTicker"/>
-        /// </summary>
         private static readonly List<string> WatchList
             = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
                                                 .Select(s => s.ToString()).ToList();
@@ -47,7 +40,6 @@ namespace Stocks_Data_Processing.Jobs
         };
             
         private Dictionary<string, IPredictionEngine> PredictionEngines;
-        #endregion
 
         public MaintainPredictionsUpToDate(
             IStockPricesRepository stockPricesRepository,
@@ -101,6 +93,7 @@ namespace Stocks_Data_Processing.Jobs
                     tabular ? datasetTabular : datasetFlat) as IPredictionEngine;
                 var predictions = await predictionEngine
                     .ComputePredictionsForNextPeriod(12 * 16 * 5, 0);
+                
                 await stockPricesRepository.RemoveAllPricePredictionsForTickerAndAlgorithm(
                     predictionParams.ticker, Algorithms[predictionParams.type]);
                 await stockPricesRepository.AddPricesDataAsync(

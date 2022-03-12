@@ -58,13 +58,14 @@ namespace Stocks_Data_Processing.Services
         {
             //Incearca sa faca scrape la Google Finance si apoi salveaza datele obtinute in urma
             //procesului inclusiv daca a fost cu success.
-            var stockDataResponse = await _currentStockGoogleService.GatherAsync(ticker);
+            var stockDataResponse = await _currentStockYahooService.GatherAsync(ticker);
+            
 
             if (!stockDataResponse.Successful)
             //Daca scraping-ul la Google Finance a esuat...
             {
                 //... obtine datele de pe Yahoo Finance.
-                stockDataResponse = await _currentStockYahooService.GatherAsync(ticker);
+                stockDataResponse = await _currentStockGoogleService.GatherAsync(ticker);
             }
 
             if (!stockDataResponse.Successful)
@@ -86,19 +87,19 @@ namespace Stocks_Data_Processing.Services
         /// <seealso cref="StocksTicker"/>
         public async Task<IList<StockCurrentInfoResponse>> GatherAllAsync()
         {
-            var GatherTasks = new List<Task<StockCurrentInfoResponse>>();
-            var WatchList = TickersHelpers.GatherAllTickers();
+            var gatherTasks = new List<Task<StockCurrentInfoResponse>>();
+            var watchList = TickersHelpers.GatherAllTickers();
 
-            foreach (var ticker in WatchList)
+            foreach (var ticker in watchList)
             //Pentru fiecare companie pe care o urmarim...
             {
                 //... porneste procesul de obtinerea valorii stock-ului.
-                GatherTasks.Add(GatherAsync(ticker));
+                gatherTasks.Add(GatherAsync(ticker));
             }
 
             //Returneaza valorile pentru fiecare companie cand se termina task-urile
             //aferente obtinerii lor.
-            return await Task.WhenAll(GatherTasks);
+            return await Task.WhenAll(gatherTasks);
         }
         #endregion
 

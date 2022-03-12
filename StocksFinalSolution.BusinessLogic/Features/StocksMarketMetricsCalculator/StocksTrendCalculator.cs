@@ -3,6 +3,7 @@ using StocksProccesing.Relational.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
 namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator

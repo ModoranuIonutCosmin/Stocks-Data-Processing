@@ -1,4 +1,4 @@
-﻿namespace StocksProcessing.API.Auth.Dtos
+﻿namespace Stocks.General.Models.Authentication
 {
     public class RegisterUserDataModelResponse
     {

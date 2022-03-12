@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stocks.General.Models
+namespace Stocks.General.Models.StocksInfoAggregates
 {
     public class OhlcPriceValue
     {
