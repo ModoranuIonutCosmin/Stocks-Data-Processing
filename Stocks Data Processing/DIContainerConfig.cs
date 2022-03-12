@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quartz.Impl;
 using Stocks_Data_Processing.Actions;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational.DataAccess;
 using System;
 using System.Linq;
@@ -21,6 +19,8 @@ using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.DataAccess.V1;
 using Microsoft.EntityFrameworkCore;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 
 namespace Stocks_Data_Processing

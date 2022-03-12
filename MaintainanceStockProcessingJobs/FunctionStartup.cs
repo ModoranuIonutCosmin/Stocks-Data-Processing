@@ -7,12 +7,12 @@ using Stocks_Data_Processing.Interfaces.Services;
 using Stocks_Data_Processing.Jobs;
 using Stocks_Data_Processing.Services;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Extension_Methods.DI;
 using System;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 
 [assembly: FunctionsStartup(typeof(FunctionStartup))]
 

@@ -1,6 +1,6 @@
 ﻿using StocksProccesing.Relational.Model;
 
-namespace StocksProcessing.API.Auth.ExtensionMethods
+namespace StocksFinalSolution.BusinessLogic.Features.Authentication.ExtensionMethods
 {
     public static class IsUserAuthorizedHelpers
     {

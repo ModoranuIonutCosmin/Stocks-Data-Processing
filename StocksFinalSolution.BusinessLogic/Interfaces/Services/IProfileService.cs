@@ -2,7 +2,7 @@
 using Stocks.General.Models.MyProfile;
 using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Features.MyProfile;
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
 public interface IProfileService
 {

@@ -1,12 +1,11 @@
-﻿using Stocks.General.Models;
-using StocksProccesing.Relational.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator
 {
     public class StocksTrendCalculator : IStocksTrendCalculator
     {

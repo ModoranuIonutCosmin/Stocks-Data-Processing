@@ -1,10 +1,10 @@
-﻿using Stocks.General.ConstantsConfig;
+﻿using System;
+using Stocks.General.ConstantsConfig;
 using Stocks.General.ExtensionMethods;
-using StocksProccesing.Relational.Model;
-using System;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator
 {
     public class StockMarketOrderTaxesCalculator : IStockMarketOrderTaxesCalculator
     {

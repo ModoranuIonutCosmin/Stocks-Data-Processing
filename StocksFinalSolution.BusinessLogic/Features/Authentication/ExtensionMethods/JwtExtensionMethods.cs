@@ -1,11 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using StocksProccesing.Relational.Model;
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using StocksProccesing.Relational.Model;
 
-namespace StocksProcessing.API.Auth
+namespace StocksFinalSolution.BusinessLogic.Features.Authentication.ExtensionMethods
 {
     public static class JwtExtensionMethods
     {

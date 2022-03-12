@@ -6,8 +6,8 @@ using Quartz;
 using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Actions;
 using Stocks_Data_Processing.Interfaces.Jobs;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
-using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational.Model;
 
 namespace Stocks_Data_Processing.Jobs

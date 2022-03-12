@@ -143,7 +143,8 @@ public class PortofolioService : IPortofolioService
 
         if (stopLossTooBig || stopLossNegative)
         {
-            throw new InvalidStopLossValueForLeveragedTrade("Invalid stop loss amount for leveraged trade!");
+            throw new InvalidStopLossValueForLeveragedTrade("Invalid stop loss amount for leveraged trade!\r\n" +
+                                                            $"Stop loss should be between [1, {marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent}]");
         }
 
         if (takeProfitNegative)

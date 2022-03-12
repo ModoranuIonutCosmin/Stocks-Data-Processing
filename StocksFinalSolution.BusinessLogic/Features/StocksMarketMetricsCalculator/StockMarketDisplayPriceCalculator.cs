@@ -2,7 +2,7 @@
 using Stocks.General.ExtensionMethods;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator
 {
     public class StockMarketDisplayPriceCalculator : IStockMarketDisplayPriceCalculator
     {

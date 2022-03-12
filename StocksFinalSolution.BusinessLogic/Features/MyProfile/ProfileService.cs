@@ -2,6 +2,7 @@
 using AutoMapper;
 using Stocks.General.Models.MyProfile;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.Features.MyProfile;
