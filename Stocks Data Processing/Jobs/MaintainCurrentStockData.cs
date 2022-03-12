@@ -17,22 +17,14 @@ namespace Stocks_Data_Processing.Jobs
     /// <returns></returns>
     public class MaintainCurrentStockData : IMaintainCurrentStockData
     {
-        private readonly ICompaniesRepository companiesRepository;
+        private readonly ICompaniesRepository _companiesRepository;
         #region Private members
-        private readonly IStockPricesRepository stockPricesRepository;
+        private readonly IStockPricesRepository _stockPricesRepository;
         private readonly ICurrentStockInfoDataScraperService _currentStockInfoDataScraper;
-        private readonly IMaintainanceJobsRepository jobsRepository;
+        private readonly IMaintainanceJobsRepository _jobsRepository;
         private readonly ILogger<MaintainCurrentStockData> _logger;
         #endregion
 
-        #region Constructor
-
-        /// <summary>
-        /// Injecteaza serviciile necesare.
-        /// </summary>
-        /// <param name="currentStockInfoDataScraper">Serviciu care face scrape 
-        /// si returneaza rezultate legate de pretul stock-urilor</param>
-        /// <param name="stocksContext">Context-ul bazei de date aferent aplicatiei.</param>
         public MaintainCurrentStockData(
             ICompaniesRepository companiesRepository,
             IStockPricesRepository stockPricesRepository,
@@ -40,19 +32,12 @@ namespace Stocks_Data_Processing.Jobs
             IMaintainanceJobsRepository jobsRepository,
             ILogger<MaintainCurrentStockData> logger)
         {
-            this.companiesRepository = companiesRepository;
-            this.stockPricesRepository = stockPricesRepository;
+            this._companiesRepository = companiesRepository;
+            this._stockPricesRepository = stockPricesRepository;
             _currentStockInfoDataScraper = currentStockInfoDataScraper;
-            this.jobsRepository = jobsRepository;
+            this._jobsRepository = jobsRepository;
             _logger = logger;
         }
-
-
-
-        #endregion
-
-        #region Main functionality
-
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -66,7 +51,7 @@ namespace Stocks_Data_Processing.Jobs
         {
             _logger.LogWarning($"[Current prices maintain task] Starting to update current stock data {DateTimeOffset.UtcNow}");
 
-            companiesRepository.EnsureCompaniesDataExists();
+            _companiesRepository.EnsureCompaniesDataExists();
 
             //Obtine date despre stock-urile companiilor urmarite.
             var stockData = await _currentStockInfoDataScraper.GatherAllAsync();
@@ -81,16 +66,14 @@ namespace Stocks_Data_Processing.Jobs
                     CompanyTicker = response.Ticker.ToString()
                 }).ToList();
 
-            //Adauga aceste randuri in tabel.
-            await stockPricesRepository.AddRangeAsync(stocksTableEntries);
+            await _stockPricesRepository.AddRangeAsync(stocksTableEntries);
 
-            await stockPricesRepository.DeleteWhereAsync(p => p.Prediction && p.Date < DateTimeOffset.UtcNow);
+            await _stockPricesRepository.DeleteWhereAsync(p => p.Date < DateTimeOffset.UtcNow && p.Prediction);
 
-            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.CurrentStocksJob);
+            _jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.CurrentStocksJob);
 
             _logger.LogWarning($"[Current prices maintain task] Done to update current stock data {DateTimeOffset.UtcNow}");
 
         }
     }
-    #endregion
 }

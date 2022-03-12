@@ -93,6 +93,7 @@ namespace Stocks_Data_Processing.Jobs
                     tabular ? datasetTabular : datasetFlat) as IPredictionEngine;
                 var predictions = await predictionEngine
                     .ComputePredictionsForNextPeriod(12 * 16 * 5, 0);
+                
                 await stockPricesRepository.RemoveAllPricePredictionsForTickerAndAlgorithm(
                     predictionParams.ticker, Algorithms[predictionParams.type]);
                 await stockPricesRepository.AddPricesDataAsync(
