@@ -1,22 +1,21 @@
-﻿using MaintainanceStockProcessingJobs;
+﻿using System;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Stocks_Data_Processing.Interfaces.Jobs;
 using Stocks_Data_Processing.Interfaces.Services;
 using Stocks_Data_Processing.Jobs;
 using Stocks_Data_Processing.Services;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
-using System;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
-using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational.Extension_Methods.DI;
 
-[assembly: FunctionsStartup(typeof(FunctionStartup))]
+[assembly: FunctionsStartup(typeof(PredictionsGeneratorFunction.FunctionStartup))]
 
-namespace MaintainanceStockProcessingJobs
+namespace PredictionsGeneratorFunction
 {
     public class FunctionStartup : FunctionsStartup
     {
