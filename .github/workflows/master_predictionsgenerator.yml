@@ -38,5 +38,5 @@ jobs:
         with:
           app-name: 'PredictionsGenerator'
           slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output/PredictionsGeneratorFunction'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8381F4D702E24232A92D1B36F5D88B96 }}
