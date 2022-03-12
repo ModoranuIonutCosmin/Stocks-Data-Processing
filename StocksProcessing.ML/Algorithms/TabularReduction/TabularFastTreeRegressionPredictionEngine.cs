@@ -20,7 +20,7 @@ public class TabularFastTreeRegressionPredictionEngine : TabularPredictionEngine
         
         var pipeline = MlContext.Regression.Trainers
             .FastTree(labelColumnName: @"Label", featureColumnName: @"Features", learningRate:0.3f,
-                numberOfLeaves: 20, numberOfTrees:100);
+                numberOfLeaves: 20, numberOfTrees: 100);
         this.TrainPipeline = pipeline;
     }
 }

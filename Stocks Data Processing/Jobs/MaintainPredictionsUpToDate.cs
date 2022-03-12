@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Stocks.General;
 using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Actions;
 using Stocks_Data_Processing.Interfaces.Jobs;
+using StocksFinalSolution.BusinessLogic.Features.Transactions;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.ML;
@@ -21,35 +23,38 @@ namespace Stocks_Data_Processing.Jobs
 {
     public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
     {
-        private readonly IStockPricesRepository stockPricesRepository;
-        private readonly ICompaniesRepository companiesRepository;
-        private readonly IMaintainanceJobsRepository jobsRepository;
+        private readonly IStockPricesRepository _stockPricesRepository;
+        private readonly IStockSummariesRepository _summariesRepository;
+        private readonly ICompaniesRepository _companiesRepository;
+        private readonly IMaintainanceJobsRepository _jobsRepository;
         private readonly ILogger<MaintainPredictionsUpToDate> _logger;
-            
-        private static readonly List<string> WatchList
-            = Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                                .Select(s => s.ToString()).ToList();
 
-        private static readonly Dictionary<Type, string> Algorithms = new()
+        private static readonly TimeSpan DatasetInterval = TimeSpan.FromHours(1);
+
+        private static readonly Dictionary<Type, string> TabularAlgorithms = new()
         {
             {typeof(TabularSdcaRegressionPredictionEngine),         "T_SDCA"},
             {typeof(TabularFastForestRegressionPredictionEngine),   "T_FFO"},
             {typeof(TabularFastTreeRegressionPredictionEngine),     "T_FTO"},
             {typeof(TabularLbfgsPoissonRegressionPredictionEngine), "T_LBFP"},
-            {typeof(SSAPredictionEngine),                           "TS_SSA"}
+        };
+        
+        private static readonly Dictionary<Type, string> TimeseriesAlgorithms = new()
+        {
+            {typeof(SSAPredictionEngine), "TS_SSA"}
         };
             
-        private Dictionary<string, IPredictionEngine> PredictionEngines;
-
         public MaintainPredictionsUpToDate(
+            IStockSummariesRepository summariesRepository,
             IStockPricesRepository stockPricesRepository,
             ICompaniesRepository companiesRepository,
             IMaintainanceJobsRepository jobsRepository,
             ILogger<MaintainPredictionsUpToDate> logger)
         {
-            this.stockPricesRepository = stockPricesRepository;
-            this.companiesRepository = companiesRepository;
-            this.jobsRepository = jobsRepository;
+            _summariesRepository = summariesRepository;
+            _stockPricesRepository = stockPricesRepository;
+            _companiesRepository = companiesRepository;
+            _jobsRepository = jobsRepository;
             _logger = logger;
         }
 
@@ -61,75 +66,97 @@ namespace Stocks_Data_Processing.Jobs
 
         public async Task UpdatePredictionsAsync()
         {
-            _logger.LogWarning($"[Predictions refresh task] Started prediction refreshing! " +
+            _logger.LogWarning("[Predictions refresh task] Started prediction refreshing! " +
                                $"{DateTimeOffset.UtcNow}");
 
-            companiesRepository.EnsureCompaniesDataExists();
+            _companiesRepository.EnsureCompaniesDataExists();
 
-            var trainingContexts = from ticker in WatchList
-                from type in Algorithms.Keys
-                select (ticker, type);
-                
-            
-            foreach (var predictionParams in trainingContexts)
+            foreach (string ticker in TickersHelpers.GatherAllTickers())
             {
-                bool tabular = predictionParams.type.IsSubclassOf(typeof(TabularPredictionEngine));
-                var datasetFlat = await GatherTimeseriesDataset(predictionParams.ticker);
+                var datasetFlat = await GatherTimeseriesDataset(ticker);
                 IEnumerable<TabularModelInput> datasetTabular = Enumerable.Empty<TabularModelInput>();
-                var currentDate = new DateTimeOffset(datasetFlat.Last().Date.Ticks, TimeSpan.Zero);
-                
-                if (tabular)
+                var latestKnownDate = datasetFlat.Last().Date;
+
+                foreach (var algorithm in TimeseriesAlgorithms.Keys)
                 {
-                    datasetTabular = datasetFlat.Tabularize(960)
-                        .Select(obs =>
-                            new TabularModelInput()
-                            {
-                                Features = obs.SkipLast(1).ToArray(),
-                                Next = obs.Last()
-                            });
+                    var predictionEngine = Activator.CreateInstance(algorithm, datasetFlat) 
+                        as IPredictionEngine;
+                    
+                    var predictions = await predictionEngine
+                        .ComputePredictionsForNextPeriod(16 * 5, 0);
+
+                    await UpdatePredictionsForAlgorithmAndTicker(latestKnownDate, TimeseriesAlgorithms[algorithm],
+                        ticker, predictions);
                 }
 
-                var predictionEngine = Activator.CreateInstance(predictionParams.type, 
-                    tabular ? datasetTabular : datasetFlat) as IPredictionEngine;
-                var predictions = await predictionEngine
-                    .ComputePredictionsForNextPeriod(12 * 16 * 5, 0);
-                
-                await stockPricesRepository.RemoveAllPricePredictionsForTickerAndAlgorithm(
-                    predictionParams.ticker, Algorithms[predictionParams.type]);
-                await stockPricesRepository.AddPricesDataAsync(
-                    predictions.Select(prediction =>
-                    {
-                        currentDate = new DateTimeOffset(currentDate
-                            .GetNextStockMarketTime(TimeSpan.FromMinutes(5)).Ticks, TimeSpan.Zero);
+                if (datasetFlat.Count() < 80)
+                {
+                    continue;
+                }
 
-                        return new StocksPriceData()
-                        {
-                            Prediction = true,
-                            AlgorithmUsed = Algorithms[predictionParams.type],
-                            Price = (decimal) prediction.Price,
-                            CompanyTicker = predictionParams.ticker,
-                            Date = currentDate
-                        };
-                    }).ToList());
+                datasetTabular = datasetFlat.Tabularize(16 * 5).
+                    Select(set => new TabularModelInput
+                    {
+                        Features = set.SkipLast(1).ToArray(),
+                        Next = set.Last()
+                    });
+                datasetFlat = Enumerable.Empty<TimestampPriceInputModel>();
+                
+                foreach (var algorithm in TabularAlgorithms.Keys)
+                {
+                    var predictionEngine = Activator.CreateInstance(algorithm, datasetTabular) 
+                        as IPredictionEngine;
+                    
+                    var predictions = await predictionEngine
+                        .ComputePredictionsForNextPeriod(16 * 5, 0);
+
+                    await UpdatePredictionsForAlgorithmAndTicker(latestKnownDate, TabularAlgorithms[algorithm],
+                        ticker, predictions);
+                    
+                }
             }
 
-            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob);
+            _jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob);
             _logger.LogWarning($"[Predictions maintan task] Done prediction refreshing! { DateTimeOffset.UtcNow }");
         }
 
 
+        private async Task UpdatePredictionsForAlgorithmAndTicker(DateTimeOffset latestDatasetDate, string algorithm, 
+            string ticker, List<PredictionResult> predictions)
+        {
+            var currentDate = latestDatasetDate;
+            var nextStockPrices = predictions.Select(prediction =>
+            {
+                currentDate = new DateTimeOffset(currentDate
+                    .GetNextStockMarketTime(DatasetInterval).Ticks, TimeSpan.Zero);
+
+                return new StocksPriceData
+                {
+                    Prediction = true,
+                    AlgorithmUsed = algorithm,
+                    Price = (decimal) prediction.Price,
+                    CompanyTicker = ticker,
+                    Date = currentDate
+                };
+            }).ToList();
+            
+            await _stockPricesRepository.RemoveAllPricePredictionsForTickerAndAlgorithm(
+                ticker, algorithm);
+            await _stockPricesRepository.AddPricesDataAsync(nextStockPrices);
+        }
+
         private async Task<IEnumerable<TimestampPriceInputModel>> GatherTimeseriesDataset(string ticker)
         {
             return
-                (await stockPricesRepository
+                (await _summariesRepository
                     .GetAllWhereAsync(p => p.CompanyTicker == ticker &&
-                                           p.Prediction == false)
+                                           p.Period == DatasetInterval.Ticks)
                 )
                 .OrderBy(p => p.Date)
-                .Select(price => new TimestampPriceInputModel()
+                .Select(price => new TimestampPriceInputModel
                 {
                     Date = new DateTime(price.Date.Ticks, DateTimeKind.Utc),
-                    Price = (float) price.Price
+                    Price = (float) price.CloseValue
                 });
         }
     }

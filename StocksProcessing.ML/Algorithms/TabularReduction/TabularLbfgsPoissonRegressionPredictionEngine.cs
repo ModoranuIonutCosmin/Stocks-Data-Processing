@@ -19,7 +19,7 @@ public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEn
         
         var pipeline = MlContext.Regression.Trainers
                 .LbfgsPoissonRegression(labelColumnName: @"Label", featureColumnName: @"Features",
-                    historySize: 960, enforceNonNegativity: true);
+                    historySize: 80, enforceNonNegativity: true);
         this.TrainPipeline = pipeline;
     }
 }
