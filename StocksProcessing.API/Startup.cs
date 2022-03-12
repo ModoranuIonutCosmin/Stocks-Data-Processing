@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator;
 using StocksProccesing.Relational;
 using StocksProccesing.Relational.DataAccess;
 using StocksProccesing.Relational.Model;
@@ -23,9 +21,12 @@ using StocksFinalSolution.BusinessLogic.Features.Authentication;
 using StocksFinalSolution.BusinessLogic.Features.Portofolio;
 using StocksFinalSolution.BusinessLogic.Features.Companies;
 using StocksFinalSolution.BusinessLogic.Features.MyProfile;
+using StocksFinalSolution.BusinessLogic.Features.Predictions;
 using StocksFinalSolution.BusinessLogic.Features.Stocks;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
+using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
+using StocksFinalSolution.BusinessLogic.Features.Transactions;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksFinalSolution.BusinessLogic.Services;
 using StocksProccesing.Relational.Extension_Methods.DI;
 using StocksProcessing.API.Middleware;
 using StocksProcessing.General.Exceptions;
@@ -161,7 +162,7 @@ namespace StocksProcessing.API
             
             services.AddPersistence();
             services.AddEmailServices();
-            
+
             services
                 .AddScoped<IProfileService, ProfileService>()
                 .AddScoped<IPortofolioService, PortofolioService>()
@@ -176,7 +177,8 @@ namespace StocksProcessing.API
                 .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
                 .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
                 .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
-                .AddTransient<IPredictionsDataService, PredictionsDataService>();
+                .AddTransient<IPredictionsDataService, PredictionsDataService>()
+                .AddTransient<ITransactionsService, TransactionsService>();
             
             
             services.AddProblemDetails(options =>
@@ -204,8 +206,10 @@ namespace StocksProcessing.API
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
                 options.Map<StockMarketClosedException>(details =>
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
+                options.Map<InvalidTransactionOwner>(details =>
+                    details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Conflict));
 
-
+                
                 options.Map<InvalidCompanyException>(details =>
                     details.MapToProblemDetailsWithStatusCode(HttpStatusCode.NotFound));
                 options.Map<InvalidConfirmationLinkException>(details =>

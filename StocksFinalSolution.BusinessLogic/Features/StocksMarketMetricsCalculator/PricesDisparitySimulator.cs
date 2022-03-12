@@ -1,7 +1,7 @@
 ﻿using System;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator
 {
     public class PricesDisparitySimulator : IPricesDisparitySimulator
     {

@@ -7,7 +7,6 @@ using Stocks_Data_Processing.Actions;
 using Stocks_Data_Processing.Interfaces.Jobs;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 
 namespace Stocks_Data_Processing.Jobs
 {

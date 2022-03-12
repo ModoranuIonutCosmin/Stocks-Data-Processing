@@ -1,14 +1,13 @@
-﻿using Stocks.General.ExtensionMethods;
-using Stocks.General.Models;
-using StocksProccesing.Relational.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Stocks.General.ExtensionMethods;
 using Stocks.General.Models.Transactions;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator
 {
     public class TransactionSummaryCalculator : ITransactionSummaryCalculator
     {

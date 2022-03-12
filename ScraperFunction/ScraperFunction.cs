@@ -16,7 +16,7 @@ namespace MaintananceJobs
         }
 
         [FunctionName("ScraperFunction")]
-        public async Task Run([TimerTrigger("0 8-23 *  * * *")]TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 8-23 * * * 1-5")]TimerInfo myTimer, ILogger log)
         {
             await maintainCurrentStockData.Execute(default);
         }

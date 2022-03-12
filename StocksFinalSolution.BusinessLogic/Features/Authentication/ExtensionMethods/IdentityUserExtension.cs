@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
-namespace StocksProcessing.API.Auth
+namespace StocksFinalSolution.BusinessLogic.Features.Authentication.ExtensionMethods
 {
     /// <summary>
     /// Extension methods for <see cref="IdentityError"/> class

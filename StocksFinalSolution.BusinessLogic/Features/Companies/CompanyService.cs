@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
 
 namespace StocksFinalSolution.BusinessLogic.Features.Companies;

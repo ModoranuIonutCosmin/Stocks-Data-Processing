@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stocks.General.Models.MyProfile;
 using StocksFinalSolution.BusinessLogic.Features.MyProfile;
+using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Auth;
 

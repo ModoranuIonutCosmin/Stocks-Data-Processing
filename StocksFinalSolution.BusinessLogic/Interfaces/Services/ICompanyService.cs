@@ -1,6 +1,6 @@
 ﻿using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Features.Companies;
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
 public interface ICompanyService
 {

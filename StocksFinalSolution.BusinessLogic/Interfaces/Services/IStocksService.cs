@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Stocks.General.Models;
 using StocksProcessing.API.Models;
 
-namespace StocksFinalSolution.BusinessLogic.Features.Stocks;
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
 public interface IStocksService
 {

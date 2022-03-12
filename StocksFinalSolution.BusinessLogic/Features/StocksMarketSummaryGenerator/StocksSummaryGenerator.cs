@@ -1,18 +1,15 @@
-﻿using Stocks.General.ExtensionMethods;
-using Stocks.General.Models;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
-using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Stocks.General.ExtensionMethods;
 using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksProccesing.Relational.Model;
+using StocksProcessing.API.Models;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator
 {
     public class StocksSummaryGenerator : IStocksSummaryGenerator
     {

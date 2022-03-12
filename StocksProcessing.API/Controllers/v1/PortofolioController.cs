@@ -15,7 +15,6 @@ using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Features.Portofolio;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksFinalSolution.BusinessLogic.StocksMarketMetricsCalculator;
 
 // For more information on enabling Web API for empty
 // projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

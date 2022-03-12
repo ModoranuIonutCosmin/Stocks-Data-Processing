@@ -1,8 +1,8 @@
-﻿using StocksProcessing.API.Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using StocksProcessing.API.Models;
 
-namespace StocksFinalSolution.BusinessLogic.StocksMarketSummaryGenerator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator
 {
     public interface IStocksSummaryGenerator
     {

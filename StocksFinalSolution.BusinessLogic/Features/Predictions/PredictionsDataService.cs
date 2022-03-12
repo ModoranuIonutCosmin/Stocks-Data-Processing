@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Stocks.General;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Services
+namespace StocksFinalSolution.BusinessLogic.Features.Predictions
 {
     public class PredictionsDataService : IPredictionsDataService
     {
