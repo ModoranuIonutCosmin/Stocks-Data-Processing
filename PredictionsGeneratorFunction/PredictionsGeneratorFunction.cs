@@ -15,7 +15,7 @@ namespace PredictionsGeneratorFunction
         }
 
         [FunctionName("PredictionsGeneratorFunction")]
-        public async Task Run([TimerTrigger("0 0 8 * * SAT")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("0 8 * * * SAT")] TimerInfo myTimer, ILogger log)
         {
             await maintainPredictionsUpToDate.Execute(default);
         }
