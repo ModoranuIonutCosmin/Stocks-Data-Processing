@@ -4,11 +4,11 @@ namespace StocksProcessing.ML.Models.Tabular;
 
 public class TabularModelInput : IInputModel
 {
-    [VectorType(959), LoadColumn(0, 958),
+    [VectorType(79), LoadColumn(0, 78),
     ColumnName("Features")]
     public float[] Features { get; set; }
 
-    [LoadColumn(959), ColumnName("Label")]
+    [LoadColumn(79), ColumnName("Label")]
     public float Next { get; set; }
 
     public float GetLabel()
