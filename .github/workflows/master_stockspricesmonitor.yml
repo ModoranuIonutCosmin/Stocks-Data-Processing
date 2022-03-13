@@ -7,9 +7,13 @@ on:
   push:
     branches:
       - master
-#   paths:
-#     - 'MaintananceJobs'
-#     - 'ScraperFunction'
+    paths-ignore:
+
+      - '.github/*.yml'
+
+      - 'README.md'
+
+      - LICENSE
   workflow_dispatch:
 
 env:
