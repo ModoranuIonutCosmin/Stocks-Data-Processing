@@ -9,7 +9,7 @@ on:
       - master
     paths-ignore:
 
-      - '.github/*.yml'
+      - '.github/*'
 
       - 'README.md'
 
