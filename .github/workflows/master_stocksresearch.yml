@@ -10,7 +10,7 @@ on:
     paths-ignore:
       - './Stocks Data Processing'
 
-      - '.github/*.yml'
+      - '.github/*'
 
       - 'README.md'
 
