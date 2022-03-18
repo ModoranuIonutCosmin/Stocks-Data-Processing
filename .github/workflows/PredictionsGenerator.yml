@@ -3,6 +3,13 @@ on:
   push:
     branches:
     - master
+    paths-ignore:
+
+    - '.github/*'
+
+    - 'README.md'
+
+    - LICENSE
 env:
   AZURE_FUNCTIONAPP_NAME: PredictionsGenerator
   AZURE_FUNCTIONAPP_PACKAGE_PATH: PredictionsGeneratorFunction/publish

@@ -7,6 +7,13 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+
+      - '.github/*'
+
+      - 'README.md'
+
+      - LICENSE
   workflow_dispatch:
 
 env:

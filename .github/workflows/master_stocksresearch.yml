@@ -9,6 +9,13 @@ on:
       - master
     paths-ignore:
       - './Stocks Data Processing'
+
+      - '.github/*'
+
+      - 'README.md'
+
+      - LICENSE
+      
   workflow_dispatch:
 
 jobs:
