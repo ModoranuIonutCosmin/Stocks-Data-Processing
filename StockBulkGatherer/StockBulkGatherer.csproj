@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Stocks Data Processing\Stocks Data Processing.csproj" />
+    <ProjectReference Include="..\Scheduled Tasks\Jobs quartz-scheduled\Stocks Data Processing.csproj" />
     <ProjectReference Include="..\StocksProccesing.Relational\StocksProccesing.Relational.csproj" />
   </ItemGroup>
 

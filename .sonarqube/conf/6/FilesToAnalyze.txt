@@ -1,1 +1,0 @@
-﻿C:\Users\Cosmin\source\repos\ModoranuIonutCosmin\Stocks-Data-Processing\StockBulkGatherer\Program.cs
