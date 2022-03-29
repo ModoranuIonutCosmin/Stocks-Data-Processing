@@ -7,55 +7,55 @@ using Stocks.General.ExtensionMethods;
 using Stocks_Data_Processing.Exceptions;
 using Stocks_Data_Processing.Interfaces.Services;
 
-namespace Stocks_Data_Processing.Services
+namespace Stocks_Data_Processing.Services;
+
+public class ScraperService : IScraperService
 {
-    public class ScraperService : IScraperService
+    private readonly HttpClient httpClient;
+
+
+    public ScraperService(HttpClient httpClient)
     {
-        private readonly HttpClient httpClient;
+        this.httpClient = httpClient;
+    }
 
+    public async Task<decimal> GetNumericFieldValueByHtmlClassesCombination(string link, List<string> classes)
+    {
+        var pageSource = await GetPageHTMLSource(link);
 
-        public ScraperService(HttpClient httpClient)
-        {
-            this.httpClient = httpClient;
-        }
+        var htmlDoc = new HtmlDocument();
+        htmlDoc.LoadHtml(pageSource);
 
-        private async Task<string> GetPageHTMLSource(string link)
-        {
-            //Incearca sa faca GET la sursa paginii pe care avem informatiile necesare...
-            var response = await httpClient.GetAsync(link);
+        //Si apoi cauta elementul ce contine pretul unui share
+        //in functie de unele trasaturi care identifica unic elementul.
+        var htmlElements = htmlDoc.DocumentNode.Descendants(0)
+            .Where(n => n.GetClasses()
+                .SequenceEqual(classes))
+            .ToList();
 
-            response.EnsureSuccessStatusCode();
+        if (!htmlElements.Any())
+            throw new ScrapeNoElementException($"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : No element" +
+                                               " to scrape found");
 
-            string pageSource = await response.Content.ReadAsStringAsync();
+        //Ia ultimul element. Acesta va fi pretul after market daca exista sau pre market altfel pretul curent
+        var valueString = htmlElements.Last().InnerText;
 
-            return pageSource;
-        }
+        if (!valueString.ParseCurrency(out var valueNumeric))
+            throw new CurrencyParseException(
+                $"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : Couldn't parse currency!");
 
-        public async Task<decimal> GetNumericFieldValueByHtmlClassesCombination(string link, List<string> classes)
-        {
-            var pageSource = await GetPageHTMLSource(link);
+        return valueNumeric;
+    }
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(pageSource);
+    private async Task<string> GetPageHTMLSource(string link)
+    {
+        //Incearca sa faca GET la sursa paginii pe care avem informatiile necesare...
+        var response = await httpClient.GetAsync(link);
 
-            //Si apoi cauta elementul ce contine pretul unui share
-            //in functie de unele trasaturi care identifica unic elementul.
-            var htmlElements = htmlDoc.DocumentNode.Descendants(0)
-                .Where(n => n.GetClasses()
-                             .SequenceEqual(classes))
-                .ToList();
+        response.EnsureSuccessStatusCode();
 
-            if (!htmlElements.Any())
-                throw new ScrapeNoElementException($"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : No element" +
-                    $" to scrape found");
-            
-            //Ia ultimul element. Acesta va fi pretul after market daca exista sau pre market altfel pretul curent
-            var valueString = htmlElements.Last().InnerText;
+        var pageSource = await response.Content.ReadAsStringAsync();
 
-            if (!valueString.ParseCurrency(out decimal valueNumeric))
-                throw new CurrencyParseException($"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : Couldn't parse currency!");
-
-            return valueNumeric;
-        }
+        return pageSource;
     }
 }

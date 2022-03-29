@@ -1,7 +1,6 @@
-﻿namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories.Base
+﻿namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories.Base;
+
+public interface IBaseEntity<TKey>
 {
-    public interface IBaseEntity<TKey>
-    {
-        TKey Id { get; set; }
-    }
+    TKey Id { get; set; }
 }

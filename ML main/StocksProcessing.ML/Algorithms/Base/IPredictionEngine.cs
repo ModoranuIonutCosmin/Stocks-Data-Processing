@@ -13,7 +13,9 @@ public interface IPredictionEngine
     Task CreatePredictionEngine(ITransformer model);
     Task TrainModel(int horizon, double testFraction);
     SchemaDefinition CreateCustomSchemaDefinition();
+
     Task<(AccuracyStatistics accuracy, List<PredictionResult> predictions)> EvaluateModel(int horizon,
         double testFraction, TimeSpan interval);
+
     Task<List<PredictionResult>> ComputePredictionsForNextPeriod(int horizon, double testFraction);
 }

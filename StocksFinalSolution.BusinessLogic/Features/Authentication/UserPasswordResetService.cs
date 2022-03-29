@@ -13,8 +13,8 @@ namespace StocksFinalSolution.BusinessLogic.Features.Authentication;
 
 public class UserPasswordResetService : IUserPasswordResetService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly IGeneralPurposeEmailService _emailSender;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public UserPasswordResetService(UserManager<ApplicationUser> userManager,
         IGeneralPurposeEmailService emailSender)
@@ -28,10 +28,7 @@ public class UserPasswordResetService : IUserPasswordResetService
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException("Invalid user email!");
-        }
+        if (user is null) throw new UserNotFoundException("Invalid user email!");
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -50,16 +47,10 @@ public class UserPasswordResetService : IUserPasswordResetService
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (user is null)
-        {
-            throw new UserNotFoundException("Invalid user email!");
-        }
+        if (user is null) throw new UserNotFoundException("Invalid user email!");
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
 
-        if (!result.Succeeded)
-        {
-            throw new InvalidPasswordResetLink(result.Errors.AggregateErrors());
-        }
+        if (!result.Succeeded) throw new InvalidPasswordResetLink(result.Errors.AggregateErrors());
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Stocks.General.Models.Transactions
+namespace Stocks.General.Models.Transactions;
+
+public class AllTransactionsGroupedSummary
 {
-    public class AllTransactionsGroupedSummary
-    {
-        public List<TransactionSummary> Transactions { get; set; } = new List<TransactionSummary>();
-    }
+    public List<TransactionSummary> Transactions { get; set; } = new();
 }

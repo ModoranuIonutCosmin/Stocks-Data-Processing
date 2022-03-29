@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Stocks.General.Models.Transactions
+namespace Stocks.General.Models.Transactions;
+
+public class AllTransactionsDetailed
 {
-    public class AllTransactionsDetailed
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string UrlLogo { get; set; }
-        public string Ticker { get; set; }
-        public List<TransactionFullInfo> Transactions { get; set; } = new List<TransactionFullInfo>();
-    }
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string UrlLogo { get; set; }
+    public string Ticker { get; set; }
+    public List<TransactionFullInfo> Transactions { get; set; } = new();
 }

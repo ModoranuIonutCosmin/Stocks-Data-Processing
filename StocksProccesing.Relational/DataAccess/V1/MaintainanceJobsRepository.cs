@@ -5,59 +5,59 @@ using System.Threading.Tasks;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksProccesing.Relational.Model;
 
-namespace StocksProccesing.Relational.DataAccess.V1
+namespace StocksProccesing.Relational.DataAccess.V1;
+
+public class MaintainanceJobsRepository : Repository<MaintenanceAction, int>, IMaintainanceJobsRepository
 {
-    public class MaintainanceJobsRepository : Repository<MaintenanceAction, int>, IMaintainanceJobsRepository
+    public MaintainanceJobsRepository(StocksMarketContext context) : base(context)
     {
-        public MaintainanceJobsRepository(StocksMarketContext context) : base(context)
+    }
+
+    public MaintenanceAction GetMaintenanceActionByName(string name)
+    {
+        return _dbContext.Actions.SingleOrDefault(e => e.Name == name);
+    }
+
+    public void MarkJobFinished(string jobName)
+    {
+        var job = _dbContext.Actions.Where(e => e.Name == jobName)
+            .FirstOrDefault();
+
+        if (job != null)
+            job.LastFinishedDate = DateTimeOffset.UtcNow;
+
+        _dbContext.SaveChanges();
+    }
+
+
+    public async Task<List<MaintenanceAction>> EnsureJobsDataExists(List<MaintenanceAction> jobsData)
+    {
+        foreach (var job in jobsData)
         {
+            var jobDetails = GetMaintenanceActionByName(job.Name);
 
-        }
-
-        public MaintenanceAction GetMaintenanceActionByName(string name)
-            => _dbContext.Actions.SingleOrDefault(e => e.Name == name);
-
-        public void MarkJobFinished(string jobName)
-        {
-            var job = _dbContext.Actions.Where(e => e.Name == jobName)
-                .FirstOrDefault();
-
-            if (job != null)
-                job.LastFinishedDate = DateTimeOffset.UtcNow;
-
-            _dbContext.SaveChanges();
-        }
-        
-
-        public async Task<List<MaintenanceAction>> EnsureJobsDataExists(List<MaintenanceAction> jobsData)
-        {
-            foreach(var job in jobsData)
+            if (jobDetails != null)
             {
-                var jobDetails = GetMaintenanceActionByName(job.Name);
+                jobDetails.Schedule = job.Schedule;
+                jobDetails.Interval = job.Interval;
+                job.LastFinishedDate = jobDetails.LastFinishedDate;
 
-                if (jobDetails != null)
-                {
-                    jobDetails.Schedule = job.Schedule;
-                    jobDetails.Interval = job.Interval;
-                    job.LastFinishedDate = jobDetails.LastFinishedDate;
-
-                    await UpdateAsync(jobDetails);
-                }
-                else
-                {
-                    await AddAsync(new MaintenanceAction()
-                    {
-                        Interval = job.Interval,
-                        LastFinishedDate = job.LastFinishedDate,
-                        Name = job.Name,
-                        Schedule = job.Schedule
-                    });
-                }
+                await UpdateAsync(jobDetails);
             }
-
-            await _dbContext.SaveChangesAsync();
-
-            return jobsData;
+            else
+            {
+                await AddAsync(new MaintenanceAction
+                {
+                    Interval = job.Interval,
+                    LastFinishedDate = job.LastFinishedDate,
+                    Name = job.Name,
+                    Schedule = job.Schedule
+                });
+            }
         }
+
+        await _dbContext.SaveChangesAsync();
+
+        return jobsData;
     }
 }

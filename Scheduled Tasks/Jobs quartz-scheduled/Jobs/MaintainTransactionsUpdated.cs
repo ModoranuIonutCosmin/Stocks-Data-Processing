@@ -7,52 +7,52 @@ using Stocks_Data_Processing.Interfaces.Jobs;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 
-namespace Stocks_Data_Processing.Jobs
+namespace Stocks_Data_Processing.Jobs;
+
+public class MaintainTransactionsUpdated : IMaintainTransactionsUpdated
 {
-    public class MaintainTransactionsUpdated : IMaintainTransactionsUpdated
+    private readonly ILogger<MaintainTransactionsUpdated> _logger;
+    private readonly IMaintainanceJobsRepository jobsRepository;
+    private readonly IStockMarketProfitCalculator profitCalculator;
+    private readonly ITransactionsRepository transactionsRepository;
+    private readonly IUsersRepository usersRepository;
+
+    public MaintainTransactionsUpdated(
+        ILogger<MaintainTransactionsUpdated> logger,
+        IStockMarketProfitCalculator profitCalculator,
+        IUsersRepository usersRepository,
+        ITransactionsRepository transactionsRepository,
+        IMaintainanceJobsRepository jobsRepository)
     {
-        private readonly ILogger<MaintainTransactionsUpdated> _logger;
-        private readonly IStockMarketProfitCalculator profitCalculator;
-        private readonly IUsersRepository usersRepository;
-        private readonly ITransactionsRepository transactionsRepository;
-        private readonly IMaintainanceJobsRepository jobsRepository;
+        _logger = logger;
+        this.profitCalculator = profitCalculator;
+        this.usersRepository = usersRepository;
+        this.transactionsRepository = transactionsRepository;
+        this.jobsRepository = jobsRepository;
+    }
 
-        public MaintainTransactionsUpdated(
-            ILogger<MaintainTransactionsUpdated> logger,
-            IStockMarketProfitCalculator profitCalculator,
-            IUsersRepository usersRepository,
-            ITransactionsRepository transactionsRepository,
-            IMaintainanceJobsRepository jobsRepository)
+    public async Task UpdateTransactions()
+    {
+        _logger.LogWarning($"[Update transactions task] Started monitoring transactions {DateTimeOffset.UtcNow}!");
+
+        var openedTransactions = transactionsRepository.GetOpenTransactions();
+
+        foreach (var transaction in openedTransactions)
         {
-            _logger = logger;
-            this.profitCalculator = profitCalculator;
-            this.usersRepository = usersRepository;
-            this.transactionsRepository = transactionsRepository;
-            this.jobsRepository = jobsRepository;
+            var profit = profitCalculator.CalculateTransactionProfit(transaction);
+
+            if (profit <= -transaction.StopLossAmount ||
+                profit >= transaction.TakeProfitAmount)
+                await usersRepository.CloseUserTransaction(transaction, profit);
         }
 
-        public async Task UpdateTransactions()
-        {
-            _logger.LogWarning($"[Update transactions task] Started monitoring transactions {DateTimeOffset.UtcNow}!");
+        jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.TransactionMonitorJob);
 
-            var openedTransactions = transactionsRepository.GetOpenTransactions();
+        _logger.LogWarning($"[Update transactions task] Done monitoring transactions! {DateTimeOffset.UtcNow}");
+    }
 
-            foreach (var transaction in openedTransactions)
-            {
-                decimal profit = profitCalculator.CalculateTransactionProfit(transaction);
-
-                if (profit <= -transaction.StopLossAmount ||
-                    profit >= transaction.TakeProfitAmount)
-                    await usersRepository.CloseUserTransaction(transaction, profit);
-            }
-            jobsRepository.MarkJobFinished(MaintainanceTasksSchedulerHelpers.TransactionMonitorJob);
-
-            _logger.LogWarning($"[Update transactions task] Done monitoring transactions! {DateTimeOffset.UtcNow}");
-        }
-
-        public async Task Execute(IJobExecutionContext context)
-        {
-            await UpdateTransactions();
-        }
+    public async Task Execute(IJobExecutionContext context)
+    {
+        await UpdateTransactions();
     }
 }

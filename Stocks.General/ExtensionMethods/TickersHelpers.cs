@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stocks.General.ExtensionMethods
+namespace Stocks.General.ExtensionMethods;
+
+public static class TickersHelpers
 {
-    public static class TickersHelpers
+    public static List<string> GatherAllTickers()
     {
-        public static List<string> GatherAllTickers()
-            => Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
-                                                .Select(s => s.ToString()).ToList();
+        return Enum.GetValues(typeof(StocksTicker)).Cast<StocksTicker>()
+            .Select(s => s.ToString()).ToList();
     }
 }

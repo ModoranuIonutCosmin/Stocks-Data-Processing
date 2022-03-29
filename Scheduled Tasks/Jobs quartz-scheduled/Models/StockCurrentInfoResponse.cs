@@ -1,43 +1,42 @@
-﻿using Stocks.General;
-using System;
+﻿using System;
 
-namespace Stocks_Data_Processing.Models
+namespace Stocks_Data_Processing.Models;
+
+/// <summary>
+///     Grupare ce tine datele obtinute in legatura
+///     cu valorile curente ale stock-urilor
+///     obtinute prin diverse metode si
+///     daca obtinerea s-a efectuat cu success.
+/// </summary>
+public class StockCurrentInfoResponse
 {
     /// <summary>
-    /// Grupare ce tine datele obtinute in legatura
-    /// cu valorile curente ale stock-urilor
-    /// obtinute prin diverse metode si
-    /// daca obtinerea s-a efectuat cu success.
+    ///     Daca sursa ce a extras datele a reusit sau nu
     /// </summary>
-    public class StockCurrentInfoResponse
-    {
-        /// <summary>
-        /// Daca sursa ce a extras datele a reusit sau nu
-        /// </summary>
-        public bool Successful { get => Exception == null; }
+    public bool Successful => Exception == null;
 
-        /// <summary>
-        /// Exceptia ce indica motivul esuarii ( sau null daca e caz de success )
-        /// </summary>
-        public Exception Exception { get; set; }
-        /// <summary>
-        /// Simbolul unei companii pe piata de stock-uri
-        /// </summary>
-        public string Ticker { get; set; }
+    /// <summary>
+    ///     Exceptia ce indica motivul esuarii ( sau null daca e caz de success )
+    /// </summary>
+    public Exception Exception { get; set; }
 
-        /// <summary>
-        /// Pretul de pornire a valorii stock-ului pe acea zi
-        /// </summary>
-        public decimal Open { get; set; }
+    /// <summary>
+    ///     Simbolul unei companii pe piata de stock-uri
+    /// </summary>
+    public string Ticker { get; set; }
 
-        /// <summary>
-        /// Valoarea curenta a unui stock
-        /// </summary>
-        public decimal Current { get; set; }
+    /// <summary>
+    ///     Pretul de pornire a valorii stock-ului pe acea zi
+    /// </summary>
+    public decimal Open { get; set; }
 
-        /// <summary>
-        /// Data si ora la care a fost observata valoarea preturilor
-        /// </summary>
-        public DateTimeOffset DateTime { get; set; }
-    }
+    /// <summary>
+    ///     Valoarea curenta a unui stock
+    /// </summary>
+    public decimal Current { get; set; }
+
+    /// <summary>
+    ///     Data si ora la care a fost observata valoarea preturilor
+    /// </summary>
+    public DateTimeOffset DateTime { get; set; }
 }

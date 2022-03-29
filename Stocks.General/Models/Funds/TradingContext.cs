@@ -1,7 +1,6 @@
-﻿namespace Stocks.General.Models.Funds
+﻿namespace Stocks.General.Models.Funds;
+
+public class TradingContext
 {
-    public class TradingContext
-    {
-        public decimal Funds { get; set; }
-    }
+    public decimal Funds { get; set; }
 }

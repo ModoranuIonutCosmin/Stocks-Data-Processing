@@ -14,126 +14,201 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64837255-daee-4e44-9093-5b0642536b8f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarkResult.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/PredictionsGenerator.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/PredictionsGenerator.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/master_maintainperiodicalsummaries.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/master_maintainperiodicalsummaries.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/master_stockspricesmonitor.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/master_stockspricesmonitor.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/tasks.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maintainance.ScraperFunc/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maintainance.ScraperFunc/Maintainance.ScraperFunc.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maintainance.ScraperFunc/ScraperFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Maintainance.ScraperFunc/host.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/FunctionStartup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/MaintainanceStockProcessingJobs.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintainanceStockProcessingJobs/host.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/FunctionStartup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/MaintananceJobs.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MaintananceJobs/host.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/FunctionStartup.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/PredictionsGeneratorFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/PredictionsGeneratorFunction.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/Properties/ServiceDependencies/PredictionsGenerator/storage1.arm.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/Properties/serviceDependencies.PredictionsGenerator.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PredictionsGeneratorFunction/host.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ScraperFunction/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ScraperFunction/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ScraperFunction/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ScraperFunction/ScraperFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ScraperFunction/ScraperFunction.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/Accuracy benchmark.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/Accuracy benchmark.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarkResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarkResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/IPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/IPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/PredictionEngineBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/PredictionEngineBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TabularPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TabularPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastForestRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastForestRegressionPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastTreeRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastTreeRegressionPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularLbfgsPoissonRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularLbfgsPoissonRegressionPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularSdcaRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularSdcaRegressionPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TimeSeries/SSAPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TimeSeries/SSAPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/SeparatedDataset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/SeparatedDataset.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/Tabular/TabularModelInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/Tabular/TabularModelInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/TimeSeries/TimestampPriceInputModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/TimeSeries/TimestampPriceInputModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/TimeSeries/TimestampPriceOutputModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/TimeSeries/TimestampPriceOutputModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/PredictionResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/PredictionResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/StatisticsHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/StatisticsHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/StocksProcessing.ML.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/StocksProcessing.ML.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/CsvHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/CsvHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/FunctionStartup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/FunctionStartup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/PredictionsGeneratorFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/PredictionsGeneratorFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/PredictionsGeneratorFunction.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/PredictionsGeneratorFunction.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/ScraperFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/ScraperFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/ScraperFunction.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/ScraperFunction.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/TaxesCollectorFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/TaxesCollectorFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/TaxesCollectorFunction.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/TaxesCollectorFunction.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TaxesCollectorFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/TransactionsMonitorFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/TransactionsMonitorFunction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/TransactionsMonitorFunction.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/TransactionsMonitorFunction.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/TransactionsMonitorFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/IMaintainanceTasksScheduler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/IMaintainanceTasksScheduler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceActionsDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceActionsDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceTasksScheduler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceTasksScheduler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceTasksSchedulerHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Actions/MaintainanceTasksSchedulerHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/App.config" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/App.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Application.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Application.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/ConfigHelpers/ReadTasksConfigHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/ConfigHelpers/ReadTasksConfigHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/DIContainerConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/DIContainerConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Exceptions/CurrencyParseException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Exceptions/CurrencyParseException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Exceptions/ScrapeNoElementException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Exceptions/ScrapeNoElementException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/IApplication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/IApplication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/IStocksDataHandlingLogic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/IStocksDataHandlingLogic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainCurrentStockData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainCurrentStockData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainPeriodicalSummaries.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainPeriodicalSummaries.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainPredictionsUpToDate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainPredictionsUpToDate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainTaxesCollected.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainTaxesCollected.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainTransactionsUpdated.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Jobs/IMaintainTransactionsUpdated.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoDataScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoDataScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoGoogleScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoGoogleScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoYahooScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/ICurrentStockInfoYahooScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/IScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/IScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainCurrentStockData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainCurrentStockData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainPeriodicalSummaries.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainPeriodicalSummaries.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainPredictionsUpToDate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainPredictionsUpToDate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainTaxesCollected.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainTaxesCollected.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainTransactionsUpdated.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Jobs/MaintainTransactionsUpdated.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Models/StockCurrentInfoResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Models/StockCurrentInfoResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Quartz Helpers/QuartzExtensionMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Quartz Helpers/QuartzExtensionMethods.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Quartz Helpers/ScopedDependency.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Quartz Helpers/ScopedDependency.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoDataScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoDataScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoGoogleScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoGoogleScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoYahooScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoYahooScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/ScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/ScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Stocks Data Processing.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Stocks Data Processing.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/StocksDataHandlingLogic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/StocksDataHandlingLogic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StockBulkGatherer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StockBulkGatherer/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StockBulkGatherer/StockBulkGatherer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StockBulkGatherer/StockBulkGatherer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks Data Processing.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Actions/IMaintainanceTasksScheduler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Actions/MaintainanceActionsDetails.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Actions/MaintainanceTasksScheduler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Actions/MaintainanceTasksSchedulerHelpers.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/App.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Application.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/ConfigHelpers/ReadTasksConfigHelpers.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/DIContainerConfig.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Exceptions/CurrencyParseException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Exceptions/ScrapeNoElementException.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/IApplication.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/IStocksDataHandlingLogic.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Jobs/IMaintainCurrentStockData.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Jobs/IMaintainPeriodicalSummaries.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Jobs/IMaintainPredictionsUpToDate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Jobs/IMaintainTaxesCollected.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Jobs/IMaintainTransactionsUpdated.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Services/ICurrentStockInfoDataScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Services/ICurrentStockInfoGoogleScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Services/ICurrentStockInfoYahooScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Interfaces/Services/IScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Jobs/MaintainCurrentStockData.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Jobs/MaintainPeriodicalSummaries.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Jobs/MaintainPredictionsUpToDate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Jobs/MaintainTaxesCollected.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Jobs/MaintainTransactionsUpdated.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Models/StockCurrentInfoResponse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Quartz Helpers/QuartzExtensionMethods.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Quartz Helpers/ScopedDependency.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Services/CurrentStockInfoDataScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Services/CurrentStockInfoGoogleScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Services/CurrentStockInfoYahooScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Services/ScraperService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/Stocks Data Processing.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks Data Processing/StocksDataHandlingLogic.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/Base/IPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/Base/PredictionEngineBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/Base/TabularPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastForestRegressionPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastTreeRegressionPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/TabularReduction/TabularLbfgsPoissonRegressionPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/TabularReduction/TabularSdcaRegressionPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Algorithms/TimeSeries/SSAPredictionEngine.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/MLModell.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/AccuracyStatistics.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/SeparatedDataset.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/Tabular/TabularModelInput.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/Tabular/TabularModelOutput.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/TimeSeries/TimestampPriceInputModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Models/TimeSeries/TimestampPriceOutputModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/PredictionResult.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/StatisticsHelpers.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/StocksProcessing.ML.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/helpers/CsvHelpers.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/ScraperFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/StocksScraper.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksScraper/host.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummariesGeneratorFunction/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummariesGeneratorFunction/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummariesGeneratorFunction/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummariesGeneratorFunction/SummariesGeneratorFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummariesGeneratorFunction/SummariesGeneratorFunction.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaxesCollectorFunction/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaxesCollectorFunction/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaxesCollectorFunction/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaxesCollectorFunction/TaxesCollectorFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TaxesCollectorFunction/TaxesCollectorFunction.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TransactionsMonitorFunction/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TransactionsMonitorFunction/Properties/serviceDependencies.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TransactionsMonitorFunction/Properties/serviceDependencies.local.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TransactionsMonitorFunction/TransactionsMonitorFunction.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TransactionsMonitorFunction/TransactionsMonitorFunction.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ConstantsConfig/BankExchangeConsts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ConstantsConfig/BankExchangeConsts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ConstantsConfig/TaxesConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ConstantsConfig/TaxesConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/ApplicationUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/Company.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/Company.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/MaintenanceAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/MaintenanceAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/Order.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/Order.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/StocksOHLC.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/StocksOHLC.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/StocksPriceData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/StocksPriceData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/StocksSummary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/StocksSummary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/StocksTransaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/StocksTransaction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/InsufficientFundsException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/InsufficientFundsException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidCompanyException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidCompanyException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidStopLossValueForLeveragedTrade.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidStopLossValueForLeveragedTrade.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidTransactionException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidTransactionException.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidTransactionOwner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/InvalidTransactionOwner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Exceptions/OrderAlreadySubmitted.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Exceptions/OrderAlreadySubmitted.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/CurrencyParserHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/CurrencyParserHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DateTimeOffsetHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DateTimeOffsetHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DecimalNumbersHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DecimalNumbersHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/ReflectionHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/ReflectionHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/TickersHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/TickersHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/TimespanParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/TimespanParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/LoginUserDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/LoginUserDataModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/ModifyPasswordRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/ModifyPasswordRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/RegisterUserDataModelRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/RegisterUserDataModelRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/RegisterUserDataModelResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/RegisterUserDataModelResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/ResetPasswordRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/ResetPasswordRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Authentication/UserProfileDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Authentication/UserProfileDataModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Funds/BalanceRefillOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Funds/BalanceRefillOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Funds/PaymentDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Funds/PaymentDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Funds/TradingContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Funds/TradingContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/SendEmailDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/SendEmailDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/SendEmailResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/SendEmailResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/StockReportSingle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/StockReportSingle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/OHLCPriceValue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/OHLCPriceValue.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/OrderTaxesPreview.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/OrderTaxesPreview.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/PlaceMarketOrderRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/StocksInfoAggregates/PlaceMarketOrderRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/StocksPredictionsPaginatedDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/StocksPredictionsPaginatedDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Transactions/AllTransactionsDetailed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Transactions/AllTransactionsDetailed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Transactions/AllTransactionsGroupedSummary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Transactions/AllTransactionsGroupedSummary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Transactions/CloseTransactionRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Transactions/CloseTransactionRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Transactions/TransactionFullInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Transactions/TransactionFullInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Models/Transactions/TransactionSummary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Models/Transactions/TransactionSummary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Stocks.General.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Stocks.General.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/StocksTicker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/StocksTicker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/IdentityUserExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/IdentityUserExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/IsUserAuthorizedHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/IsUserAuthorizedHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/JwtExtensionMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/ExtensionMethods/JwtExtensionMethods.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserAuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserAuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserPasswordResetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserPasswordResetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Companies/CompanyService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Companies/CompanyService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/MyProfile/ProfileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/MyProfile/ProfileService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Portofolio/PortofolioService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Portofolio/PortofolioService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Predictions/PredictionsDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Predictions/PredictionsDataService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Stocks/StocksService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Stocks/StocksService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/PricesDisparitySimulator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/PricesDisparitySimulator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketDisplayPriceCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketDisplayPriceCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketOrderTaxesCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketOrderTaxesCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketProfitCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StockMarketProfitCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StocksTrendCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/StocksTrendCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/TransactionSummaryCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketMetricsCalculator/TransactionSummaryCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/IStocksSummaryGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/IStocksSummaryGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/StocksSummaryGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/StocksSummaryGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Transactions/TransactionsService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Transactions/TransactionsService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/IDirectEmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/IDirectEmailSender.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/IGeneralPurposeEmailService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/IGeneralPurposeEmailService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/ITemplatedEmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Email/ITemplatedEmailSender.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/Base/IBaseEntity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/Base/IBaseEntity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/Base/IRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/Base/IRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/ICompaniesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/ICompaniesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IMaintainanceJobsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IMaintainanceJobsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IOrdersRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IOrdersRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IStockPricesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IStockPricesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IStockSummariesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IStockSummariesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/ITransactionsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/ITransactionsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IUsersRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Repositories/IUsersRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IPredictionsDataService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IPredictionsDataService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IPricesDisparitySimulator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IPricesDisparitySimulator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketDisplayPriceCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketDisplayPriceCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketOrderTaxesCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketOrderTaxesCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketProfitCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStockMarketProfitCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStocksTrendCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/IStocksTrendCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/ITransactionSummaryCalculator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Interfaces/Services/ITransactionSummaryCalculator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/MappingProfiles/SummaryToOhlcPricesMP.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/MappingProfiles/SummaryToOhlcPricesMP.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/StocksFinalSolution.BusinessLogic.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/StocksFinalSolution.BusinessLogic.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StockContextFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StockContextFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StocksMarketContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StocksMarketContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/CompaniesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/CompaniesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/MaintainanceJobsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/MaintainanceJobsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/OrdersRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/OrdersRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/Repository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/Repository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/StockPricesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/StockPricesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/StockSummariesRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/StockSummariesRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/TransactionsRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/TransactionsRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/UsersRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/V1/UsersRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DatabaseSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DatabaseSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Email/DirectEmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Email/DirectEmailSender.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Email/GeneralPurposeEmailService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Email/GeneralPurposeEmailService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Email/Template/contactMessage.html" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Email/Template/contactMessage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Email/Template/message.html" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Email/Template/message.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Email/TemplatedEmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Email/TemplatedEmailSender.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Extension Methods/SpRepositoryExtentionMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Extension Methods/SpRepositoryExtentionMethods.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/StocksProccesing.Relational.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/StocksProccesing.Relational.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Attributes/AuthorizeTokenAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Attributes/AuthorizeTokenAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/BaseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/BaseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/PortofolioController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/PortofolioController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/ProfileController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/ProfileController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/StocksInfoController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/StocksInfoController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/TransactionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/TransactionsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Extension Methods/ProblemDetailsExtensionMethods.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Extension Methods/ProblemDetailsExtensionMethods.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponseExtensionsHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponseExtensionsHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/StocksProcessing.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/StocksProcessing.API.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/appsettings.Production.json" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/appsettings.Production.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -352,6 +427,7 @@
       <updated>1648579565327</updated>
       <workItem from="1648579573810" duration="931000" />
       <workItem from="1648580636082" duration="536000" />
+      <workItem from="1648581711999" duration="396000" />
     </task>
     <servers />
   </component>

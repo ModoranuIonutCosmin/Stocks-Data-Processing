@@ -16,11 +16,11 @@ namespace StocksFinalSolution.BusinessLogic.Features.Stocks;
 public class StocksService : IStocksService
 {
     private readonly ICompaniesRepository _companiesRepository;
-    private readonly IStockPricesRepository _stockPricesRepository;
-    private readonly IStockSummariesRepository _summariesRepository;
-    private readonly IStocksTrendCalculator _stocksTrendCalculator;
-    private readonly IStockMarketDisplayPriceCalculator _stockPriceCalculator;
     private readonly IMapper _mapper;
+    private readonly IStockMarketDisplayPriceCalculator _stockPriceCalculator;
+    private readonly IStockPricesRepository _stockPricesRepository;
+    private readonly IStocksTrendCalculator _stocksTrendCalculator;
+    private readonly IStockSummariesRepository _summariesRepository;
 
     public StocksService(ICompaniesRepository companiesRepository,
         IStockPricesRepository stockPricesRepository,
@@ -36,7 +36,7 @@ public class StocksService : IStocksService
         _stockPriceCalculator = stockPriceCalculator;
         _mapper = mapper;
     }
-    
+
     public async Task<StockReportSingle> GetReportForSingleCompany(string ticker)
     {
         var lastSummaryEntry = await _summariesRepository
@@ -46,7 +46,7 @@ public class StocksService : IStocksService
 
         return MergeCompanyDataWithStockSummary(companyData, lastSummaryEntry);
     }
-    
+
     public async Task<List<StockReportSingle>> GetReportForOfAllCompanies()
     {
         var companies = await _companiesRepository.GetAllAsync();
@@ -54,27 +54,23 @@ public class StocksService : IStocksService
 
         var result = companies.Join(summaries, c => c.Ticker,
             s => s.CompanyTicker,
-            (company, summary) =>
-            {
-                return MergeCompanyDataWithStockSummary(company, summary);
-            }).ToList();
-        
+            (company, summary) => { return MergeCompanyDataWithStockSummary(company, summary); }).ToList();
+
         return result;
     }
-    
-    
+
 
     public async Task<StocksSummary> GetHistoricalData(string ticker,
         string interval)
     {
-        Company company = _companiesRepository.GetCompanyData(ticker);
-        long intervalTicks = TimespanParser.ParseTimeSpanTicks(interval);
+        var company = _companiesRepository.GetCompanyData(ticker);
+        var intervalTicks = TimespanParser.ParseTimeSpanTicks(interval);
 
-        List<OhlcPriceValue> dataPoints = 
+        var dataPoints =
             _mapper.Map<List<StocksOhlc>, List<OhlcPriceValue>>(
                     await _summariesRepository.GetAllByTickerAndPeriod(ticker,
                         TimeSpan.FromTicks(intervalTicks))
-                                                                )
+                )
                 .OrderBy(e => e.Date)
                 .ToList();
 
@@ -83,7 +79,7 @@ public class StocksService : IStocksService
             : _stocksTrendCalculator.CalculateTrendFromOHLC(dataPoints[^1]);
         var currentBasePrice = _stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(ticker);
 
-        return new StocksSummary()
+        return new StocksSummary
         {
             Period = intervalTicks,
             UrlLogo = company.UrlLogo,
@@ -92,7 +88,7 @@ public class StocksService : IStocksService
             Ticker = ticker,
             Trend = trend,
             SellPrice = _stockPriceCalculator.CalculateSellPrice(currentBasePrice),
-            BuyPrice = _stockPriceCalculator.CalculateBuyPrice(currentBasePrice, 1),
+            BuyPrice = _stockPriceCalculator.CalculateBuyPrice(currentBasePrice),
             Timepoints = dataPoints
         };
     }
@@ -102,9 +98,9 @@ public class StocksService : IStocksService
         var trend = _stocksTrendCalculator.CalculateTrendFromOHLC(summary);
         var price = summary.CloseValue;
         var sellPrice = _stockPriceCalculator.CalculateSellPrice(price);
-        var buyPrice = _stockPriceCalculator.CalculateBuyPrice(price, 1);
+        var buyPrice = _stockPriceCalculator.CalculateBuyPrice(price);
 
-        return new StockReportSingle()
+        return new StockReportSingle
         {
             BuyPrice = buyPrice.TruncateToDecimalPlaces(3),
             SellPrice = sellPrice.TruncateToDecimalPlaces(3),
@@ -120,9 +116,8 @@ public class StocksService : IStocksService
                 High = summary.High,
                 Low = summary.Low,
                 OpenValue = summary.OpenValue,
-                CloseValue = summary.CloseValue,
+                CloseValue = summary.CloseValue
             }
         };
     }
-    
 }

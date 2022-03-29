@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace StocksProcessing.General.Exceptions
+namespace StocksProcessing.General.Exceptions;
+
+[Serializable]
+public class InvalidTransactionException : Exception
 {
-    [Serializable]
-    public class InvalidTransactionException : Exception
+    public InvalidTransactionException(string message) : base(message)
     {
-        public InvalidTransactionException(string message) : base(message)
-        {
-        }
     }
 }

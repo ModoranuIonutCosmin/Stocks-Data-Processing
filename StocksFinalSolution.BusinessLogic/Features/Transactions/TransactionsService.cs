@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Stocks.General.Exceptions;
 using Stocks.General.Models.Transactions;
@@ -14,9 +12,9 @@ namespace StocksFinalSolution.BusinessLogic.Features.Transactions;
 
 public class TransactionsService : ITransactionsService
 {
+    private readonly IStockMarketProfitCalculator _stockMarketProfitCalculator;
     private readonly ITransactionSummaryCalculator _transactionSummaryCalculator;
     private readonly IUsersRepository _usersRepository;
-    private readonly IStockMarketProfitCalculator _stockMarketProfitCalculator;
 
     public TransactionsService(ITransactionSummaryCalculator transactionSummaryCalculator,
         IUsersRepository usersRepository,
@@ -47,7 +45,7 @@ public class TransactionsService : ITransactionsService
     public async Task<AllTransactionsDetailed> GatherTransactionsParticularTicker(ApplicationUser userRequesting,
         string ticker)
     {
-        List<StocksTransaction> openTransactionsList = _usersRepository
+        var openTransactionsList = _usersRepository
             .GetTransactionsListForUserByTicker(userRequesting, ticker);
 
         var result = _transactionSummaryCalculator
@@ -64,16 +62,12 @@ public class TransactionsService : ITransactionsService
         var transaction = _usersRepository.GetTransactionInfo(request.Id);
 
         if (transaction is null)
-        {
             throw new InvalidTransactionException(nameof(transaction) + "transaction were not found!");
-        }
 
         if (!userRequesting.UserOwnsTheTransaction(transaction))
-        {
             throw new InvalidTransactionOwner("User does not own this transaction");
-        }
 
-        decimal profitOrLoss = _stockMarketProfitCalculator.CalculateTransactionProfit(transaction);
+        var profitOrLoss = _stockMarketProfitCalculator.CalculateTransactionProfit(transaction);
 
         await _usersRepository.CloseUserTransaction(transaction, profitOrLoss);
 

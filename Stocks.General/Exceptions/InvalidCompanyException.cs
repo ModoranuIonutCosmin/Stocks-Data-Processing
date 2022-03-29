@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace StocksProcessing.General.Exceptions
+namespace StocksProcessing.General.Exceptions;
+
+[Serializable]
+public class InvalidCompanyException : Exception
 {
-    [Serializable]
-    public class InvalidCompanyException : Exception
+    public InvalidCompanyException(string message) : base(message)
     {
-        public InvalidCompanyException(string message) : base(message)
-        {
-        }
     }
 }

@@ -1,47 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
 
-namespace StocksProccesing.Relational.Email
+namespace StocksProccesing.Relational.Email;
+
+public class TemplatedEmailSender : ITemplatedEmailSender
 {
-    public class TemplatedEmailSender : ITemplatedEmailSender
+    private readonly IDirectEmailSender directEmailSender;
+
+    public TemplatedEmailSender(IDirectEmailSender directEmailSender,
+        ILogger<TemplatedEmailSender> logger)
     {
-        private readonly IDirectEmailSender directEmailSender;
+        this.directEmailSender = directEmailSender;
+    }
 
-        public TemplatedEmailSender(IDirectEmailSender directEmailSender,
-            ILogger<TemplatedEmailSender> logger)
+    public async Task<SendEmailResponse> SendEmailAsync(SendEmailDetails sendEmailDetails,
+        string templateName, Dictionary<string, string> substitutions)
+    {
+        var templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+            "Email", "Template",
+            $"{templateName}.html");
+
+
+        var content = default(string);
+        using (var reader = new StreamReader(templatePath))
         {
-            this.directEmailSender = directEmailSender;
+            content = await reader.ReadToEndAsync();
         }
-        public async Task<SendEmailResponse> SendEmailAsync(SendEmailDetails sendEmailDetails,
-            string templateName, Dictionary<string, string> substitutions)
-        {
-            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                "Email", "Template",
-                $"{templateName}.html");
 
+        foreach (var substitution in substitutions) content = content.Replace(substitution.Key, substitution.Value);
 
-            var content = default(string);
-            using (var reader = new StreamReader(templatePath))
-            {
-                content = await reader.ReadToEndAsync();
-            }
+        sendEmailDetails.Content = content;
 
-            foreach (var substitution in substitutions)
-            {
-                content = content.Replace(substitution.Key, substitution.Value);
-            }
+        sendEmailDetails.IsHTML = true;
 
-            sendEmailDetails.Content = content;
-
-            sendEmailDetails.IsHTML = true;
-
-            return await directEmailSender.SendEmailAsync(sendEmailDetails);
-        }
+        return await directEmailSender.SendEmailAsync(sendEmailDetails);
     }
 }

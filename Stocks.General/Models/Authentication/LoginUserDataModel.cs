@@ -1,9 +1,8 @@
-﻿namespace Stocks.General.Models.Authentication
-{
-    public class LoginUserDataModel
-    {
-        public string UserNameOrEmail { get; set; }
+﻿namespace Stocks.General.Models.Authentication;
 
-        public string Password { get; set; }
-    }
+public class LoginUserDataModel
+{
+    public string UserNameOrEmail { get; set; }
+
+    public string Password { get; set; }
 }

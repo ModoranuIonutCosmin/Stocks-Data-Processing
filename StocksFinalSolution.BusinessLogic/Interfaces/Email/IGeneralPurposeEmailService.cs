@@ -2,14 +2,13 @@
 using Stocks.General.Models;
 using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Interfaces.Email
-{
-    public interface IGeneralPurposeEmailService
-    {
-        Task<SendEmailResponse> SendConfirmationEmail(ApplicationUser recipient,
-            string confirmationLink);
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Email;
 
-        Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
-            string resetPasswordLink);
-    }
+public interface IGeneralPurposeEmailService
+{
+    Task<SendEmailResponse> SendConfirmationEmail(ApplicationUser recipient,
+        string confirmationLink);
+
+    Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
+        string resetPasswordLink);
 }

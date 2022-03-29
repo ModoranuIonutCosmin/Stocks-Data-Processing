@@ -1,9 +1,8 @@
 ﻿using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Interfaces.Services
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
+
+public interface IStockMarketProfitCalculator
 {
-    public interface IStockMarketProfitCalculator
-    {
-        decimal CalculateTransactionProfit(StocksTransaction transaction);
-    }
+    decimal CalculateTransactionProfit(StocksTransaction transaction);
 }

@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace StocksProcessing.ML
+namespace StocksProcessing.ML;
+
+public class PredictionResult : IComparable<PredictionResult>
 {
-    public class PredictionResult : IComparable<PredictionResult>
+    public DateTimeOffset Date { get; set; }
+    public float Price { get; set; }
+
+    public int CompareTo(PredictionResult other)
     {
-        public DateTimeOffset Date { get; set; }
-        public float Price { get; set; }
+        return Price.CompareTo(other.Price);
+    }
 
-        public int CompareTo(PredictionResult other)
-        {
-            return Price.CompareTo(other.Price);
-        }
-
-        public override string ToString()
-        {
-            return $"Date: {Date}, Price: {Price}";
-        }
+    public override string ToString()
+    {
+        return $"Date: {Date}, Price: {Price}";
     }
 }

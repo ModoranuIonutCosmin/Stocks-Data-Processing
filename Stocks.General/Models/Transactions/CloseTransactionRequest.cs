@@ -1,8 +1,7 @@
-﻿namespace Stocks.General.Models.Transactions
+﻿namespace Stocks.General.Models.Transactions;
+
+public class CloseTransactionRequest
 {
-    public class CloseTransactionRequest
-    {
-        public string Token { get; set; }
-        public int Id { get; set; }
-    }
+    public string Token { get; set; }
+    public int Id { get; set; }
 }

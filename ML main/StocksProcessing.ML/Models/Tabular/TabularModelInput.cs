@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.ML.Data;
 
 namespace StocksProcessing.ML.Models.Tabular;
 
@@ -11,18 +10,21 @@ public class TabularModelInput : IInputModel
 
     // [LoadColumn(79), ColumnName("Label")]
     public float Label { get; set; }
-    
+
     public DateTimeOffset FirstFeatureDate { get; set; }
 
     public float GetLabel()
     {
-        return this.Label;
+        return Label;
     }
+
     public int GetLineSize()
-        => Features.Length;
+    {
+        return Features.Length;
+    }
 
     public DateTimeOffset GetObservationDate()
     {
-        return this.FirstFeatureDate;
+        return FirstFeatureDate;
     }
 }

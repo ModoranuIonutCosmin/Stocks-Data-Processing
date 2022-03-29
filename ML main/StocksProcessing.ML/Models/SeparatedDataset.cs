@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace StocksProcessing.ML.Models
+namespace StocksProcessing.ML.Models;
+
+public class SeparatedDataset<TM>
 {
-    public class SeparatedDataset<TM>
-    {
-        public IEnumerable<TM> TrainData { get; set; }
-        public IEnumerable<TM> TestData { get; set; }
-    }
+    public IEnumerable<TM> TrainData { get; set; }
+    public IEnumerable<TM> TestData { get; set; }
 }

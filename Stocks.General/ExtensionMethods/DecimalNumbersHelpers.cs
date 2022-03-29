@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Stocks.General.ExtensionMethods
+namespace Stocks.General.ExtensionMethods;
+
+public static class DecimalNumbersHelpers
 {
-    public static class DecimalNumbersHelpers
+    public static decimal TruncateToDecimalPlaces(this decimal number, int decimalPlaces)
     {
-        public static decimal TruncateToDecimalPlaces(this decimal number, int decimalPlaces)
-        {
-            return Convert.ToDecimal(number.ToString("N" + decimalPlaces));
-        }
+        return Convert.ToDecimal(number.ToString("N" + decimalPlaces));
     }
 }

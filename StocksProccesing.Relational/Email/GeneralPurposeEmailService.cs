@@ -1,74 +1,73 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
 using StocksProccesing.Relational.Model;
 
-namespace StocksProccesing.Relational.Email
+namespace StocksProccesing.Relational.Email;
 
+public class GeneralPurposeEmailService : IGeneralPurposeEmailService
 {
-    public class GeneralPurposeEmailService : IGeneralPurposeEmailService
+    private readonly ITemplatedEmailSender templatedEmailSender;
+
+    public GeneralPurposeEmailService(ITemplatedEmailSender templatedEmailSender
+    )
     {
-        private readonly ITemplatedEmailSender templatedEmailSender;
+        this.templatedEmailSender = templatedEmailSender;
+    }
 
-        public GeneralPurposeEmailService(ITemplatedEmailSender templatedEmailSender
-            )
+    public async Task<SendEmailResponse> SendConfirmationEmail(ApplicationUser recipient,
+        string confirmationLink)
+    {
+        var emailDetails = new SendEmailDetails
         {
-            this.templatedEmailSender = templatedEmailSender;
-        }
+            FromEmail = "accounts@modsdeal.com",
+            ToEmail = recipient.Email,
+            ToName = recipient.FirstName,
+            Subject = "Email Confirmation for ModsDeal"
+        };
 
-        public async Task<SendEmailResponse> SendConfirmationEmail(ApplicationUser recipient,
-            string confirmationLink)
-        {
-            var emailDetails = new SendEmailDetails
-            {
-                FromEmail = "accounts@modsdeal.com",
-                ToEmail = recipient.Email,
-                ToName = recipient.FirstName,
-                Subject = "Email Confirmation for ModsDeal",
-            };
-
-            return await templatedEmailSender
-                .SendEmailAsync(emailDetails, "message",
-                new()
+        return await templatedEmailSender
+            .SendEmailAsync(emailDetails, "message",
+                new Dictionary<string, string>
                 {
-                    { "--Username--", recipient.UserName },
-                    { "--Content1--", "An attempt to register an account with your email was made." },
+                    {"--Username--", recipient.UserName},
+                    {"--Content1--", "An attempt to register an account with your email was made."},
                     {
                         "--Content2--",
                         "If it was made by you, click the button below to confirm email " +
                         "otherwise, simply ignore this message"
                     },
-                    { "--Link--", confirmationLink },
-                    { "--LinkAction--", "Confirm" }
+                    {"--Link--", confirmationLink},
+                    {"--LinkAction--", "Confirm"}
                 });
-        }
+    }
 
 
-        public async Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
-            string resetPasswordLink)
+    public async Task<SendEmailResponse> SendResetPasswordEmail(ApplicationUser recipient,
+        string resetPasswordLink)
+    {
+        var emailDetails = new SendEmailDetails
         {
-            var emailDetails = new SendEmailDetails
-            {
-                FromEmail = "accounts@modsdeal.com",
-                ToEmail = recipient.Email,
-                ToName = recipient.FirstName,
-                Subject = "Password reset for ModsDeal",
-            };
+            FromEmail = "accounts@modsdeal.com",
+            ToEmail = recipient.Email,
+            ToName = recipient.FirstName,
+            Subject = "Password reset for ModsDeal"
+        };
 
-            return await templatedEmailSender
-                .SendEmailAsync(emailDetails, "message",
-                new()
+        return await templatedEmailSender
+            .SendEmailAsync(emailDetails, "message",
+                new Dictionary<string, string>
                 {
-                    { "--Username--", recipient.UserName },
-                    { "--Content1--", "A password reset request was made for this account." },
+                    {"--Username--", recipient.UserName},
+                    {"--Content1--", "A password reset request was made for this account."},
                     {
                         "--Content2--",
                         "If it was made by you, click the button below to reset the password " +
                         "otherwise, simply ignore this message."
                     },
-                    { "--Link--", resetPasswordLink },
-                    { "--LinkAction--", "Confirm" }
+                    {"--Link--", resetPasswordLink},
+                    {"--LinkAction--", "Confirm"}
                 });
-        }
     }
 }

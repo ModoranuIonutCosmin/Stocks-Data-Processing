@@ -1,52 +1,51 @@
-﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using StocksProccesing.Relational;
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using StocksProccesing.Relational;
 using StocksProcessing.ML.Models.TimeSeries;
 
-namespace StocksProcessing.ML
+namespace StocksProcessing.ML;
+
+internal static class Program
 {
-    static class Program
+    private static async Task Main()
     {
-        static async Task Main()
-        {
-            var ticker = "TSLA";
+        var ticker = "TSLA";
 
-            MLContext mlContext = new();
+        MLContext mlContext = new();
 
-            DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<TimestampPriceInputModel>();
+        var loader = mlContext.Data.CreateDatabaseLoader<TimestampPriceInputModel>();
 
-            // string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
-            //                $"PricesData WHERE CompanyTicker = '{ticker}' ORDER BY Date asc";
-            string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(CloseValue AS REAL) as Price FROM " +
-            $"[dbo].[Summaries] WHERE CompanyTicker = '{ticker}' AND Period = 3000000000 ORDER BY Date asc";
+        // string query = $"SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
+        //                $"PricesData WHERE CompanyTicker = '{ticker}' ORDER BY Date asc";
+        var query = "SELECT CAST(Date AS DateTime) as Date, CAST(CloseValue AS REAL) as Price FROM " +
+                    $"[dbo].[Summaries] WHERE CompanyTicker = '{ticker}' AND Period = 3000000000 ORDER BY Date asc";
 
-            DatabaseSource dbSource = new(SqlClientFactory.Instance,
-                                            DatabaseSettings.ConnectionString,
-                                            query);
+        DatabaseSource dbSource = new(SqlClientFactory.Instance,
+            DatabaseSettings.ConnectionString,
+            query);
 
-            IDataView dataView = loader.Load(dbSource);
+        var dataView = loader.Load(dbSource);
 
 
-            var allData = mlContext.Data.CreateEnumerable<TimestampPriceInputModel>(dataView, false);
-            Console.WriteLine("starting to tabularize");
-            var result = allData
-                .Tabularize(1440)
-                .Select(list => 
-                    list.Select(datasetEntry => datasetEntry.Price)
-                        .ToList())
-                .ToList();
-                
-            await result.WriteDatasetToFile("./dataset.csv");
+        var allData = mlContext.Data.CreateEnumerable<TimestampPriceInputModel>(dataView, false);
+        Console.WriteLine("starting to tabularize");
+        var result = allData
+            .Tabularize(1440)
+            .Select(list =>
+                list.Select(datasetEntry => datasetEntry.Price)
+                    .ToList())
+            .ToList();
 
-            // var results = new PredictionEngine().EvaluateModel(allData, horizon: 144);
+        await result.WriteDatasetToFile("./dataset.csv");
 
-            // // var results = new PredictionEngine().Predict(ticker);
+        // var results = new PredictionEngine().EvaluateModel(allData, horizon: 144);
 
-            // results.ForEach(k => Console.WriteLine(k));
-        }
+        // // var results = new PredictionEngine().Predict(ticker);
+
+        // results.ForEach(k => Console.WriteLine(k));
     }
 }

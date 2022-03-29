@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Stocks_Data_Processing.Exceptions
+namespace Stocks_Data_Processing.Exceptions;
+
+[Serializable]
+public class ScrapeNoElementException : Exception
 {
-    [Serializable]
-    public class ScrapeNoElementException : Exception
+    public ScrapeNoElementException()
     {
-        public ScrapeNoElementException()
-        {
-        }
+    }
 
-        public ScrapeNoElementException(string message) : base(message)
-        {
-        }
+    public ScrapeNoElementException(string message) : base(message)
+    {
+    }
 
-        public ScrapeNoElementException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public ScrapeNoElementException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected ScrapeNoElementException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+    protected ScrapeNoElementException(SerializationInfo info, StreamingContext context) : base(info, context)
+    {
     }
 }

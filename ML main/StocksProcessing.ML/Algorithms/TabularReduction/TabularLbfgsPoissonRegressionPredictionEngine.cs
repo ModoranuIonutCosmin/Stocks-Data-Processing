@@ -8,7 +8,7 @@ namespace StocksProcessing.ML.Algorithms.TabularReduction;
 
 public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEngine
 {
-    public TabularLbfgsPoissonRegressionPredictionEngine(IEnumerable<TabularModelInput> dataset) : 
+    public TabularLbfgsPoissonRegressionPredictionEngine(IEnumerable<TabularModelInput> dataset) :
         base(dataset)
     {
     }
@@ -16,10 +16,10 @@ public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEn
     public override async Task SetupPipeline(int horizon)
     {
         // Data process configuration with pipeline data transformations
-        
+
         var pipeline = MlContext.Regression.Trainers
-                .LbfgsPoissonRegression(labelColumnName: @"Label", featureColumnName: @"Features",
-                    historySize: 80, enforceNonNegativity: true);
-        this.TrainPipeline = pipeline;
+            .LbfgsPoissonRegression(@"Label", @"Features",
+                historySize: 80, enforceNonNegativity: true);
+        TrainPipeline = pipeline;
     }
 }

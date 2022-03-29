@@ -1,55 +1,58 @@
-﻿using Quartz;
-using Stocks_Data_Processing.Quartz_Helpers;
-using StocksProccesing.Relational.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Quartz;
 using Stocks_Data_Processing.Interfaces.Jobs;
+using Stocks_Data_Processing.Quartz_Helpers;
+using StocksProccesing.Relational.Model;
 
-namespace Stocks_Data_Processing.Actions
+namespace Stocks_Data_Processing.Actions;
+
+public class MaintainanceTasksScheduler : IMaintainanceTasksScheduler
 {
-    public class MaintainanceTasksScheduler : IMaintainanceTasksScheduler
+    private readonly Dictionary<string, IJob> AllTasks = new();
+    private readonly Dictionary<string, IJob> PeriodicalTasks = new();
+    private readonly IScheduler scheduler;
+
+
+    public MaintainanceTasksScheduler(IScheduler scheduler)
     {
-        private readonly IScheduler scheduler;
-        private readonly Dictionary<string, IJob> PeriodicalTasks = new();
+        PeriodicalTasks.Add(MaintainanceTasksSchedulerHelpers.TaxesCollectJob,
+            DIContainerConfig.Resolve<IMaintainTaxesCollected>());
+        PeriodicalTasks.Add(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob,
+            DIContainerConfig.Resolve<IMaintainPredictionsUpToDate>());
 
-        private readonly Dictionary<string, IJob> AllTasks = new();
+        AllTasks.Add(MaintainanceTasksSchedulerHelpers.TaxesCollectJob,
+            DIContainerConfig.Resolve<IMaintainTaxesCollected>());
+        AllTasks.Add(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob,
+            DIContainerConfig.Resolve<IMaintainPredictionsUpToDate>());
+        AllTasks.Add(MaintainanceTasksSchedulerHelpers.CurrentSummariesJob,
+            DIContainerConfig.Resolve<IMaintainPeriodicalSummaries>());
+        AllTasks.Add(MaintainanceTasksSchedulerHelpers.CurrentStocksJob,
+            DIContainerConfig.Resolve<IMaintainCurrentStockData>());
+        AllTasks.Add(MaintainanceTasksSchedulerHelpers.TransactionMonitorJob,
+            DIContainerConfig.Resolve<IMaintainTransactionsUpdated>());
 
+        this.scheduler = scheduler;
+    }
 
-        public MaintainanceTasksScheduler(IScheduler scheduler)
+    public async Task<List<Task>> ScheduleJobs(List<MaintenanceAction> jobs)
+    {
+        var pendingTasks = new List<Task>();
+
+        foreach (var job in jobs)
         {
-            PeriodicalTasks.Add(MaintainanceTasksSchedulerHelpers.TaxesCollectJob, DIContainerConfig.Resolve<IMaintainTaxesCollected>());
-            PeriodicalTasks.Add(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob, DIContainerConfig.Resolve<IMaintainPredictionsUpToDate>());
+            var implementation = AllTasks[job.Name];
 
-            AllTasks.Add(MaintainanceTasksSchedulerHelpers.TaxesCollectJob, DIContainerConfig.Resolve<IMaintainTaxesCollected>());
-            AllTasks.Add(MaintainanceTasksSchedulerHelpers.PredictionsRefreshJob, DIContainerConfig.Resolve<IMaintainPredictionsUpToDate>());
-            AllTasks.Add(MaintainanceTasksSchedulerHelpers.CurrentSummariesJob, DIContainerConfig.Resolve<IMaintainPeriodicalSummaries>());
-            AllTasks.Add(MaintainanceTasksSchedulerHelpers.CurrentStocksJob, DIContainerConfig.Resolve<IMaintainCurrentStockData>());
-            AllTasks.Add(MaintainanceTasksSchedulerHelpers.TransactionMonitorJob, DIContainerConfig.Resolve<IMaintainTransactionsUpdated>());
+            if (PeriodicalTasks.ContainsKey(job.Name) &&
+                job.LastFinishedDate.AddTicks(job.Interval) < DateTimeOffset.UtcNow)
+                pendingTasks.Add(implementation.Execute(default));
 
-            this.scheduler = scheduler;
+            await scheduler.ScheduleJobAsync(implementation, job);
         }
 
-        public async Task<List<Task>> ScheduleJobs(List<MaintenanceAction> jobs)
-        {
-            var pendingTasks = new List<Task>();
+        await scheduler.Start();
 
-            foreach (var job in jobs)
-            {
-                var implementation = AllTasks[job.Name];
-
-                if (PeriodicalTasks.ContainsKey(job.Name) &&
-                    job.LastFinishedDate.AddTicks(job.Interval) < DateTimeOffset.UtcNow)
-                {
-                    pendingTasks.Add(implementation.Execute(default));
-                }
-                
-                await scheduler.ScheduleJobAsync(implementation, job);
-            }
-
-            await scheduler.Start();
-
-            return pendingTasks;
-        }
+        return pendingTasks;
     }
 }

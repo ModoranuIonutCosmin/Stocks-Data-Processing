@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Stocks.General.ConstantsConfig;
 using Stocks.General.Exceptions;
 using Stocks.General.ExtensionMethods;
-using Stocks.General.Models;
 using Stocks.General.Models.Funds;
 using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
@@ -17,12 +16,12 @@ namespace StocksFinalSolution.BusinessLogic.Features.Portofolio;
 public class PortofolioService : IPortofolioService
 {
     private readonly IOrdersRepository _ordersRepository;
-    private readonly IStockPricesRepository _stockPricesRepository;
     private readonly IStockMarketDisplayPriceCalculator _priceCalculator;
+    private readonly IStockPricesRepository _stockPricesRepository;
     private readonly IStockMarketOrderTaxesCalculator _taxesCalculator;
     private readonly ITransactionsRepository _transactionsRepository;
-    private readonly IUsersRepository _usersRepository;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUsersRepository _usersRepository;
 
     public PortofolioService(IOrdersRepository ordersRepository,
         IStockPricesRepository stockPricesRepository,
@@ -44,17 +43,17 @@ public class PortofolioService : IPortofolioService
     public async Task<BalanceRefillOrder> ReplenishBalance(ApplicationUser userRequesting,
         PaymentDetails paymentDetails)
     {
-        var order = new Order()
+        var order = new Order
         {
             Amount = paymentDetails.Amount,
             CurrencyTicker = paymentDetails.InitialCurrencyTicker,
             DateFinalized = paymentDetails.PaymentDate,
-            PaymentProcessor = paymentDetails.PaymentHandler,
+            PaymentProcessor = paymentDetails.PaymentHandler
         };
 
         await _ordersRepository.PlaceRefillBalanceOrder(userRequesting, order);
 
-        return new BalanceRefillOrder()
+        return new BalanceRefillOrder
         {
             AmountBought = paymentDetails.Amount,
             CurrentBalance = userRequesting.Capital
@@ -65,10 +64,8 @@ public class PortofolioService : IPortofolioService
         string ticker, decimal invested, decimal leverage, bool isBuy)
     {
         if (!DateTimeOffset.UtcNow.IsDateDuringStockMarketOpenTimeframe())
-        {
             throw new StockMarketClosedException(
                 "Stock market is closed, try again during business hours");
-        }
 
         if (invested > requestingUser.Capital || invested == 0)
         {
@@ -80,10 +77,8 @@ public class PortofolioService : IPortofolioService
         var todaysPrices = _stockPricesRepository.GetTodaysPriceEvolution(ticker);
 
         if (!todaysPrices.Any())
-        {
             throw new NoStockPricesRecordedException("Our backend stocks prices store in unavailable." +
                                                      " Try again later");
-        }
 
         var openPrice = todaysPrices.First().Price;
         var currentStocksPriceWithoutFees = todaysPrices.Last().Price; // sell price
@@ -95,7 +90,7 @@ public class PortofolioService : IPortofolioService
             ? _priceCalculator.CalculateBuyPrice(currentStocksPriceWithoutFees, leverage)
             : _priceCalculator.CalculateSellPrice(currentStocksPriceWithoutFees, leverage);
 
-        return new OrderTaxesPreview()
+        return new OrderTaxesPreview
         {
             CurrentPrice = currentPrice,
             TodayIncrement = (currentStocksPriceWithoutFees - openPrice).TruncateToDecimalPlaces(3),
@@ -104,7 +99,7 @@ public class PortofolioService : IPortofolioService
             UnitsPaid = (effectiveMoney / currentPrice).TruncateToDecimalPlaces(3),
             PercentageExposed = (effectiveMoney / requestingUser.Capital).TruncateToDecimalPlaces(3),
             WeekdayTax = _taxesCalculator.CalculateWeekDayTax(leverage, borrowedMoney, isBuy),
-            WeekendTax = _taxesCalculator.CalculateWeekEndTax(leverage, borrowedMoney, isBuy),
+            WeekendTax = _taxesCalculator.CalculateWeekEndTax(leverage, borrowedMoney, isBuy)
         };
     }
 
@@ -112,15 +107,11 @@ public class PortofolioService : IPortofolioService
         PlaceMarketOrderRequest marketOrder)
     {
         if (!DateTimeOffset.UtcNow.IsDateDuringStockMarketOpenTimeframe())
-        {
             throw new StockMarketClosedException(
                 "Stock market is closed, try again during business hours");
-        }
 
         if (_transactionsRepository.ExistsTransaction(marketOrder.Token))
-        {
             throw new OrderAlreadySubmitted("An error occured. You've already placed this order!");
-        }
 
         if (marketOrder.InvestedAmount > requestingUser.Capital ||
             marketOrder.InvestedAmount == 0)
@@ -131,40 +122,31 @@ public class PortofolioService : IPortofolioService
         }
 
         if (!TaxesConfig.Leverages.Contains(marketOrder.Leverage))
-        {
             throw new InvalidLeverageValue("Invalid leverage value!");
-        }
 
-        bool leveragedTrade = (marketOrder.Leverage > 1) || (!marketOrder.IsBuy);
-        bool stopLossTooBig = leveragedTrade && marketOrder.StopLossAmount >
+        var leveragedTrade = marketOrder.Leverage > 1 || !marketOrder.IsBuy;
+        var stopLossTooBig = leveragedTrade && marketOrder.StopLossAmount >
             marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent;
-        bool stopLossNegative = marketOrder.StopLossAmount < 0;
-        bool takeProfitNegative = marketOrder.TakeProfitAmount < 0;
+        var stopLossNegative = marketOrder.StopLossAmount < 0;
+        var takeProfitNegative = marketOrder.TakeProfitAmount < 0;
 
         if (stopLossTooBig || stopLossNegative)
-        {
             throw new InvalidStopLossValueForLeveragedTrade("Invalid stop loss amount for leveraged trade!\r\n" +
                                                             $"Stop loss should be between [1, {marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent}]");
-        }
 
-        if (takeProfitNegative)
-        {
-            throw new InvalidTakeProfitValue("Take profit value invalid -> it was negative.");
-        }
+        if (takeProfitNegative) throw new InvalidTakeProfitValue("Take profit value invalid -> it was negative.");
 
         var todaysPrices = _stockPricesRepository.GetTodaysPriceEvolution(marketOrder.Ticker);
 
         if (!todaysPrices.Any())
-        {
             throw new NoStockPricesRecordedException("Our backend stocks prices store in unavailable." +
                                                      " Try again later");
-        }
 
         var currentPrice = _stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(marketOrder.Ticker);
         var sellPrice = _priceCalculator.CalculateSellPrice(currentPrice, marketOrder.Leverage);
         var buyPrice = _priceCalculator.CalculateBuyPrice(currentPrice, marketOrder.Leverage);
 
-        var transaction = new StocksTransaction()
+        var transaction = new StocksTransaction
         {
             StopLossAmount = marketOrder.StopLossAmount,
             TakeProfitAmount = marketOrder.TakeProfitAmount,
@@ -187,9 +169,9 @@ public class PortofolioService : IPortofolioService
 
     public TradingContext GetTradingContext(ApplicationUser userRequesting)
     {
-        return new TradingContext()
+        return new TradingContext
         {
-            Funds = userRequesting.Capital,
+            Funds = userRequesting.Capital
         };
     }
 }

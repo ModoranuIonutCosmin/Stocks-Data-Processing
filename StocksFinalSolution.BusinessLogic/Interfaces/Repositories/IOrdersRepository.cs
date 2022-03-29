@@ -2,10 +2,9 @@
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories.Base;
 using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+
+public interface IOrdersRepository : IRepository<Order, int>
 {
-    public interface IOrdersRepository : IRepository<Order, int>
-    {
-        Task PlaceRefillBalanceOrder(ApplicationUser user, Order order);
-    }
+    Task PlaceRefillBalanceOrder(ApplicationUser user, Order order);
 }

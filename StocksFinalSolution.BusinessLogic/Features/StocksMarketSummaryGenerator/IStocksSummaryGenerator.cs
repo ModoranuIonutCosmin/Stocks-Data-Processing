@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using StocksProcessing.API.Models;
 
-namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator
+namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
+
+public interface IStocksSummaryGenerator
 {
-    public interface IStocksSummaryGenerator
-    {
-        Task<StocksSummary> GenerateSummary(string ticker, TimeSpan interval);
-    }
+    Task<StocksSummary> GenerateSummary(string ticker, TimeSpan interval);
 }

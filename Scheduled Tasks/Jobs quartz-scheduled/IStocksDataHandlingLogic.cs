@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Stocks_Data_Processing
+namespace Stocks_Data_Processing;
+
+public interface IStocksDataHandlingLogic
 {
-    public interface IStocksDataHandlingLogic
-    {
-        Task StartAllFunctions();
-    }
+    Task StartAllFunctions();
 }

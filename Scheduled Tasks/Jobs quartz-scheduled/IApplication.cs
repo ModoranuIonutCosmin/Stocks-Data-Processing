@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Stocks_Data_Processing
+namespace Stocks_Data_Processing;
+
+public interface IApplication
 {
-    public interface IApplication
-    {
-        Task Run();
-    }
+    Task Run();
 }

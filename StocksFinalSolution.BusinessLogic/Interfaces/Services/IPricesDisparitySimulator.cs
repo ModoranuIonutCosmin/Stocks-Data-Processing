@@ -1,7 +1,6 @@
-﻿namespace StocksFinalSolution.BusinessLogic.Interfaces.Services
+﻿namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
+
+public interface IPricesDisparitySimulator
 {
-    public interface IPricesDisparitySimulator
-    {
-        decimal ComputeSpreadAmount();
-    }
+    decimal ComputeSpreadAmount();
 }

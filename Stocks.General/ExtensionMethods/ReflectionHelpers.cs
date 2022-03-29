@@ -1,7 +1,5 @@
-﻿namespace Stocks.General.ExtensionMethods
-{
-    public class ReflectionHelpers
-    {
+﻿namespace Stocks.General.ExtensionMethods;
 
-    }
+public class ReflectionHelpers
+{
 }

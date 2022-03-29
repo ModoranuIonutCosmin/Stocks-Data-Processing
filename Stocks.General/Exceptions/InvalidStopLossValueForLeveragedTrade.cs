@@ -6,6 +6,5 @@ public class InvalidStopLossValueForLeveragedTrade : Exception
 {
     public InvalidStopLossValueForLeveragedTrade(string? message) : base(message)
     {
-        
     }
 }

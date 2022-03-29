@@ -18,10 +18,10 @@ public class ProfileService : IProfileService
         _mapper = mapper;
         _usersRepository = usersRepository;
     }
-    
+
     public async Task<ProfilePrivateData> GatherProfileData(ApplicationUser requestingUser)
     {
-        ApplicationUser userData = await _usersRepository.GetByIdAsync(requestingUser.Id);
+        var userData = await _usersRepository.GetByIdAsync(requestingUser.Id);
 
         return _mapper.Map<ApplicationUser, ProfilePrivateData>(userData);
     }

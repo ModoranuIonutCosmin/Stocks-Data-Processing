@@ -12,34 +12,37 @@ namespace StocksProcessing.ML.Algorithms.Base;
 
 public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
     where TMI : class, IInputModel, new()
-    where TMO: class, new()
+    where TMO : class, new()
 {
     protected IEnumerable<TMI> _dataset;
-    protected IDataView TrainData { get; set; }
-    protected IDataView TestData { get; set; }
-    protected MLContext MlContext { get; set; }
-    protected dynamic TrainPipeline { get; set; }
-    
+
     protected Microsoft.ML.PredictionEngineBase<TMI, TMO> PredictionEngine;
-    
+
     public PredictionEngineBase(IEnumerable<TMI> dataset)
     {
         _dataset = dataset;
         MlContext = new MLContext();
     }
 
+    protected IDataView TrainData { get; set; }
+    protected IDataView TestData { get; set; }
+    protected MLContext MlContext { get; set; }
+    protected dynamic TrainPipeline { get; set; }
+
     public abstract Task SetupPipeline(int horizon);
+
     public virtual async Task CreatePredictionEngine(ITransformer model)
     {
         PredictionEngine = MlContext.Model.CreatePredictionEngine<TMI, TMO>(model,
             inputSchemaDefinition: CreateCustomSchemaDefinition());
     }
+
     public virtual async Task TrainModel(int horizon, double testFraction)
     {
-        SeparatedDataset<TMI> separatedDataset = _dataset.SeparateDataSet(testFraction);
+        var separatedDataset = _dataset.SeparateDataSet(testFraction);
 
         var customSchema = CreateCustomSchemaDefinition();
-        
+
         TrainData = MlContext.Data.LoadFromEnumerable(separatedDataset.TrainData, customSchema);
         TestData = MlContext.Data.LoadFromEnumerable(separatedDataset.TestData, customSchema);
         dynamic model;
@@ -57,15 +60,17 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
     }
 
     public abstract SchemaDefinition CreateCustomSchemaDefinition();
+
     public abstract Task<List<PredictionResult>> ComputePredictionsForNextPeriod(int horizon,
         double testFraction);
+
     public virtual async Task<(AccuracyStatistics accuracy, List<PredictionResult> predictions)> EvaluateModel
         (int horizon, double testFraction, TimeSpan interval)
     {
         var forecastedPrices = await ComputePredictionsForNextPeriod(horizon, testFraction);
 
         var testData = MlContext.Data
-            .CreateEnumerable<TMI>(TestData, reuseRowObject: false)
+            .CreateEnumerable<TMI>(TestData, false)
             .ToList();
 
         var testDataPriceObservations
@@ -73,7 +78,7 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
 
         var currentForecastedEntry = testData.FirstOrDefault()
             ?.GetObservationDate() ?? DateTimeOffset.MinValue;
-        
+
         forecastedPrices.ForEach(
             prediction =>
             {
@@ -81,10 +86,10 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
                 prediction.Date = currentForecastedEntry;
             });
 
-        return (new AccuracyStatistics() 
+        return (new AccuracyStatistics
         {
-            MAE = forecastedPrices.Select( pred => pred.Price).CalculateMAE(testDataPriceObservations),
-            RMSE = forecastedPrices.Select( pred => pred.Price).CalculateRMSE(testDataPriceObservations),
+            MAE = forecastedPrices.Select(pred => pred.Price).CalculateMAE(testDataPriceObservations),
+            RMSE = forecastedPrices.Select(pred => pred.Price).CalculateRMSE(testDataPriceObservations)
         }, forecastedPrices);
     }
 }

@@ -2,11 +2,10 @@
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories.Base;
 using StocksProccesing.Relational.Model;
 
-namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories
+namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+
+public interface ITransactionsRepository : IRepository<StocksTransaction, int>
 {
-    public interface ITransactionsRepository : IRepository<StocksTransaction, int>
-    {
-        bool ExistsTransaction(string uniqueTransactionToken);
-        List<StocksTransaction> GetOpenTransactions();
-    }
+    bool ExistsTransaction(string uniqueTransactionToken);
+    List<StocksTransaction> GetOpenTransactions();
 }

@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ML\StocksProcessing.ML\StocksProcessing.ML.csproj" />
+        <ProjectReference Include="..\ML main\StocksProcessing.ML\StocksProcessing.ML.csproj"/>
     </ItemGroup>
 
 </Project>

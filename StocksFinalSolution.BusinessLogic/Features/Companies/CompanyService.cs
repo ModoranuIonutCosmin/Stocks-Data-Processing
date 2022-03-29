@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Stocks.General.Models;
-using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+﻿using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
 
@@ -14,6 +12,7 @@ public class CompanyService : ICompanyService
     {
         _companiesRepository = companiesRepository;
     }
+
     public Company GetCompanyData(string ticker)
     {
         return _companiesRepository.GetCompanyData(ticker);

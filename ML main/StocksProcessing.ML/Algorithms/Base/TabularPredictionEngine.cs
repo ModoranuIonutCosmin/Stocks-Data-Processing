@@ -9,26 +9,26 @@ namespace StocksProcessing.ML.Algorithms.Base;
 
 public abstract class TabularPredictionEngine : PredictionEngineBase<TabularModelInput, TabularModelOutput>
 {
-    public int WindowSize => _dataset.FirstOrDefault()?.GetLineSize() ?? 0;
     protected TabularPredictionEngine(IEnumerable<TabularModelInput> dataset) : base(dataset)
     {
-        
     }
+
+    public int WindowSize => _dataset.FirstOrDefault()?.GetLineSize() ?? 0;
 
     public override SchemaDefinition CreateCustomSchemaDefinition()
     {
-        int featuresDimension = WindowSize;
+        var featuresDimension = WindowSize;
 
-        SchemaDefinition autoSchema = SchemaDefinition.Create(typeof(TabularModelInput));
-        
-        SchemaDefinition.Column featureColumn = autoSchema[0];
-        PrimitiveDataViewType itemType = ((VectorDataViewType)featureColumn.ColumnType).ItemType;
+        var autoSchema = SchemaDefinition.Create(typeof(TabularModelInput));
+
+        var featureColumn = autoSchema[0];
+        var itemType = ((VectorDataViewType) featureColumn.ColumnType).ItemType;
         featureColumn.ColumnType = new VectorDataViewType(itemType, featuresDimension);
         featureColumn.ColumnName = "Features";
-        
-        SchemaDefinition.Column labelColumn = autoSchema[1];
+
+        var labelColumn = autoSchema[1];
         labelColumn.ColumnName = "Label";
-        
+
 
         return autoSchema;
     }
@@ -36,32 +36,26 @@ public abstract class TabularPredictionEngine : PredictionEngineBase<TabularMode
     public override async Task<List<PredictionResult>> ComputePredictionsForNextPeriod(int horizon,
         double testFraction)
     {
-        if (PredictionEngine == null)
-        {
-            await TrainModel(horizon, testFraction);
-        }
+        if (PredictionEngine == null) await TrainModel(horizon, testFraction);
 
-        if (PredictionEngine == null)
-        {
-            throw new Exception("Failed model training - got nothing");
-        }
+        if (PredictionEngine == null) throw new Exception("Failed model training - got nothing");
 
         var result = new List<PredictionResult>();
-        TabularModelInput previousDataEntry = _dataset.Last();
+        var previousDataEntry = _dataset.Last();
 
         previousDataEntry.Label = 0;
 
-        for (int predictionIndex = 0; predictionIndex < horizon; predictionIndex++)
+        for (var predictionIndex = 0; predictionIndex < horizon; predictionIndex++)
         {
-            var nextPrice = this.PredictionEngine.Predict(previousDataEntry);
+            var nextPrice = PredictionEngine.Predict(previousDataEntry);
 
-            float[] nextFeatures = new float[previousDataEntry.Features.Length];
+            var nextFeatures = new float[previousDataEntry.Features.Length];
             Array.Copy(previousDataEntry.Features, 1, nextFeatures,
                 0, previousDataEntry.Features.Length - 1);
             nextFeatures[^1] = nextPrice.Score;
             previousDataEntry.Features = nextFeatures;
 
-            result.Add(new PredictionResult()
+            result.Add(new PredictionResult
             {
                 Price = nextPrice.Score
             });
