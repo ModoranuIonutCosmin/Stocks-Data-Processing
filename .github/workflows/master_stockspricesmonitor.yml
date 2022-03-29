@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build .Scheduled Tasks/Azure Functions/ScraperFunction --configuration Release --output ./output
+          dotnet build "./Scheduled Tasks/Azure Functions/ScraperFunction" --configuration Release --output ./output
           popd
 
       - name: 'Run Azure Functions Action'
