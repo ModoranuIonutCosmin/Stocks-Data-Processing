@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Stocks_Data_Processing.Interfaces.Jobs;
 
-namespace MaintainanceStockProcessingJobs;
+namespace SummariesGeneratorFunction;
 
 public class SummariesGeneratorFunction
 {
