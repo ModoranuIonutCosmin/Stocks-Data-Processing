@@ -127,11 +127,24 @@ public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
             currentDate = new DateTimeOffset(currentDate
                 .GetNextStockMarketTime(DatasetInterval).Ticks, TimeSpan.Zero);
 
+
+            decimal price = 0m;
+
+            try
+            {
+                price = (decimal)prediction.Price;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(prediction);
+                Console.WriteLine(algorithm);
+            }
+
             return new StocksPriceData
             {
                 Prediction = true,
                 AlgorithmUsed = algorithm,
-                Price = (decimal) prediction.Price,
+                Price = price,
                 CompanyTicker = ticker,
                 Date = currentDate
             };

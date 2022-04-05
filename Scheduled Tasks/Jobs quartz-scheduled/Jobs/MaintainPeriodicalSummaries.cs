@@ -40,8 +40,10 @@ public class MaintainPeriodicalSummaries : IMaintainPeriodicalSummaries
         var tickersList = TickersHelpers.GatherAllTickers();
 
         foreach (var ticker in tickersList)
-        foreach (var period in periods)
-            await UpdateLastPeriod(ticker, period);
+        {
+            foreach (var period in periods)
+                await UpdateLastPeriod(ticker, period);
+        }
     }
 
     public async Task UpdateLastPeriod(string ticker, TimeSpan period)
