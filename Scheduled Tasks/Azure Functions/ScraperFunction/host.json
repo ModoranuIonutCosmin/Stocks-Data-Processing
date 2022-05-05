@@ -1,11 +1,13 @@
 {
   "version": "2.0",
   "logging": {
-    "applicationInsights": {
-      "samplingSettings": {
-        "isEnabled": true,
-        "excludedTypes": "Request"
-      }
+    {
+      "fileLoggingMode": "always",
+      "logLevel": {
+        "default": "Error",
+        "Host.Results": "Error",
+        "Function": "Error",
+        "Host.Aggregator": "Warning"
     }
   }
 }
