@@ -16,8 +16,6 @@ public class TabularFastForestRegressionPredictionEngine : TabularPredictionEngi
 
     public override async Task SetupPipeline(int horizon)
     {
-        var featuresColumnName = "Features";
-        // Data process configuration with pipeline data transformations
         var pipeline = MlContext.Regression.Trainers
             .FastForest(new FastForestRegressionTrainer.Options
             {

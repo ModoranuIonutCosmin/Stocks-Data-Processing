@@ -21,10 +21,10 @@ public class SSAPredictionEngine : TimeSeriesPredictionEngine
             "ForecastedPrices",
             "Price",
             horizon,
-            trainDataLength,
-            trainDataLength,
+            seriesLength: trainDataLength,
+            trainSize: trainDataLength,
             horizon,
-            confidenceLevel: 0.99f,
+            confidenceLevel: 0.95f,
             confidenceLowerBoundColumn: "LowerBoundPrices",
             confidenceUpperBoundColumn: "UpperBoundPrices");
 

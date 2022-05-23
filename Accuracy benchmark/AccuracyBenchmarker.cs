@@ -29,9 +29,10 @@ public class AccuracyBenchmarker
 
         var accuracyStatistics = await ssaPredEngine
             .EvaluateModel(horizon, testFraction, _forecastDateInterval);
+        
 
         return AccuracyBenchmarkResult.FromBenchmarkTest(accuracyStatistics.accuracy,
-            accuracyStatistics.predictions, ticker, _dataset, testFraction);
+            accuracyStatistics.predictions, ticker, _dataset, testFraction: testFraction, "SSA");
     }
 
     public async Task<AccuracyBenchmarkResult> BenchmarkFastForest(string ticker, int horizon,
@@ -44,7 +45,7 @@ public class AccuracyBenchmarker
             = await fastForestEngine.EvaluateModel(horizon, testFraction, _forecastDateInterval);
 
         return AccuracyBenchmarkResult.FromBenchmarkTest(accuracyStatistics.accuracy,
-            accuracyStatistics.predictions, ticker, _dataset, testFraction);
+            accuracyStatistics.predictions, ticker, _dataset, testFraction, "FastForest");
     }
 
     public async Task<AccuracyBenchmarkResult> BenchmarkFastTreeTweedie(string ticker, int horizon,
@@ -57,7 +58,7 @@ public class AccuracyBenchmarker
             = await fastTreeTweedieEngine.EvaluateModel(horizon, testFraction, _forecastDateInterval);
 
         return AccuracyBenchmarkResult.FromBenchmarkTest(accuracyStatistics.accuracy,
-            accuracyStatistics.predictions, ticker, _dataset, testFraction);
+            accuracyStatistics.predictions, ticker, _dataset, testFraction, "FastTreeTweedie");
     }
 
     public async Task<AccuracyBenchmarkResult> BenchmarkSDCA(string ticker, int horizon,
@@ -70,6 +71,6 @@ public class AccuracyBenchmarker
             = await sdcaEngine.EvaluateModel(horizon, testFraction, _forecastDateInterval);
 
         return AccuracyBenchmarkResult.FromBenchmarkTest(accuracyStatistics.accuracy,
-            accuracyStatistics.predictions, ticker, _dataset, testFraction);
+            accuracyStatistics.predictions, ticker, _dataset, testFraction, "SDCA");
     }
 }

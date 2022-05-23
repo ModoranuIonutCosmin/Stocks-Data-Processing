@@ -11,7 +11,7 @@ public class TabularModelInput : IInputModel
     // [LoadColumn(79), ColumnName("Label")]
     public float Label { get; set; }
 
-    public DateTimeOffset FirstFeatureDate { get; set; }
+    public DateTimeOffset LastFeatureDate { get; set; }
 
     public float GetLabel()
     {
@@ -25,6 +25,6 @@ public class TabularModelInput : IInputModel
 
     public DateTimeOffset GetObservationDate()
     {
-        return FirstFeatureDate;
+        return LastFeatureDate;
     }
 }

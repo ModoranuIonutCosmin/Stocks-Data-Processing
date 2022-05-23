@@ -34,7 +34,7 @@ public abstract class
         var predictionEngine =
             PredictionEngine as TimeSeriesPredictionEngine<TimestampPriceInputModel, TimestampPriceOutputModel>;
 
-        var results = predictionEngine.Predict();
+        var results = predictionEngine.Predict(horizon: horizon);
 
         return results.ForecastedPrices.Select(price => new PredictionResult
         {

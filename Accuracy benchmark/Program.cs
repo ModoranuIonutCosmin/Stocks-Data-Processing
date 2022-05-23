@@ -7,32 +7,45 @@ using StocksProccesing.Relational;
 using StocksProcessing.ML.Models.TimeSeries;
 
 var predictionHorizon = TimeSpan.FromHours(80);
-var intervalTimepoints = TimeSpan.FromMinutes(5);
-var companyTicker = "VOO";
+var intervalTimepoints = TimeSpan.FromMinutes(1);
+var companyTicker = "TSLA";
+double testFraction = 0.5;
+int tabularWindowSize = 18 * 60;
 
 var horizon = (int) Math.Floor(predictionHorizon.Divide(intervalTimepoints));
 
 var mlContext = new MLContext();
 
 var loader = mlContext.Data.CreateDatabaseLoader<TimestampPriceInputModel>();
-var query = "SELECT CAST(Date AS DateTime) as Date, CAST(CloseValue AS REAL) as Price FROM " +
+var querySummaries = "SELECT CAST(Date AS DateTime) as Date, CAST(CloseValue AS REAL) as Price FROM " +
             $"[dbo].[Summaries] WHERE CompanyTicker = '{companyTicker}' AND Period = {intervalTimepoints.Ticks}" +
+            "ORDER BY Date asc";
+
+var queryWhole = "SELECT CAST(Date AS DateTime) as Date, CAST(Price AS REAL) as Price FROM " +
+            $"[dbo].[PricesData] WHERE CompanyTicker = '{companyTicker}'" +
             "ORDER BY Date asc";
 
 DatabaseSource dbSource = new(SqlClientFactory.Instance,
     Environment.GetEnvironmentVariable("DATABASE_URL_PROD") ?? DatabaseSettings.ConnectionString,
-    query);
+    queryWhole);
 
 var dataView = loader.Load(dbSource);
 
-var trainData = mlContext.Data.CreateEnumerable<TimestampPriceInputModel>(dataView, false);
+var trainData 
+    = mlContext.Data.CreateEnumerable<TimestampPriceInputModel>(dataView, false)
+        .ToList();
 
 
-var benchmarker = new AccuracyBenchmarker(trainData.ToList(), 960, intervalTimepoints);
+var benchmarker = new AccuracyBenchmarker(trainData, tabularWindowSize, intervalTimepoints);
 
-var benchmarkResult
-    = await benchmarker.BenchmarkSingleSpectrumAnalysis(companyTicker, horizon);
-var jsonString = JsonSerializer.Serialize(benchmarkResult);
+var benchmarkResults = new List<AccuracyBenchmarkResult>();
 
-File.AppendAllText("out.txt", "\r\n======================\r\n");
-File.AppendAllText("out.txt", jsonString);
+benchmarkResults.Add(await benchmarker.BenchmarkSingleSpectrumAnalysis(companyTicker, horizon, testFraction: testFraction));
+benchmarkResults.Add(await benchmarker.BenchmarkSDCA(companyTicker, horizon, testFraction: testFraction));
+benchmarkResults.Add(await benchmarker.BenchmarkFastForest(companyTicker, horizon, testFraction: testFraction));
+benchmarkResults.Add(await benchmarker.BenchmarkFastTreeTweedie(companyTicker, horizon, testFraction: testFraction));
+
+
+var jsonString = JsonSerializer.Serialize(benchmarkResults);
+
+await File.WriteAllTextAsync("out.txt", jsonString);

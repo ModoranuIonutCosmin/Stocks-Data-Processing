@@ -1,0 +1,3 @@
+- La gather se face intepolare doar per day in rest se skipeaza
+- La functie se trag datele doar din intervalul 8-23 L-V
+- Datele in actuals sunt shiftate 3 ore din cauza cast-ului din BD DateTimeOffset -> DateTime utc - local

@@ -15,7 +15,7 @@ public class SummariesGeneratorFunction
     }
 
     [FunctionName("SummariesGeneratorFunction")]
-    public async Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo myTimer, ILogger log)
+    public async Task Run([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
     {
         await maintainPeriodicalSummaries.Execute(default);
     }

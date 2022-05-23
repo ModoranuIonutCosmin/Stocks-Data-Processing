@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Accuracy benchmark": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DATABASE_URL_PROD": "Server=tcp:stocksprocessing.database.windows.net,1433;Initial Catalog=stocks;Persist Security Info=False;User ID=stocks;Password=theLOSTHIGHWAY#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+      }
+    }
+  }
+}

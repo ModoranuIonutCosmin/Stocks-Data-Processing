@@ -18,15 +18,16 @@ public class AccuracyBenchmarkResult
     public double TestFraction { get; set; }
 
     public List<TimestampPriceInputModel> Actuals => Dataset
-        .TakeLast((int) Math.Floor(Dataset.Count * TestFraction)).ToList();
+        // .TakeLast((int) Math.Floor(Dataset.Count * TestFraction)).ToList();
+        .Skip(Math.Max(0, (int) (Dataset.Count() * (1 - TestFraction)))).ToList();
 
     public static AccuracyBenchmarkResult FromBenchmarkTest(AccuracyStatistics accuracyStatistics,
         List<PredictionResult> results, string ticker, List<TimestampPriceInputModel> dataset,
-        double testFraction)
+        double testFraction, string label = "")
     {
         return new()
         {
-            Algorithm = "SingleSpectrumAnalysis",
+            Algorithm = label,
             Ticker = ticker,
             ComputedStatistics = accuracyStatistics,
             ForecastedPrices = results,

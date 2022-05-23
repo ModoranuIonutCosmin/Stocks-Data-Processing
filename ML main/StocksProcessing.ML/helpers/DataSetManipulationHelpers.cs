@@ -42,7 +42,7 @@ public static class DataSetManipulationHelpers
                 .ToList();
 
             datasetOffset++;
-
+            
             if (windowSize != chunk.Count) break;
 
             featuresGrouped.Add(chunk);
@@ -63,7 +63,7 @@ public static class DataSetManipulationHelpers
             Label = datapoint
                 .Select(e => e.Price)
                 .Last(),
-            FirstFeatureDate = datapoint.FirstOrDefault()?.Date ?? DateTime.MinValue
+            LastFeatureDate = datapoint.LastOrDefault()?.Date ?? DateTime.MinValue
         }).ToList();
     }
 }

@@ -15,8 +15,6 @@ public class TabularLbfgsPoissonRegressionPredictionEngine : TabularPredictionEn
 
     public override async Task SetupPipeline(int horizon)
     {
-        // Data process configuration with pipeline data transformations
-
         var pipeline = MlContext.Regression.Trainers
             .LbfgsPoissonRegression(@"Label", @"Features",
                 historySize: 80, enforceNonNegativity: true);
