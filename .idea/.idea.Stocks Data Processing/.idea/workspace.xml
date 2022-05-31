@@ -16,34 +16,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64837255-daee-4e44-9093-5b0642536b8f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/AlphaVantageContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/AlphaVantageStocksPricesGatherer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/Application.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/DIContainerConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/IApiStockPricesGatherer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/IApplication.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/JsonPricesExtensionHelpers.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/PriceDataModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StockBulkGatherer/StockPricesAPIModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DatasetInterpolationHelpers.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DateFormatterHelpers.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DeepCopyHelpers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarkResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarkResult.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/AccuracyBenchmarker.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accuracy benchmark/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Accuracy benchmark/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastForestRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastForestRegressionPredictionEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastTreeRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularFastTreeRegressionPredictionEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularLbfgsPoissonRegressionPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TabularReduction/TabularLbfgsPoissonRegressionPredictionEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TimeSeries/SSAPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/TimeSeries/SSAPredictionEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/Tabular/TabularModelInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Models/Tabular/TabularModelInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/SummariesGeneratorFunction/SummariesGeneratorFunction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StockBulkGatherer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StockBulkGatherer/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StockBulkGatherer/StockBulkGatherer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StockBulkGatherer/StockBulkGatherer.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stocks.General/Stocks.General.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Stocks.General.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -333,6 +307,7 @@
       <workItem from="1652808897758" duration="4076000" />
       <workItem from="1652877817095" duration="5625000" />
       <workItem from="1652971115327" duration="3275000" />
+      <workItem from="1654023365880" duration="1056000" />
     </task>
     <servers />
   </component>
