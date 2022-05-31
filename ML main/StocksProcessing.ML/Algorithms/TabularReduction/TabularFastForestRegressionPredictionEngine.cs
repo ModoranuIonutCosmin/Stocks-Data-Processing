@@ -19,7 +19,7 @@ public class TabularFastForestRegressionPredictionEngine : TabularPredictionEngi
         var pipeline = MlContext.Regression.Trainers
             .FastForest(new FastForestRegressionTrainer.Options
             {
-                NumberOfTrees = 4,
+                NumberOfTrees = 10,
                 FeatureFraction = 0.8F, LabelColumnName = @"Label", FeatureColumnName = @"Features"
             });
 
