@@ -16,8 +16,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="64837255-daee-4e44-9093-5b0642536b8f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Security/ISimpleAESProtector.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Security/SimpleAESProtector.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Encryption/EncryptDataConverter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Encryption/EntityDataConverionHelpers.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Encryption/Personal Data/LookupProtector.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Encryption/Personal Data/LookupProtectorKeyRing.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Stocks Data Processing/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/ScraperFunction/host.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/PredictionEngineBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/PredictionEngineBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TabularPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TabularPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/Algorithms/Base/TimeSeriesPredictionEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ML main/StocksProcessing.ML/helpers/DataSetManipulationHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/DIContainerConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/DIContainerConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/IScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Interfaces/Services/IScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoDataScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoDataScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoGoogleScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoGoogleScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoYahooScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/CurrentStockInfoYahooScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/ScraperService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Scheduled Tasks/Jobs quartz-scheduled/Services/ScraperService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/ApplicationUser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/ApplicationUser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/Entities/StocksOHLC.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/Entities/StocksOHLC.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/CurrencyParserHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/CurrencyParserHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DatasetInterpolationHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Stocks.General/ExtensionMethods/DatasetInterpolationHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserAuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/Authentication/UserAuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/StocksSummaryGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/Features/StocksMarketSummaryGenerator/StocksSummaryGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/StocksFinalSolution.BusinessLogic.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksFinalSolution.BusinessLogic/StocksFinalSolution.BusinessLogic.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StocksMarketContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/DataAccess/StocksMarketContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/Migrations/StocksMarketContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/Migrations/StocksMarketContextModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProccesing.Relational/StocksProccesing.Relational.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProccesing.Relational/StocksProccesing.Relational.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Attributes/AuthorizeTokenAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Attributes/AuthorizeTokenAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/PortofolioController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/PortofolioController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/ProfileController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/ProfileController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/TransactionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Controllers/v1/TransactionsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Payloads/ApiResponseExtensionsHelpers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/StocksProcessing.API.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/StocksProcessing.API.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StocksProcessing.API/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/StocksProcessing.API/appsettings.Development.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,10 +67,31 @@
       </set>
     </option>
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9e655e9fd1cc406fb2837d7f3c3eba138f5788/17/825219b8/IDisposable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c16cbad0b31bbe7bdc02699bad15b2382411c17867822dbac1c72d0458b563/EntityFrameworkCoreDataProtectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/93bf8ca51564b3532dce6442f8ec6d3856e11622b484427b6e965ca60aba4b1/IdentityDbContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d872cabec6d78efef79ab60ad51bc41ce2946dacd29326b5f8fba17bdc982/DataProtectionServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c6ad457575d35dcbff26c9a5e3fb1d92f1d3c55f25ef6ebf475367b5d8/List.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1c87ebc0463474b9cfdc34f154ef2d4739232841c777cf3e2c4158a7ce07d/ExtensionsCatalog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d23ddb881ebc4d4290991a839764b5826280/1a/4828ce82/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f4708639776589f5ac2739f6fcbfc67343b1f9dac51cc1dbfdb003eef77cc1c/Monitor.CoreCLR.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1284c4841bec516393c793cdbfa136f7f6cebcc97c2137c22a616a3aba4988/IPersonalDataProtector.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ac26cfdf462b65acb9acc2a1373bbdb2d1e258864aa2735e55ce53ebe8b22e/UserManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/38f462cb76578f34cd106bbd1d96f262911c88fbbf17140fb259573fea4ecc5/IdentityUser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1c5077cce02cdef9ee9aa6d0541775cb3dfd724432ebe43bd5a9a2a82f758cb/DefaultPersonalDataProtector.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/35685969ca6fb9667db23d16af9c753601b4e53d3a83c7e47d45cd82cc136b/IUserStore.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/575c31ecc35a636b6f962cb71d53992552941a18982aae1c8e6c16305cc3761b/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/11f31873df2f52fde7fd5e72c817613e169a357e4c7bf4e4e72afa1917c8/IdentityDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9f584526bf33cd3e7664379889ba679a7bf75ae438cf9ce811d344e613b768c5/ILookupProtector.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -53,9 +109,10 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected=".NET Project.Accuracy benchmark">
+  <component name="RunManager" selected=".NET Launch Settings Profile.StocksProcessing.API: Kestrel">
     <configuration name="PredictionsGeneratorFunction" type="AzureFunctionsHost" factoryName="Azure Functions host">
       <option name="EXE_PATH" value="$PROJECT_DIR$/Scheduled Tasks/Azure Functions/PredictionsGeneratorFunction/bin/Debug/net6.0/PredictionsGeneratorFunction.dll" />
       <option name="PROGRAM_PARAMETERS" value="host start --pause-on-error" />
@@ -307,7 +364,12 @@
       <workItem from="1652808897758" duration="4076000" />
       <workItem from="1652877817095" duration="5625000" />
       <workItem from="1652971115327" duration="3275000" />
-      <workItem from="1654023365880" duration="1056000" />
+      <workItem from="1654023365880" duration="1748000" />
+      <workItem from="1654348640585" duration="3293000" />
+      <workItem from="1654352491732" duration="4050000" />
+      <workItem from="1654434580352" duration="16382000" />
+      <workItem from="1654464007840" duration="3395000" />
+      <workItem from="1654517118589" duration="2518000" />
     </task>
     <servers />
   </component>
@@ -339,10 +401,10 @@
           <line>71</line>
           <properties documentPath="C:\Users\zero6\Desktop\stocks\Stocks-Data-Processing\ML main\StocksProcessing.ML\Algorithms\Base\PredictionEngineBase.cs" initialLine="71" containingFunctionPresentation="method 'EvaluateModel'">
             <startOffsets>
-              <option value="2367" />
+              <option value="2391" />
             </startOffsets>
             <endOffsets>
-              <option value="2471" />
+              <option value="2495" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="7" />
@@ -365,10 +427,10 @@
           <line>75</line>
           <properties documentPath="C:\Users\zero6\Desktop\stocks\Stocks-Data-Processing\ML main\StocksProcessing.ML\Algorithms\Base\PredictionEngineBase.cs" initialLine="75" containingFunctionPresentation="method 'EvaluateModel'">
             <startOffsets>
-              <option value="2481" />
+              <option value="2505" />
             </startOffsets>
             <endOffsets>
-              <option value="2566" />
+              <option value="2590" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="10" />
@@ -404,10 +466,10 @@
           <line>88</line>
           <properties documentPath="C:\Users\zero6\Desktop\stocks\Stocks-Data-Processing\ML main\StocksProcessing.ML\Algorithms\Base\PredictionEngineBase.cs" initialLine="88" containingFunctionPresentation="method 'EvaluateModel'">
             <startOffsets>
-              <option value="2950" />
+              <option value="2974" />
             </startOffsets>
             <endOffsets>
-              <option value="3227" />
+              <option value="3251" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="14" />
@@ -424,6 +486,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/StocksProccesing.Relational/Encryption/EntityDataConverionHelpers.cs</url>
+          <line>19</line>
+          <properties documentPath="C:\Users\zero6\Desktop\stocks\Stocks-Data-Processing\StocksProccesing.Relational\Encryption\EntityDataConverionHelpers.cs" initialLine="19" containingFunctionPresentation="method 'AddDataProtectionConverters'">
+            <startOffsets>
+              <option value="664" />
+            </startOffsets>
+            <endOffsets>
+              <option value="710" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

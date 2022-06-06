@@ -27,18 +27,18 @@ public static class DataSetManipulationHelpers
         };
     }
 
-    public static List<List<TimestampPriceInputModel>> Tabularize(this IEnumerable<TimestampPriceInputModel> allData,
+    public static List<List<TimestampPriceInputModel>> Tabularize(
+        this IEnumerable<TimestampPriceInputModel> allData,
         int windowSize)
     {
-        var datasetOffset = 0;
+        int datasetOffset = 0;
         var dataset = new List<TimestampPriceInputModel>(allData);
         var featuresGrouped = new List<List<TimestampPriceInputModel>>();
 
-        var chunk = new List<TimestampPriceInputModel>();
 
         while (datasetOffset + windowSize <= dataset.Count)
         {
-            chunk = dataset.GetRange(datasetOffset, windowSize)
+            List<TimestampPriceInputModel> chunk = dataset.GetRange(datasetOffset, windowSize)
                 .ToList();
 
             datasetOffset++;

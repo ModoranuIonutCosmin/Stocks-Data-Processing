@@ -16,7 +16,7 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
 {
     protected IEnumerable<TMI> _dataset;
 
-    protected Microsoft.ML.PredictionEngineBase<TMI, TMO> PredictionEngine;
+    protected Microsoft.ML.PredictionEngineBase<TMI, TMO> _theirPredictionEngine;
 
     public PredictionEngineBase(IEnumerable<TMI> dataset)
     {
@@ -24,7 +24,7 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
         MlContext = new MLContext();
     }
 
-    protected IDataView TrainData { get; set; }
+    protected IDataView TrainDataView { get; set; }
     protected IDataView TestData { get; set; }
     protected MLContext MlContext { get; set; }
     protected dynamic TrainPipeline { get; set; }
@@ -33,7 +33,7 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
 
     public virtual async Task CreatePredictionEngine(ITransformer model)
     {
-        PredictionEngine = MlContext.Model.CreatePredictionEngine<TMI, TMO>(model,
+        _theirPredictionEngine = MlContext.Model.CreatePredictionEngine<TMI, TMO>(model,
             inputSchemaDefinition: CreateCustomSchemaDefinition());
     }
 
@@ -43,13 +43,13 @@ public abstract class PredictionEngineBase<TMI, TMO> : IPredictionEngine
 
         var customSchema = CreateCustomSchemaDefinition();
 
-        TrainData = MlContext.Data.LoadFromEnumerable(separatedDataset.TrainData, customSchema);
+        TrainDataView = MlContext.Data.LoadFromEnumerable(separatedDataset.TrainData, customSchema);
         TestData = MlContext.Data.LoadFromEnumerable(separatedDataset.TestData, customSchema);
         dynamic model;
         await SetupPipeline(horizon);
         try
         {
-            model = TrainPipeline.Fit(TrainData);
+            model = TrainPipeline.Fit(TrainDataView);
             CreatePredictionEngine(model);
         }
         catch (Exception e)

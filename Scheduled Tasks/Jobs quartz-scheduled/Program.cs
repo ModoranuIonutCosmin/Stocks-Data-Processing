@@ -11,7 +11,7 @@ internal static class Program
 
         using var scope = DIContainer.BeginLifetimeScope();
         DIContainerConfig.Scope = scope;
-
+        
         await scope.Resolve<IApplication>().Run();
     }
 }

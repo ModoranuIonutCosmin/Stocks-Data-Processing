@@ -13,33 +13,32 @@ public static class DatasetInterpolationHelpers
         DateTimeOffset currentDt;
         DateTimeOffset nextDt;
 
-        for (var i = 0; i < priceData.Count - 1; i++)
+        for (int entryIndex = 0; entryIndex < priceData.Count - 1; entryIndex++)
         {
-            current = priceData[i];
-            next = priceData[i + 1];
+            current = priceData[entryIndex];
+            next = priceData[entryIndex + 1];
             currentDt = current.Date;
             nextDt = next.Date;
 
             if (currentDt.Day == nextDt.Day)
             {
                 var deltaTime = nextDt - currentDt;
-                decimal source;
 
-                source = current.Price;
+                decimal source = current.Price;
 
-                for (var j = 1; j < deltaTime.TotalMinutes; ++j)
+                for (var occurenceIndex = 1; occurenceIndex < deltaTime.TotalMinutes; ++occurenceIndex)
                 {
-                    ++i;
+                    ++entryIndex;
 
                     var fillingRow = new StocksPriceData
                     {
                         CompanyTicker = current.CompanyTicker,
                         Price = source,
-                        Date = currentDt.AddMinutes(j),
+                        Date = currentDt.AddMinutes(occurenceIndex),
                         Prediction = false
                     };
 
-                    priceData.Insert(i, fillingRow);
+                    priceData.Insert(entryIndex, fillingRow);
                 }
             }
         }

@@ -30,7 +30,8 @@ public class StocksOhlc
     [Column(TypeName = "bigint")]
     public long Period { get; set; }
 
-    [MaxLength(10)] public string CompanyTicker { get; set; }
+    [MaxLength(10)] 
+    public string CompanyTicker { get; set; }
 
     public Company Company { get; set; }
 }
