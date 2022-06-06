@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stocks.General.Models.Transactions;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Auth;
+using StocksProcessing.API.Attributes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

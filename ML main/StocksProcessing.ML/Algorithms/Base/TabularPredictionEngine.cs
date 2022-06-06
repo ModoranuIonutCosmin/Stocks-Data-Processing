@@ -36,9 +36,9 @@ public abstract class TabularPredictionEngine : PredictionEngineBase<TabularMode
     public override async Task<List<PredictionResult>> ComputePredictionsForNextPeriod(int horizon,
         double testFraction)
     {
-        if (PredictionEngine == null) await TrainModel(horizon, testFraction);
+        if (_theirPredictionEngine == null) await TrainModel(horizon, testFraction);
 
-        if (PredictionEngine == null) throw new Exception("Failed model training - got nothing");
+        if (_theirPredictionEngine == null) throw new Exception("Failed model training - got nothing");
 
         var result = new List<PredictionResult>();
         var previousDataEntry = _dataset.Last();
@@ -47,7 +47,7 @@ public abstract class TabularPredictionEngine : PredictionEngineBase<TabularMode
 
         for (var predictionIndex = 0; predictionIndex < horizon; predictionIndex++)
         {
-            var nextPrice = PredictionEngine.Predict(previousDataEntry);
+            var nextPrice = _theirPredictionEngine.Predict(previousDataEntry);
 
             var nextFeatures = new float[previousDataEntry.Features.Length];
             Array.Copy(previousDataEntry.Features, 1, nextFeatures,

@@ -37,7 +37,8 @@ public static class DIContainerConfig
     public static IContainer Configure()
     {
         var builder = new ContainerBuilder();
-
+        
+        
         ServiceCollection serviceCollection = new();
 
         serviceCollection.AddDbContext<StocksMarketContext>(opt =>

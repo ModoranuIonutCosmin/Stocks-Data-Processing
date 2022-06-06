@@ -22,17 +22,17 @@ public abstract class
 
     public override async Task CreatePredictionEngine(ITransformer model)
     {
-        PredictionEngine = model.CreateTimeSeriesEngine<TimestampPriceInputModel,
+        _theirPredictionEngine = model.CreateTimeSeriesEngine<TimestampPriceInputModel,
             TimestampPriceOutputModel>(MlContext);
     }
 
     public override async Task<List<PredictionResult>> ComputePredictionsForNextPeriod
         (int horizon, double testFraction)
     {
-        if (PredictionEngine == null) await TrainModel(horizon, testFraction);
+        if (_theirPredictionEngine == null) await TrainModel(horizon, testFraction);
 
         var predictionEngine =
-            PredictionEngine as TimeSeriesPredictionEngine<TimestampPriceInputModel, TimestampPriceOutputModel>;
+            _theirPredictionEngine as TimeSeriesPredictionEngine<TimestampPriceInputModel, TimestampPriceOutputModel>;
 
         var results = predictionEngine.Predict(horizon: horizon);
 

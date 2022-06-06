@@ -35,23 +35,23 @@ public class StocksSummaryGenerator : IStocksSummaryGenerator
 
     public async Task<StocksSummary> GenerateSummary(string ticker, TimeSpan interval)
     {
-        var lastUpdatedDate = stockSummariesRepository
+        DateTimeOffset lastUpdatedDate = stockSummariesRepository
                                   .GetLastSummaryEntry(ticker, interval)?.Date
                               ?? DateTimeOffset.FromUnixTimeMilliseconds(0);
 
-        var pricesData = (await stockPricesRepository
+        List<StocksPriceData> pricesData = (await stockPricesRepository
                 .GetAllWhereAsync(e => e.CompanyTicker == ticker &&
                                        e.Date > lastUpdatedDate.Add(interval) && !e.Prediction))
             .OrderBy(e => e.Date)
             .ToList();
 
-        var groupedChunks = new List<List<StocksPriceData>>();
+        List<List<StocksPriceData>> groupedChunks = new List<List<StocksPriceData>>();
 
         if (!pricesData.Any())
             return new StocksSummary();
 
-        var currentTimePoint = pricesData.First().Date;
-        var currentGroup = new List<StocksPriceData>();
+        DateTimeOffset currentTimePoint = pricesData.First().Date;
+        List<StocksPriceData> currentGroup = new List<StocksPriceData>();
 
         foreach (var timePoint in pricesData)
         {

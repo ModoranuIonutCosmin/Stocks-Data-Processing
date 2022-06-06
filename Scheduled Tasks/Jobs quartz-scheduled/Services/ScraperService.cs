@@ -11,51 +11,31 @@ namespace Stocks_Data_Processing.Services;
 
 public class ScraperService : IScraperService
 {
-    private readonly HttpClient httpClient;
-
-
-    public ScraperService(HttpClient httpClient)
+    public async Task<List<decimal>> ExtractNumericFields(string url, string xPath)
     {
-        this.httpClient = httpClient;
-    }
-
-    public async Task<decimal> GetNumericFieldValueByHtmlClassesCombination(string link, List<string> classes)
-    {
-        var pageSource = await GetPageHTMLSource(link);
-
-        var htmlDoc = new HtmlDocument();
-        htmlDoc.LoadHtml(pageSource);
-
-        //Si apoi cauta elementul ce contine pretul unui share
-        //in functie de unele trasaturi care identifica unic elementul.
-        var htmlElements = htmlDoc.DocumentNode.Descendants(0)
-            .Where(n => n.GetClasses()
-                .SequenceEqual(classes))
+        var htmlDoc = await new HtmlWeb().LoadFromWebAsync(url);
+        
+        var htmlNodes = htmlDoc.DocumentNode
+            .SelectNodes(xPath)
             .ToList();
 
-        if (!htmlElements.Any())
-            throw new ScrapeNoElementException($"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : No element" +
+        if (!htmlNodes.Any())
+            throw new ScrapeNoElementException($"{nameof(ExtractNumericFields)} : No element" +
                                                " to scrape found");
 
-        //Ia ultimul element. Acesta va fi pretul after market daca exista sau pre market altfel pretul curent
-        var valueString = htmlElements.Last().InnerText;
-
-        if (!valueString.ParseCurrency(out var valueNumeric))
-            throw new CurrencyParseException(
-                $"{nameof(GetNumericFieldValueByHtmlClassesCombination)} : Couldn't parse currency!");
-
-        return valueNumeric;
+        List<decimal> result = new List<decimal>();
+        
+        htmlNodes.ForEach(node =>
+        {
+            bool success = node.InnerText.ParseCurrency(out var valueNumeric);
+            
+            if (success)
+            {
+                result.Add(valueNumeric);
+            }
+        });
+        
+        return result;
     }
 
-    private async Task<string> GetPageHTMLSource(string link)
-    {
-        //Incearca sa faca GET la sursa paginii pe care avem informatiile necesare...
-        var response = await httpClient.GetAsync(link);
-
-        response.EnsureSuccessStatusCode();
-
-        var pageSource = await response.Content.ReadAsStringAsync();
-
-        return pageSource;
-    }
 }

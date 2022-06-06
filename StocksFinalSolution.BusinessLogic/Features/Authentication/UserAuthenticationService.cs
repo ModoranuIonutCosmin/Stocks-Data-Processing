@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Stocks.General.Models.Authentication;
 using StocksFinalSolution.BusinessLogic.Features.Authentication.ExtensionMethods;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.General.Exceptions;
@@ -18,11 +19,14 @@ public class UserAuthenticationService : IUserAuthenticationService
 {
     private readonly IGeneralPurposeEmailService _emailSender;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IUsersRepository _usersRepository;
 
     public UserAuthenticationService(UserManager<ApplicationUser> userManager,
+        IUsersRepository usersRepository,
         IGeneralPurposeEmailService emailSender)
     {
         _userManager = userManager;
+        _usersRepository = usersRepository;
         _emailSender = emailSender;
     }
 
@@ -44,10 +48,11 @@ public class UserAuthenticationService : IUserAuthenticationService
 
         var result = await _userManager.CreateAsync(user, registerData.Password);
 
-        if (!result.Succeeded) throw new AuthenticationException(result.Errors.AggregateErrors());
+        if (!result.Succeeded) 
+            throw new AuthenticationException(result.Errors.AggregateErrors());
 
         var userIdentity = await _userManager.FindByNameAsync(user.UserName);
-
+    
         //Generare token de verificarfe email...
         var emailConfirmationToken = await _userManager
             .GenerateEmailConfirmationTokenAsync(userIdentity);

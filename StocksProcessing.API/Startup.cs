@@ -4,6 +4,9 @@ using System.Security.Authentication;
 using System.Text;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +27,9 @@ using StocksFinalSolution.BusinessLogic.Features.StocksMarketMetricsCalculator;
 using StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 using StocksFinalSolution.BusinessLogic.Features.Transactions;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
+using StocksFinalSolution.BusinessLogic.Security;
 using StocksProccesing.Relational.DataAccess;
+using StocksProccesing.Relational.Encryption.Personal_Data;
 using StocksProccesing.Relational.Extension_Methods.DI;
 using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Middleware;
@@ -97,16 +102,29 @@ public class Startup
             );
             options.EnableSensitiveDataLogging();
         });
-
-
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        
+        services.AddDataProtection()
+            .PersistKeysToDbContext<StocksMarketContext>()
+            .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+            {
+                EncryptionAlgorithm = EncryptionAlgorithm.AES_192_GCM,
+                ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
+            });
+        
+        services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
+            {
+                opts.Stores.ProtectPersonalData = true;
+            })
             .AddEntityFrameworkStores<StocksMarketContext>()
             .AddDefaultTokenProviders();
 
+        services.AddScoped<IPersonalDataProtector, PersonalDataProtector>();
+        services.AddScoped<ILookupProtector, LookupProtector>();
+        services.AddScoped<ILookupProtectorKeyRing, LookupProtectorKeyRing>();
 
-        services.AddAuthentication().AddJwtBearer(options =>
-
-        {
+        services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
             var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ??
                             Configuration["Jwt:Secret"];
 
@@ -124,7 +142,6 @@ public class Startup
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
             };
         });
-
 
         services.Configure<IdentityOptions>(options =>
         {
@@ -222,6 +239,9 @@ public class Startup
             options.Map<UnauthorizedAccessException>(details =>
                 details.MapToProblemDetailsWithStatusCode(HttpStatusCode.Unauthorized));
         });
+
+        // var encrpted = new SimpleAESProtector("cheiatop", "cheie128bitkreaz").Encrypt("hahaha");
+        // var deencrpted = new SimpleAESProtector("cheiatop", "cheie128bitkreaz").Decrypt(encrpted);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -237,6 +257,7 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseCors();
         app.UseRouting();
+        
 
         app.UseAuthorization();
         app.UseAuthentication();

@@ -7,22 +7,16 @@ namespace StocksProccesing.Relational.Model;
 
 public class ApplicationUser : IdentityUser
 {
-    #region Public Properties
-
-    /// <summary>
-    ///     The users first name
-    /// </summary>
-    [Column(TypeName = "VARCHAR(50)")]
+    [Column(TypeName = "VARCHAR(256)")]
+    [ProtectedPersonalData]
     public string FirstName { get; set; }
 
-    /// <summary>
-    ///     The users last name
-    /// </summary>
-    [Column(TypeName = "VARCHAR(50)")]
+    [Column(TypeName = "VARCHAR(256)")]
+    [ProtectedPersonalData]
     public string LastName { get; set; }
-
-
-    [Column(TypeName = "decimal(20, 4)")] public decimal Capital { get; set; }
+    
+    [Column(TypeName = "decimal(20, 4)")] 
+    public decimal Capital { get; set; }
 
 
     public List<StocksTransaction> OpenTransactions { get; set; }
@@ -46,5 +40,4 @@ public class ApplicationUser : IdentityUser
         return hash.ToHashCode();
     }
 
-    #endregion
 }
