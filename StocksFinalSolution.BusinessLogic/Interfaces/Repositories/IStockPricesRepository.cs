@@ -7,7 +7,6 @@ namespace StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 
 public interface IStockPricesRepository : IRepository<StocksPriceData, int>
 {
-    Task AddPricesDataAsync(List<StocksPriceData> elements);
     decimal GetCurrentUnitPriceByStocksCompanyTicker(string ticker);
     List<StocksPriceData> GetTodaysPriceEvolution(string ticker);
 

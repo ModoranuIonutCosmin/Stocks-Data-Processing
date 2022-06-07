@@ -35,6 +35,16 @@ using StocksProccesing.Relational.Model;
 using StocksProcessing.API.Middleware;
 using StocksProcessing.General.Exceptions;
 
+
+using Stocks.General.ExtensionMethods;
+using Stripe;
+using StocksFinalSolution.BusinessLogic.Interfaces;
+using StocksFinalSolution.BusinessLogic.Features.Subscriptions;
+using Stocks.General.Models.Payments;
+using StocksProccesing.Relational.Cache;
+using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
+using StocksProccesing.Relational.DataAccess.V1.Cached;
+
 namespace StocksProcessing.API;
 
 public class Startup
@@ -53,10 +63,19 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+
+
+        // DateTimeOffset dto = new DateTimeOffset(2022, 06, 10, 23, 1, 1, TimeSpan.Zero);
+
+        // dto = dto.GetNextStockMarketTime(TimeSpan.FromHours(1));
+
+
+        services.Configure<StripeSettings>(Configuration.GetSection("Stripe:PublicKey"));
+
         services.AddControllers();
-        services.AddSwaggerGen(opt =>
+        _ = services.AddSwaggerGen(opt =>
         {
-            opt.SwaggerDoc("v1", new OpenApiInfo {Title = "StocksProcessing.API", Version = "v1"});
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "StocksProcessing.API", Version = "v1" });
             opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
@@ -77,10 +96,12 @@ public class Startup
                             Id = "Bearer"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
         });
+
+        StripeConfiguration.ApiKey = Configuration["Stripe:SecretKey"];
 
         services.AddApiVersioning(config =>
         {
@@ -121,6 +142,15 @@ public class Startup
         services.AddScoped<IPersonalDataProtector, PersonalDataProtector>();
         services.AddScoped<ILookupProtector, LookupProtector>();
         services.AddScoped<ILookupProtectorKeyRing, LookupProtectorKeyRing>();
+
+
+        services.AddStackExchangeRedisCache(opts =>
+        {
+            opts.Configuration = $"{Configuration["Redis:Server"]}:{Configuration["Redis:Port"]}";
+        });
+
+        services.AddSingleton<ICacheService, RedisCacheService>();
+
 
         services.AddAuthentication()
             .AddJwtBearer(options =>
@@ -171,6 +201,7 @@ public class Startup
                 });
         });
 
+
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddPersistence();
@@ -191,8 +222,10 @@ public class Startup
             .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
             .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
             .AddTransient<IPredictionsDataService, PredictionsDataService>()
-            .AddTransient<ITransactionsService, TransactionsService>();
+            .AddTransient<ITransactionsService, TransactionsService>()
+            .AddTransient<ISubscriptionsService, SubscriptionsService>();
 
+        services.Decorate<IStockSummariesRepository, StocksSummariesCachedRepository>();
 
         services.AddProblemDetails(options =>
         {
@@ -257,7 +290,6 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseCors();
         app.UseRouting();
-        
 
         app.UseAuthorization();
         app.UseAuthentication();

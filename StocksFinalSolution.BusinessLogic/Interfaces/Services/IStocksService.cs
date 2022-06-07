@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Stocks.General.Entities;
 using Stocks.General.Models;
-using StocksProcessing.API.Models;
 
 namespace StocksFinalSolution.BusinessLogic.Interfaces.Services;
 

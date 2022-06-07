@@ -4,8 +4,10 @@
         <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1"/>
-    </ItemGroup>
+        <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+
+	</ItemGroup>
     <ItemGroup>
         <None Update="host.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -16,6 +18,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Jobs quartz-scheduled\Stocks Data Processing.csproj"/>
+        <ProjectReference Include="..\..\Jobs quartz-scheduled\Stocks Data Processing.csproj" />
     </ItemGroup>
 </Project>

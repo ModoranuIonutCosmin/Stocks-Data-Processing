@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Stocks.General.Models.StocksInfoAggregates;
 
-namespace StocksProcessing.API.Models;
+namespace Stocks.General.Entities;
 
 public class StocksSummary
 {

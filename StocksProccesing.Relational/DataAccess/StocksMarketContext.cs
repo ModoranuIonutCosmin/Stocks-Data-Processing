@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Stocks.General.Entities;
 using StocksProccesing.Relational.Encryption;
 using StocksProccesing.Relational.Model;
 
@@ -17,6 +18,7 @@ public class StocksMarketContext : IdentityDbContext<ApplicationUser>,
     public DbSet<MaintenanceAction> Actions { get; set; }
     public DbSet<StocksOhlc> Summaries { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Subscription> Subscriptions { get; set; }
 
     public StocksMarketContext()
     {
@@ -38,6 +40,10 @@ public class StocksMarketContext : IdentityDbContext<ApplicationUser>,
         // {
         //     this.AddDataProtectionConverters(entityBuilder);
         // });
+
+        //builder.Entity<ApplicationUser>()
+        //    .HasAlternateKey(u => u.CustomerId)
+        //    .HasName("AlternateKey_CustomerId");
         
         //Campuri indetity
         
