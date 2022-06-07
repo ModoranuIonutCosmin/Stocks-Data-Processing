@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Stocks.General.Entities;
 using Stocks.General.ExtensionMethods;
 using Stocks.General.Models;
 using Stocks.General.Models.StocksInfoAggregates;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
-using StocksProcessing.API.Models;
 
 namespace StocksFinalSolution.BusinessLogic.Features.Stocks;
 

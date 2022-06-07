@@ -2,9 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Stocks.General.Entities;
 using Stocks.General.Models;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
-using StocksProcessing.API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,19 +14,16 @@ namespace StocksProcessing.API.Controllers.v1;
 [ApiController]
 public class StocksInfoController : BaseController
 {
-    private readonly ICompanyService _companiesService;
     private readonly IPredictionsDataService _predictionsDataService;
     private readonly IStocksService _stocksService;
 
     public StocksInfoController(
         IPredictionsDataService predictionsDataService,
-        IStocksService stocksService,
-        ICompanyService companiesService
+        IStocksService stocksService
     )
     {
         _predictionsDataService = predictionsDataService;
         _stocksService = stocksService;
-        _companiesService = companiesService;
     }
 
 

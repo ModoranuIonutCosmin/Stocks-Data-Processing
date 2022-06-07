@@ -8,6 +8,9 @@ namespace StocksProccesing.Relational.Model;
 public class ApplicationUser : IdentityUser
 {
     [Column(TypeName = "VARCHAR(256)")]
+    public string CustomerId { get; set; }
+
+    [Column(TypeName = "VARCHAR(256)")]
     [ProtectedPersonalData]
     public string FirstName { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StocksProcessing.API.Models;
+using Stocks.General.Entities;
 
 namespace StocksFinalSolution.BusinessLogic.Features.StocksMarketSummaryGenerator;
 

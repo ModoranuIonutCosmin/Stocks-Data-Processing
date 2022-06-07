@@ -59,11 +59,6 @@ public class StockPricesRepository : Repository<StocksPriceData, int>,
             .CountAsync();
     }
 
-    public async Task AddPricesDataAsync(List<StocksPriceData> elements)
-    {
-        await _dbContext.PricesData.AddRangeAsync(elements);
-        await SaveChangesAsync();
-    }
 
     public async Task RemoveAllPricePredictionsForTickerAndAlgorithm(string ticker, string algorithm)
     {

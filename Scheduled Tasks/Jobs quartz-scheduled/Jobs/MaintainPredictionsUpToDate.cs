@@ -70,9 +70,11 @@ public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
 
         foreach (var ticker in TickersHelpers.GatherAllTickers())
         {
-            var datasetFlat = await GatherTimeseriesDataset(ticker);
+            IEnumerable<TimestampPriceInputModel> datasetFlat 
+                = await GatherTimeseriesDataset(ticker);
+
             var datasetTabular = Enumerable.Empty<TabularModelInput>();
-            var latestKnownDate = datasetFlat.Last().Date;
+            DateTime latestKnownDate = datasetFlat.Last().Date;
 
             foreach (var algorithm in TimeseriesAlgorithms.Keys)
             {
@@ -108,6 +110,8 @@ public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
                 var predictions = await predictionEngine
                     .ComputePredictionsForNextPeriod(16 * 5, 0);
 
+                DateTimeOffset latestDataEntryDate = DateTime.SpecifyKind(latestKnownDate, DateTimeKind.Local);
+
                 await UpdatePredictionsForAlgorithmAndTicker(latestKnownDate, TabularAlgorithms[algorithm],
                     ticker, predictions);
             }
@@ -121,12 +125,10 @@ public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
     private async Task UpdatePredictionsForAlgorithmAndTicker(DateTimeOffset latestDatasetDate, string algorithm,
         string ticker, List<PredictionResult> predictions)
     {
-        var currentDate = latestDatasetDate;
+        DateTimeOffset currentDate = latestDatasetDate;
         var nextStockPrices = predictions.Select(prediction =>
         {
-            currentDate = new DateTimeOffset(currentDate
-                .GetNextStockMarketTime(DatasetInterval).Ticks, TimeSpan.Zero);
-
+            currentDate = currentDate.GetNextStockMarketTime(DatasetInterval);
 
             decimal price = 0m;
 
@@ -152,7 +154,7 @@ public class MaintainPredictionsUpToDate : IMaintainPredictionsUpToDate
 
         await _stockPricesRepository.RemoveAllPricePredictionsForTickerAndAlgorithm(
             ticker, algorithm);
-        await _stockPricesRepository.AddPricesDataAsync(nextStockPrices);
+        await _stockPricesRepository.AddRangeAsync(nextStockPrices); //TODO: verificat
     }
 
     private async Task<IEnumerable<TimestampPriceInputModel>> GatherTimeseriesDataset(string ticker)

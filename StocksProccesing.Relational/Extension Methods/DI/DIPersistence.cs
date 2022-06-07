@@ -15,6 +15,9 @@ public static class DIPersistence
             .AddScoped<IStockPricesRepository, StockPricesRepository>()
             .AddScoped<ICompaniesRepository, CompaniesRepository>()
             .AddScoped<IStockSummariesRepository, StockSummariesRepository>()
+            .AddScoped<ISubscriptionsRepository, SubscriptionsRepository>()
             .AddScoped<IMaintainanceJobsRepository, MaintainanceJobsRepository>();
+
     }
+
 }

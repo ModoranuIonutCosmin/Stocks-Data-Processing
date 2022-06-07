@@ -6,9 +6,9 @@ public static class TimespanParser
 {
     public static long ParseTimeSpanTicks(string interval)
     {
-        var l = interval.Length - 1;
-        var value = interval.Substring(0, l);
-        var type = interval.Substring(l, 1);
+        var length = interval.Length - 1;
+        var value = interval.Substring(0, length);
+        var type = interval.Substring(length, 1);
 
         switch (type)
         {

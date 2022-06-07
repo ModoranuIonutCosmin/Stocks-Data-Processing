@@ -14,13 +14,13 @@ public static class JsonPricesExtensionHelpers
     {
         StockPricesAPIModel payload = JsonConvert.DeserializeObject<StockPricesAPIModel>(jsonText);
 
-        return payload.Results
-            .Select(item => new StocksPriceData()
+        return payload?.Results
+            ?.Select(item => new StocksPriceData()
             {
                 CompanyTicker = ticker,
                 Date = DateTimeOffset.FromUnixTimeSeconds((long) item.t / 1000).ToUniversalTime(),
                 Price = item.c,
                 Prediction = false
-            }).ToList();
+            }).ToList() ?? new();
     }
 }
