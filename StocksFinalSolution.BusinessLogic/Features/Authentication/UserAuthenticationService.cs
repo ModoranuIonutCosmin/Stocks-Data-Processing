@@ -5,6 +5,7 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Stocks.General.Entities;
 using Stocks.General.Models.Authentication;
 using StocksFinalSolution.BusinessLogic.Features.Authentication.ExtensionMethods;
 using StocksFinalSolution.BusinessLogic.Interfaces.Email;
@@ -20,13 +21,16 @@ public class UserAuthenticationService : IUserAuthenticationService
     private readonly IGeneralPurposeEmailService _emailSender;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUsersRepository _usersRepository;
+    private readonly ISubscriptionsRepository _subscriptionsRepository;
 
     public UserAuthenticationService(UserManager<ApplicationUser> userManager,
         IUsersRepository usersRepository,
+        ISubscriptionsRepository subscriptionsRepository,
         IGeneralPurposeEmailService emailSender)
     {
         _userManager = userManager;
         _usersRepository = usersRepository;
+        _subscriptionsRepository = subscriptionsRepository;
         _emailSender = emailSender;
     }
 
@@ -104,12 +108,21 @@ public class UserAuthenticationService : IUserAuthenticationService
             : await _userManager.FindByNameAsync(loginData.UserNameOrEmail);
 
 
-        if (user == null) throw new AuthenticationException("Invalid credentials!");
+        if (user == null)
+        {
+            throw new AuthenticationException("Invalid credentials!");
+        }
 
         //Verifica daca parola este corecta fara a incrementa numarul de incercari. (peek)
         var isValidPassword = await _userManager.CheckPasswordAsync(user, loginData.Password);
 
-        if (!isValidPassword) throw new AuthenticationException("Invalid credentials!");
+        if (!isValidPassword)
+        {
+            throw new AuthenticationException("Invalid credentials!");
+        }
+
+        Subscription subscription = await _subscriptionsRepository
+            .GetSubscriptionByCustomerId(user.CustomerId);
 
         return new UserProfileDetailsApiModel
         {
@@ -117,7 +130,8 @@ public class UserAuthenticationService : IUserAuthenticationService
             LastName = user.LastName,
             Email = user.Email,
             UserName = user.UserName,
-            Token = user.GenerateJwtToken(jwtSecret, issuer, audience)
+            Token = user.GenerateJwtToken(jwtSecret, issuer, audience, subscription),
+            Subscription = subscription
         };
     }
 

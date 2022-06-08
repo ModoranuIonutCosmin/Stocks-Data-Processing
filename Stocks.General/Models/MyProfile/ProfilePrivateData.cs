@@ -1,4 +1,6 @@
-﻿namespace Stocks.General.Models.MyProfile;
+﻿using Stocks.General.Entities;
+
+namespace Stocks.General.Models.MyProfile;
 
 public class ProfilePrivateData
 {
@@ -7,4 +9,5 @@ public class ProfilePrivateData
     public decimal Capital { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
+    public Subscription Subscription { get; set; }
 }

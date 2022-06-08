@@ -32,7 +32,7 @@ public class CurrentStockInfoYahooScraperService : ICurrentStockInfoYahooScraper
         {
             currentPrice =
                 (await _scraper.ExtractNumericFields(BuildResourceLink(ticker), ValueXPath))
-                .Last();
+                .First();
             
             scrapeDate = DateTimeOffset.UtcNow.RoundDown(TimeSpan.FromMinutes(1));
         }

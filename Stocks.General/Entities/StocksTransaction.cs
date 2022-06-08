@@ -24,6 +24,8 @@ public class StocksTransaction
 
     [Required] public DateTimeOffset Date { get; set; }
 
+    public DateTimeOffset ScheduledAutoClose { get; set; }
+
     [Required]
     [Column(TypeName = "decimal(20, 4)")]
     public decimal UnitSellPriceThen { get; set; }
