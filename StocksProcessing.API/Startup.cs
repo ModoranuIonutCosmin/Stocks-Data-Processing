@@ -44,6 +44,7 @@ using Stocks.General.Models.Payments;
 using StocksProccesing.Relational.Cache;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksProccesing.Relational.DataAccess.V1.Cached;
+using StocksFinalSolution.BusinessLogic.Features.TradeSuggestions;
 
 namespace StocksProcessing.API;
 
@@ -70,7 +71,7 @@ public class Startup
         // dto = dto.GetNextStockMarketTime(TimeSpan.FromHours(1));
 
 
-        services.Configure<StripeSettings>(Configuration.GetSection("Stripe:PublicKey"));
+        services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
         services.AddControllers();
         _ = services.AddSwaggerGen(opt =>
@@ -123,7 +124,7 @@ public class Startup
             );
             options.EnableSensitiveDataLogging();
         });
-        
+
         services.AddDataProtection()
             .PersistKeysToDbContext<StocksMarketContext>()
             .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
@@ -131,7 +132,7 @@ public class Startup
                 EncryptionAlgorithm = EncryptionAlgorithm.AES_192_GCM,
                 ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
             });
-        
+
         services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
                 opts.Stores.ProtectPersonalData = true;
@@ -155,23 +156,23 @@ public class Startup
         services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-            var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ??
-                            Configuration["Jwt:Secret"];
+                var jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ??
+                                Configuration["Jwt:Secret"];
 
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                //Valideaza faptul ca payload-ul din Token a fost semnat cu secretul 
-                //disponibil pe server si nu a fost modificat
-                ValidateIssuerSigningKey = true,
-                ValidateAudience = true,
-                ValidateIssuer = true,
-                ValidateLifetime = true,
-                ValidIssuer = Configuration["Jwt:Issuer"],
-                ValidAudience = Configuration["Jwt:Audience"],
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
-            };
-        });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    //Valideaza faptul ca payload-ul din Token a fost semnat cu secretul 
+                    //disponibil pe server si nu a fost modificat
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+                };
+            });
 
         services.Configure<IdentityOptions>(options =>
         {
@@ -214,16 +215,17 @@ public class Startup
             .AddScoped<IStocksService, StocksService>()
             .AddScoped<IUserAuthenticationService, UserAuthenticationService>()
             .AddScoped<IUserPasswordResetService, UserPasswordResetService>()
+            .AddTransient<IPredictionsDataService, PredictionsDataService>()
+            .AddTransient<ITransactionsService, TransactionsService>()
+            .AddTransient<ISubscriptionsService, SubscriptionsService>()
+            .AddTransient<ITradeSuggestionsService, TradeSuggestionsService>()
             .AddTransient<IStockMarketDisplayPriceCalculator, StockMarketDisplayPriceCalculator>()
             .AddTransient<IStockMarketOrderTaxesCalculator, StockMarketOrderTaxesCalculator>()
             .AddTransient<IStockMarketProfitCalculator, StockMarketProfitCalculator>()
             .AddTransient<IStocksTrendCalculator, StocksTrendCalculator>()
             .AddTransient<ITransactionSummaryCalculator, TransactionSummaryCalculator>()
             .AddTransient<IPricesDisparitySimulator, PricesDisparitySimulator>()
-            .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>()
-            .AddTransient<IPredictionsDataService, PredictionsDataService>()
-            .AddTransient<ITransactionsService, TransactionsService>()
-            .AddTransient<ISubscriptionsService, SubscriptionsService>();
+            .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>();
 
         services.Decorate<IStockSummariesRepository, StocksSummariesCachedRepository>();
 

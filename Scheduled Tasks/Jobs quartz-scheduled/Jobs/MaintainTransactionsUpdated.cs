@@ -40,9 +40,10 @@ public class MaintainTransactionsUpdated : IMaintainTransactionsUpdated
         foreach (var transaction in openedTransactions)
         {
             var profit = profitCalculator.CalculateTransactionProfit(transaction);
+            var tradeValue = transaction.InvestedAmount + profit;
 
-            if (profit <= -transaction.StopLossAmount ||
-                profit >= transaction.TakeProfitAmount)
+            if (tradeValue <= transaction.StopLossAmount ||
+                tradeValue >= transaction.TakeProfitAmount)
                 await usersRepository.CloseUserTransaction(transaction, profit);
         }
 

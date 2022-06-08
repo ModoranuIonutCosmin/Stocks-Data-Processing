@@ -125,14 +125,17 @@ public class PortofolioService : IPortofolioService
             throw new InvalidLeverageValue("Invalid leverage value!");
 
         var leveragedTrade = marketOrder.Leverage > 1 || !marketOrder.IsBuy;
-        var stopLossTooBig = leveragedTrade && marketOrder.StopLossAmount >
+        var stopLossTooSmall = leveragedTrade && marketOrder.StopLossAmount <
             marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent;
-        var stopLossNegative = marketOrder.StopLossAmount < 0;
         var takeProfitNegative = marketOrder.TakeProfitAmount < 0;
 
-        if (stopLossTooBig || stopLossNegative)
+        if (stopLossTooSmall)
+        {
             throw new InvalidStopLossValueForLeveragedTrade("Invalid stop loss amount for leveraged trade!\r\n" +
-                                                            $"Stop loss should be between [1, {marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent}]");
+                                                            $"Stop loss should be between " +
+                                                            $"[{marketOrder.InvestedAmount * TaxesConfig.StopLossMaxPercent}," +
+                                                            $" {marketOrder.InvestedAmount}]");
+        }
 
         if (takeProfitNegative) throw new InvalidTakeProfitValue("Take profit value invalid -> it was negative.");
 

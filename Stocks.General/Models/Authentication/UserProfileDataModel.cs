@@ -1,4 +1,6 @@
-﻿namespace Stocks.General.Models.Authentication;
+﻿using Stocks.General.Entities;
+
+namespace Stocks.General.Models.Authentication;
 
 public class UserProfileDetailsApiModel
 {
@@ -11,4 +13,6 @@ public class UserProfileDetailsApiModel
     public string Email { get; set; }
 
     public string Token { get; set; }
+
+    public Subscription Subscription { get; set; }
 }
