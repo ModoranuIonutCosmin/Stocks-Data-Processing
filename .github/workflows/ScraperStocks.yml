@@ -5,10 +5,10 @@ on:
     - master
 env:
   AZURE_FUNCTIONAPP_NAME: ScraperStocks
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: Scheduled Tasks\Azure Functions\PredictionsGeneratorFunction/publish
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: Scheduled Tasks\Azure Functions\ScraperFunction/publish
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
-  WORKING_DIRECTORY: Scheduled Tasks\Azure Functions\PredictionsGeneratorFunction
+  WORKING_DIRECTORY: Scheduled Tasks\Azure Functions\ScraperFunction
 jobs:
   build-and-deploy:
     runs-on: windows-latest
