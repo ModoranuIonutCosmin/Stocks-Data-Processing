@@ -85,6 +85,35 @@ Tesla vehicles are produced at its factory in Fremont, California, and Gigafacto
                     UrlLogo = "https://etoro-cdn.etorostatic.com/market-avatars/4238/150x150.png",
                     Description =
                         "The investment seeks to track the performance of the Standard & Poor‘s 500 Index that measures the investment return of large-capitalization stocks. The fund employs an indexing investment approach designed to track the performance of the Standard & Poor's 500 Index, a widely recognized benchmark of U.S. stock market performance that is dominated by the stocks of large U.S. companies. The advisor attempts to replicate the target index by investing all, or substantially all, of its assets in the stocks that make up the index, holding each stock in approximately the same proportion as its weighting in the index."
+                },
+                new()
+                {
+                    Ticker = "GME",
+                    Name = "GameStop Corp.",
+                    UrlLogo = "https://brandlogos.net/wp-content/uploads/2014/12/gamestop-logo.png",
+                    Description = "GameStop Corp. is an American video game, consumer electronics, and gaming merchandise retailer.The company is headquartered in Grapevine, Texas (a suburb of Dallas), and is the largest video game retailer worldwide. As of 29 January 2022, the company operated 4,573 stores including 3,018 in the United States, 231 in Canada, 417 in Australia and 907 in Europe under the GameStop, EB Games, EB Games Australia, Micromania-Zing, ThinkGeek and Zing Pop Culture brands. The company was founded in Dallas in 1984 as Babbage's, and took on its current name in 1999."
+                },
+
+                new()
+                {
+                    Ticker = "AAPL",
+                    Name = "Apple Inc.",
+                    UrlLogo = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+                    Description = "Apple Inc. is an American multinational technology company that specializes in consumer electronics, software and online services headquartered in Cupertino, California, United States. Apple is the largest information technology company by revenue (totaling US$365.8 billion in 2021) and as of May 2022, it is the world's second most valuable company, the fourth-largest personal computer vendor by unit sales and second-largest mobile phone manufacturer. It is one of the Big Five American information technology companies, alongside Alphabet, Amazon, Meta, and Microsoft."
+                },
+                new()
+                {
+                    Ticker = "GM",
+                    Name = "General Motors",
+                    UrlLogo = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/General_Motors_logo.svg/1200px-General_Motors_logo.svg.png",
+                    Description = "The General Motors Company (GM) is an American multinational automotive manufacturing corporation headquartered in Detroit, Michigan, United States. It is the largest automaker in the United States and was the largest in the world for 77 years, until losing the top spot to Toyota."
+                },
+                new()
+                {
+                    Ticker = "PLTR",
+                    Name = "Palantir Technologies Inc.",
+                    UrlLogo = "https://www.palantir.com/assets/xrfr7uokpv1b/22VT84Bt3hjfBryjjM75Eb/7dc269e89ac9a2d2e74a5eec3e8754cd/Palantir_Logo_2000x2000.png",
+                    Description = "Palantir Technologies is a public American software company that specializes in big data analytics. Headquartered in Denver, Colorado, it was founded by Peter Thiel,[3] Nathan Gettings, Joe Lonsdale, Stephen Cohen, and Alex Karp in 2003. The company's name is derived from The Lord of the Rings where the magical palantíri were 'seeing-stones', described as indestructible balls of crystal used for communication and to see events in other parts of the world."
                 }
             });
             _dbContext.SaveChanges();

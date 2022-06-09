@@ -10,5 +10,9 @@ public enum StocksTicker
     TSLA,
     INTC,
     MSFT,
-    VOO
+    VOO,
+    GME,
+    AAPL,
+    GM,
+    PLTR
 }

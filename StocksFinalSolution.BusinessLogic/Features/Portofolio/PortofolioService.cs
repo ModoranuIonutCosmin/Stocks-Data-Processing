@@ -148,7 +148,7 @@ public class PortofolioService : IPortofolioService
         var currentPrice = _stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(marketOrder.Ticker);
         var sellPrice = _priceCalculator.CalculateSellPrice(currentPrice, marketOrder.Leverage);
         var buyPrice = _priceCalculator.CalculateBuyPrice(currentPrice, marketOrder.Leverage);
-        var openNow = marketOrder.ScheduledOpen != default;
+        var openNow = marketOrder.ScheduledOpen == default;
 
 
         var transaction = new StocksTransaction

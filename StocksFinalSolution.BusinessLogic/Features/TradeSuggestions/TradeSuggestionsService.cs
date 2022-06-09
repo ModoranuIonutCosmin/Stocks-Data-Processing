@@ -72,6 +72,15 @@ namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions
 
             for (int observation = 0; observation < observations.Count - 1; observation += 2)
             {
+                var currentPrice = observations[observation].Price;
+                var expectedPrice = observations[observation + 1].Price;
+
+                if ((isBuy && currentPrice + currentPrice * 0.01m > expectedPrice) ||
+                    (!isBuy && currentPrice - currentPrice * 0.01m < expectedPrice))
+                {
+                    continue;
+                }
+
                 transactions.Add(new TradeSuggestion
                 {
                     CurrentPrice = observations[observation].Price,

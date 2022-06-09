@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Stocks.General": {
+      "commandName": "Project",
+      "commandLineArgs": "-p 7072"
+    }
+  }
+}
