@@ -102,7 +102,14 @@ public class Startup
             });
         });
 
-        StripeConfiguration.ApiKey = Configuration["Stripe:SecretKey"];
+        string stripeApiKey = Configuration["Stripe:SecretKey"];
+
+        if (hostingEnvironment.IsProduction())
+        {
+            stripeApiKey = Environment.GetEnvironmentVariable("stripe_secret_key") ?? stripeApiKey;
+        }
+
+        StripeConfiguration.ApiKey = stripeApiKey;
 
         services.AddApiVersioning(config =>
         {
@@ -125,13 +132,13 @@ public class Startup
             options.EnableSensitiveDataLogging();
         });
 
-        services.AddDataProtection()
-            .PersistKeysToDbContext<StocksMarketContext>()
-            .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
-            {
-                EncryptionAlgorithm = EncryptionAlgorithm.AES_192_GCM,
-                ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
-            });
+        //services.AddDataProtection()
+        //    .PersistKeysToDbContext<StocksMarketContext>()
+        //    .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+        //    {
+        //        EncryptionAlgorithm = EncryptionAlgorithm.AES_192_GCM,
+        //        ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
+        //    });
 
         services.AddIdentity<ApplicationUser, IdentityRole>(opts =>
             {
@@ -144,10 +151,17 @@ public class Startup
         services.AddScoped<ILookupProtector, LookupProtector>();
         services.AddScoped<ILookupProtectorKeyRing, LookupProtectorKeyRing>();
 
+        string redisConnectionString = $"{Configuration["Redis:Server"]}:{Configuration["Redis:Port"]}";
+
+        if (hostingEnvironment.IsProduction())
+        {
+            redisConnectionString = Environment.GetEnvironmentVariable("RedisConnString") ?? redisConnectionString;
+        }
+
 
         services.AddStackExchangeRedisCache(opts =>
         {
-            opts.Configuration = $"{Configuration["Redis:Server"]}:{Configuration["Redis:Port"]}";
+            opts.Configuration = redisConnectionString;
         });
 
         services.AddSingleton<ICacheService, RedisCacheService>();
@@ -167,8 +181,8 @@ public class Startup
                     ValidateAudience = true,
                     ValidateIssuer = true,
                     ValidateLifetime = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Audience"],
+                    ValidIssuer = Environment.GetEnvironmentVariable("JwtIssuer") ?? Configuration["Jwt:Issuer"],
+                    ValidAudience = Environment.GetEnvironmentVariable("JwtAudience") ?? Configuration["Jwt:Audience"],
                     IssuerSigningKey =
                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
                 };

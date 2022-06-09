@@ -28,7 +28,8 @@ namespace StocksProcessing.API.Controllers.v1
         {
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
-            string endpointSecret = _configuration["Stripe:EventWebhook"];
+            string endpointSecret = Environment.GetEnvironmentVariable("stripe_event_web_hook") ??
+                _configuration["Stripe:EventWebhook"];
 
             try
             {

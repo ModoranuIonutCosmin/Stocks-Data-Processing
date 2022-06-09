@@ -20,14 +20,16 @@ public class LookupProtector : ILookupProtector
     public string Protect(string keyId, string data)
     {
         string key = _keyRing[keyId];
-        string iv = _configuration["PersonalDataKeys:IV"];
+        string iv = Environment.GetEnvironmentVariable("PersonalDataKeys:IV") ??
+            _configuration["PersonalDataKeys:IV"];
 
         return new SimpleAESProtector(key, iv).Encrypt(data);
     }
 
     public string Unprotect(string keyId, string data) {
         string key = _keyRing[keyId];
-        string iv = _configuration["PersonalDataKeys:IV"];
+        string iv = Environment.GetEnvironmentVariable("PersonalDataKeys:IV") ??
+            _configuration["PersonalDataKeys:IV"];
 
         return new SimpleAESProtector(key, iv).Decrypt(data);
     }
