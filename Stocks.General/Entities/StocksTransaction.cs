@@ -24,6 +24,7 @@ public class StocksTransaction
 
     [Required] public DateTimeOffset Date { get; set; }
 
+    public DateTimeOffset ScheduledAutoOpen { get; set; }
     public DateTimeOffset ScheduledAutoClose { get; set; }
 
     [Required]

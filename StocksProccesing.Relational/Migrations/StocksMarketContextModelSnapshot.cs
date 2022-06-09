@@ -461,6 +461,12 @@ namespace StocksProccesing.Relational.Migrations
                     b.Property<bool>("Open")
                         .HasColumnType("bit");
 
+                    b.Property<DateTimeOffset>("ScheduledAutoClose")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ScheduledAutoOpen")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<decimal>("StopLossAmount")
                         .HasColumnType("decimal(20,4)");
 
@@ -544,11 +550,9 @@ namespace StocksProccesing.Relational.Migrations
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksOhlc", b =>
                 {
-                    b.HasOne("StocksProccesing.Relational.Model.Company", "Company")
+                    b.HasOne("StocksProccesing.Relational.Model.Company", null)
                         .WithMany("SummariesData")
                         .HasForeignKey("CompanyTicker");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("StocksProccesing.Relational.Model.StocksPriceData", b =>

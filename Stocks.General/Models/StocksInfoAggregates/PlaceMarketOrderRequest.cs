@@ -1,4 +1,6 @@
-﻿namespace Stocks.General.Models.StocksInfoAggregates;
+﻿using System;
+
+namespace Stocks.General.Models.StocksInfoAggregates;
 
 public class PlaceMarketOrderRequest
 {
@@ -13,4 +15,7 @@ public class PlaceMarketOrderRequest
     public decimal TakeProfitAmount { get; set; }
 
     public decimal InvestedAmount { get; set; }
+
+    public DateTimeOffset ScheduledOpen { get; set; }
+    public DateTimeOffset ScheduledClose { get; set; }
 }

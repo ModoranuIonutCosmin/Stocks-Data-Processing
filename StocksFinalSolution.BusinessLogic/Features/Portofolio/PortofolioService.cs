@@ -148,6 +148,8 @@ public class PortofolioService : IPortofolioService
         var currentPrice = _stockPricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(marketOrder.Ticker);
         var sellPrice = _priceCalculator.CalculateSellPrice(currentPrice, marketOrder.Leverage);
         var buyPrice = _priceCalculator.CalculateBuyPrice(currentPrice, marketOrder.Leverage);
+        var openNow = marketOrder.ScheduledOpen != default;
+
 
         var transaction = new StocksTransaction
         {
@@ -157,15 +159,25 @@ public class PortofolioService : IPortofolioService
             InvestedAmount = marketOrder.InvestedAmount,
             UniqueActionStamp = marketOrder.Token,
             IsBuy = marketOrder.IsBuy,
-            Open = true,
+            Open = openNow,
             UnitSellPriceThen = sellPrice,
             UnitBuyPriceThen = buyPrice,
             Leverage = marketOrder.Leverage,
             Ticker = marketOrder.Ticker,
+            ScheduledAutoClose = marketOrder.ScheduledClose,
+            ScheduledAutoOpen = marketOrder.ScheduledOpen,
             ApplicationUserId = requestingUser.Id
         };
 
-        await _usersRepository.OpenUserTransaction(requestingUser, transaction);
+        if (openNow)
+        {
+            await _usersRepository.OpenUserTransaction(requestingUser, transaction);
+        }
+        else
+        {
+            await _transactionsRepository.AddAsync(transaction);
+        }
+
 
         return marketOrder;
     }
