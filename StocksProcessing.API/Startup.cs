@@ -242,6 +242,7 @@ public class Startup
             .AddTransient<IStocksSummaryGenerator, StocksSummaryGenerator>();
 
         services.Decorate<IStockSummariesRepository, StocksSummariesCachedRepository>();
+        services.Decorate<IStockPricesRepository, StockPricesCachedRepository>();
 
         services.AddProblemDetails(options =>
         {

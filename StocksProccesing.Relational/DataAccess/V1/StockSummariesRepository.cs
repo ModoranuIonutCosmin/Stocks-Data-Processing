@@ -12,9 +12,10 @@ public class StockSummariesRepository : Repository<StocksOhlc, int>, IStockSumma
 {
     public StockSummariesRepository(StocksMarketContext context) : base(context)
     {
+
     }
 
-    public StocksOhlc GetLastSummaryEntry(string ticker, TimeSpan interval)
+    public StocksOhlc GetLastSummaryEntryForTicker(string ticker, TimeSpan interval)
     {
         if (string.IsNullOrWhiteSpace(ticker))
             throw new ArgumentException($"'{nameof(ticker)}' cannot be null or whitespace.", nameof(ticker));
@@ -36,7 +37,7 @@ public class StockSummariesRepository : Repository<StocksOhlc, int>, IStockSumma
             .FirstAsync();
     }
 
-    public async Task<List<StocksOhlc>> GetLastSummaryEntryForAll(TimeSpan interval)
+    public async Task<List<StocksOhlc>> GetLastSummaryEntryForAllTickers(TimeSpan interval)
     {
         var dailySummaries = await _dbContext.Summaries
             .Where(e => e.Period == interval.Ticks)
@@ -50,7 +51,7 @@ public class StockSummariesRepository : Repository<StocksOhlc, int>, IStockSumma
             ).ToList();
     }
 
-    public async Task<List<StocksOhlc>> GetAllByTickerAndPeriod(string ticker, TimeSpan period)
+    public async virtual Task<List<StocksOhlc>> GetAllEntriesByTickerAndPeriod(string ticker, TimeSpan period)
     {
         return (await GetAllWhereAsync(e => e.CompanyTicker == ticker &&
                                             e.Period == period.Ticks)).ToList();

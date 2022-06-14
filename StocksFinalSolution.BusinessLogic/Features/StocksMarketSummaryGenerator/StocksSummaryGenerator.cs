@@ -36,7 +36,7 @@ public class StocksSummaryGenerator : IStocksSummaryGenerator
     public async Task<StocksSummary> GenerateSummary(string ticker, TimeSpan interval)
     {
         DateTimeOffset lastUpdatedDate = stockSummariesRepository
-                                  .GetLastSummaryEntry(ticker, interval)?.Date
+                                  .GetLastSummaryEntryForTicker(ticker, interval)?.Date
                               ?? DateTimeOffset.FromUnixTimeMilliseconds(0);
 
         List<StocksPriceData> pricesData = (await stockPricesRepository

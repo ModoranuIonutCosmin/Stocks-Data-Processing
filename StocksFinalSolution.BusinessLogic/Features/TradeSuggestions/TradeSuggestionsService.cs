@@ -1,6 +1,6 @@
 ﻿using Stocks.General.Models.StocksInfoAggregates;
 using Stocks.General.Models.TradeSuggestions;
-using StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy;
+using StocksFinalSolution.BusinessLogic.Features.TradeSuggestions.Strategy;
 using StocksFinalSolution.BusinessLogic.Interfaces.Repositories;
 using StocksFinalSolution.BusinessLogic.Interfaces.Services;
 using StocksProccesing.Relational.Model;
@@ -33,16 +33,6 @@ namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions
 
             List<StocksPriceData> observations = new List<StocksPriceData>();
 
-            StocksPriceData lastIncludedObservation = nextHorizonPrices.First();
-
-            for (int i = 1; i < nextHorizonPrices.Count; i++)
-            {
-                if (lastIncludedObservation.Date.Add(interval) <= nextHorizonPrices[i].Date)
-                {
-                    lastIncludedObservation = nextHorizonPrices[i];
-                    observations.Add(lastIncludedObservation);
-                }
-            }
 
             ViableTradesContext context = new ViableTradesContext();
 
@@ -56,15 +46,15 @@ namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions
 
             var investedAmount = 0.01m * userRequesting.Capital;
 
-            results.AddRange(BuildTradeRequests(buyResults, isBuy: true, ticker, investedAmount));
-            results.AddRange(BuildTradeRequests(sellResults, isBuy: false, ticker, investedAmount));
+            results.AddRange(BuildTradeRequests(buyResults, isBuy: true, ticker, investedAmount, interval));
+            results.AddRange(BuildTradeRequests(sellResults, isBuy: false, ticker, investedAmount, interval));
 
             return results;
         }
 
 
         private List<TradeSuggestion> BuildTradeRequests(List<StocksPriceData> observations, bool isBuy,
-            string ticker, decimal investedAmount)
+            string ticker, decimal investedAmount, TimeSpan interval)
         {
             //TODO: Invested amount
 
@@ -102,7 +92,24 @@ namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions
                 });
             }
 
-            return transactions;
+
+            TradeSuggestion previousTrade = transactions.FirstOrDefault();
+            List<TradeSuggestion> filteredTradeSuggestions = new List<TradeSuggestion>();
+
+            for (int i = 1; i < transactions.Count; i++)
+            {
+
+                var currentTradeDate = transactions[i].OpenRequest.ScheduledOpen;
+                var previousTradeDate = previousTrade.OpenRequest.ScheduledOpen;
+
+                if (previousTradeDate.Add(interval) <= currentTradeDate)
+                {
+                    previousTrade = transactions[i];
+                    filteredTradeSuggestions.Add(transactions[i]);
+                }
+            }
+
+            return filteredTradeSuggestions;
         }
     }
 }

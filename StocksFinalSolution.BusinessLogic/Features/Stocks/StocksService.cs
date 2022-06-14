@@ -50,7 +50,7 @@ public class StocksService : IStocksService
     public async Task<List<StockReportSingle>> GetReportForOfAllCompanies()
     {
         var companies = await _companiesRepository.GetAllAsync();
-        var summaries = await _summariesRepository.GetLastSummaryEntryForAll(TimeSpan.FromDays(1));
+        var summaries = await _summariesRepository.GetLastSummaryEntryForAllTickers(TimeSpan.FromDays(1));
 
         var result = companies.Join(summaries, c => c.Ticker,
             s => s.CompanyTicker,
@@ -68,7 +68,7 @@ public class StocksService : IStocksService
 
         var dataPoints =
             _mapper.Map<List<StocksOhlc>, List<OhlcPriceValue>>(
-                    await _summariesRepository.GetAllByTickerAndPeriod(ticker,
+                    await _summariesRepository.GetAllEntriesByTickerAndPeriod(ticker,
                         TimeSpan.FromTicks(intervalTicks))
                 )
                 .OrderBy(e => e.Date)

@@ -33,4 +33,7 @@ public class TransactionFullInfo
     public decimal ProfitOrLoss { get; set; }
 
     public decimal ProfitOrLossPercentage { get; set; }
+
+    public DateTimeOffset ScheduledAutoOpen { get; set; }
+    public DateTimeOffset ScheduledAutoClose { get; set; }
 }

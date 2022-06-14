@@ -45,11 +45,11 @@ public class TransactionsService : ITransactionsService
     public async Task<AllTransactionsDetailed> GatherTransactionsParticularTicker(ApplicationUser userRequesting,
         string ticker)
     {
-        var openTransactionsList = _usersRepository
+        var transactionsList = _usersRepository
             .GetTransactionsListForUserByTicker(userRequesting, ticker);
 
         var result = _transactionSummaryCalculator
-            .AggregateOpenTransactionsDataForSingleCompany(openTransactionsList, ticker);
+            .AggregateOpenTransactionsDataForSingleCompany(transactionsList, ticker);
 
 
         return result;

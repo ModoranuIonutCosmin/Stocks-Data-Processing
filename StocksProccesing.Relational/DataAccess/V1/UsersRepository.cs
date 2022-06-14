@@ -22,7 +22,7 @@ public class UsersRepository : Repository<ApplicationUser, string>, IUsersReposi
     public List<StocksTransaction> GetTransactionsListForUser(ApplicationUser user)
     {
         return _dbContext.Transactions
-            .Where(e => e.ApplicationUserId == user.Id && e.Open)
+            .Where(e => e.ApplicationUserId == user.Id)
             .AsNoTracking()
             .ToList();
     }
@@ -30,8 +30,8 @@ public class UsersRepository : Repository<ApplicationUser, string>, IUsersReposi
     public List<StocksTransaction> GetTransactionsListForUserByTicker(ApplicationUser user, string ticker)
     {
         return _dbContext.Transactions
-            .Where(e => e.ApplicationUserId == user.Id && e.Open
-                                                       && e.Ticker == ticker)
+            .Where(e => e.ApplicationUserId == user.Id &&
+                   e.Ticker == ticker)
             .ToList();
     }
 

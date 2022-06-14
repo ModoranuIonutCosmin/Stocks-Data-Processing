@@ -48,7 +48,7 @@ public class MaintainPeriodicalSummaries : IMaintainPeriodicalSummaries
 
     public async Task UpdateLastPeriod(string ticker, TimeSpan period)
     {
-        var lastSummary = stockSummariesRepository.GetLastSummaryEntry(ticker, period);
+        var lastSummary = stockSummariesRepository.GetLastSummaryEntryForTicker(ticker, period);
 
         if (lastSummary != null)
             //Sterge ultimul range

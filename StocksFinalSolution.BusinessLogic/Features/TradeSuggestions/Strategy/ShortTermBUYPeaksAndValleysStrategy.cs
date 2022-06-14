@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy;
+namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions.Strategy;
 
 public class ShortTermBUYPeaksAndValleysStrategy : IViableTradesStrategy
 {
+
     public Task<List<StocksPriceData>> ExecuteStrategy(List<StocksPriceData> nextHorizonPrices)
     {
         var result = new List<StocksPriceData>();

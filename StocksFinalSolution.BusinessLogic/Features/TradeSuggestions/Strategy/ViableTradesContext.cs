@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy
+namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions.Strategy
 {
     public class ViableTradesContext
     {
@@ -13,7 +13,15 @@ namespace StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy
             _viableTradesStrategy = new ShortTermBUYPeaksAndValleysStrategy();
         }
 
-        public void SetStrategy (ViableTradesStrategy tradesStrategy)
+        public IViableTradesStrategy IViableTradesStrategy
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public void SetStrategy(ViableTradesStrategy tradesStrategy)
         {
             switch (tradesStrategy)
             {

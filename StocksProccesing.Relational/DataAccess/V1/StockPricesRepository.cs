@@ -43,10 +43,10 @@ public class StockPricesRepository : Repository<StocksPriceData, int>,
             .Where(p => p.CompanyTicker == ticker &&
                         p.AlgorithmUsed == algorithm &&
                         p.Prediction == true)
-            .OrderByDescending(p => p.Date)
+            .OrderBy(p => p.Date)
             .Skip(page * count)
             .Take(count)
-            .AsSplitQuery()
+            .AsNoTracking()
             .ToListAsync();
     }
 

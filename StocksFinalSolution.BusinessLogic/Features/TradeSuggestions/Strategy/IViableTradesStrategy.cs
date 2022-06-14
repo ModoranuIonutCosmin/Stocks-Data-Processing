@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy
+namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions.Strategy
 {
     public interface IViableTradesStrategy
     {

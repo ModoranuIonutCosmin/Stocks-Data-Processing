@@ -1,4 +1,4 @@
-﻿namespace StocksFinalSolution.BusinessLogic.Features.Subscriptions.Strategy
+﻿namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions.Strategy
 {
     public enum ViableTradesStrategy
     {

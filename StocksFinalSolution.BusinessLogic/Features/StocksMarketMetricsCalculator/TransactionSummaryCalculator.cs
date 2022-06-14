@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Stocks.General.ExtensionMethods;
@@ -83,48 +84,66 @@ public class TransactionSummaryCalculator : ITransactionSummaryCalculator
         string ticker)
     {
         var companyData = companiesRepository.GetCompanyData(ticker);
+        var openTransactions = transactions.Where(e => e.Open == true).ToList();
+        var scheduledTransactions = transactions.Where(e => !e.Open && 
+            e.ScheduledAutoOpen != default &&
+            e.ScheduledAutoOpen >= DateTimeOffset.UtcNow).ToList();
+        var closedTransactions = transactions.Where(e => !e.Open &&
+        (e.ScheduledAutoOpen == default || e.ScheduledAutoOpen < DateTimeOffset.UtcNow)).ToList();
+
+
         var result = new AllTransactionsDetailed
         {
-            Transactions = transactions.Select(e =>
-            {
-                var currentSellPrice = pricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(ticker);
-
-                var currentPrice = e.IsBuy
-                    ? currentSellPrice
-                    : displayPriceCalculator.CalculateBuyPrice(currentSellPrice, e.Leverage);
-                var isCFD = e.Leverage > 1 || !e.IsBuy;
-                var initialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen;
-                var unitsPurchased = e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen);
-                var profitOrLoss = ((currentPrice - initialPrice) * unitsPurchased *
-                                    (!e.IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
-                var profitOrLossPercentage =
-                    (profitOrLoss / (initialPrice * unitsPurchased)).TruncateToDecimalPlaces(3);
-
-                return new TransactionFullInfo
-                {
-                    Id = e.Id,
-                    CurrentPrice = currentPrice.TruncateToDecimalPlaces(3),
-                    InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
-                    IsBuy = e.IsBuy,
-                    Leverage = e.Leverage,
-                    InvestedAmount = e.InvestedAmount,
-                    UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen))
-                        .TruncateToDecimalPlaces(3),
-                    StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
-                    TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
-                    Date = e.Date,
-                    IsCFD = isCFD,
-                    ProfitOrLoss = profitOrLoss,
-                    ProfitOrLossPercentage = profitOrLossPercentage
-                };
-            }).ToList(),
-
+            OpenTransactions = CalculateTransactionDetailedInfo(openTransactions),
+            ClosedTransactions = CalculateTransactionDetailedInfo(closedTransactions),
+            ScheduledTransactions = CalculateTransactionDetailedInfo(scheduledTransactions),
             UrlLogo = companyData.UrlLogo,
             Name = companyData.Name,
             Description = companyData.Description,
-            Ticker = ticker
+            Ticker = ticker,
+
         };
 
         return result;
+    }
+
+    private List<TransactionFullInfo> CalculateTransactionDetailedInfo(List<StocksTransaction> transactions)
+    {
+        return transactions.Select(e =>
+        {
+            var currentSellPrice = pricesRepository.GetCurrentUnitPriceByStocksCompanyTicker(e.Ticker);
+
+            var currentPrice = e.IsBuy
+                ? currentSellPrice
+                : displayPriceCalculator.CalculateBuyPrice(currentSellPrice, e.Leverage);
+            var isCFD = e.Leverage > 1 || !e.IsBuy;
+            var initialPrice = e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen;
+            var unitsPurchased = e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen);
+            var profitOrLoss = ((currentPrice - initialPrice) * unitsPurchased *
+                                (!e.IsBuy ? -1 : 1)).TruncateToDecimalPlaces(3);
+            var profitOrLossPercentage =
+                (profitOrLoss / (initialPrice * unitsPurchased)).TruncateToDecimalPlaces(3);
+
+            return new TransactionFullInfo
+            {
+                Id = e.Id,
+                Ticker = e.Ticker,
+                CurrentPrice = currentPrice.TruncateToDecimalPlaces(3),
+                InitialPrice = (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen).TruncateToDecimalPlaces(3),
+                IsBuy = e.IsBuy,
+                Leverage = e.Leverage,
+                InvestedAmount = e.InvestedAmount,
+                UnitsPurchased = (e.InvestedAmount / (e.IsBuy ? e.UnitBuyPriceThen : e.UnitSellPriceThen))
+                    .TruncateToDecimalPlaces(3),
+                StopLossAmount = e.StopLossAmount.TruncateToDecimalPlaces(3),
+                TakeProfitAmount = e.TakeProfitAmount.TruncateToDecimalPlaces(3),
+                Date = e.Date,
+                IsCFD = isCFD,
+                ProfitOrLoss = profitOrLoss,
+                ProfitOrLossPercentage = profitOrLossPercentage,
+                ScheduledAutoClose = e.ScheduledAutoClose,
+                ScheduledAutoOpen = e.ScheduledAutoOpen
+            };
+        }).ToList();
     }
 }
