@@ -1,6 +1,11 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using StocksProccesing.Relational.Model;
+using StocksProcessing.API.Attributes;
 using Stripe.Checkout;
+using System.Threading.Tasks;
 
 namespace StocksProcessing.API.Controllers.v1
 {
@@ -8,28 +13,32 @@ namespace StocksProcessing.API.Controllers.v1
     [ApiVersion("1.0")]
     public class StripePortalApiController : BaseController
     {
-        [HttpPost("create-portal-session")]
-        public ActionResult Create()
-        {
-            // For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
-            // Typically this is stored alongside the authenticated user in your database.
-            var checkoutService = new SessionService();
-            var checkoutSession = checkoutService.Get(Request.Form["session_id"]);
+        private readonly IConfiguration configuration;
+        private readonly UserManager<ApplicationUser> userManager;
 
-            // This is the URL to which your customer will return after
-            // they are done managing billing in the Customer Portal.
-            var returnUrl = "http://localhost:4242";
+        public StripePortalApiController(IConfiguration configuration,
+            UserManager<ApplicationUser> userManager)
+        {
+            this.configuration = configuration;
+            this.userManager = userManager;
+        }
+
+        [HttpPost("create-portal-session")]
+        [AuthorizeToken]
+        public async Task<IActionResult> Create()
+        {
+            var userRequesting = await userManager.GetUserAsync(HttpContext.User);
 
             var options = new Stripe.BillingPortal.SessionCreateOptions
             {
-                Customer = checkoutSession.CustomerId,
-                ReturnUrl = returnUrl,
+                Customer = userRequesting.CustomerId,
+                ReturnUrl = configuration["FrontEnd:URL"],
             };
+
             var service = new Stripe.BillingPortal.SessionService();
             var session = service.Create(options);
 
-            Response.Headers.Add("Location", session.Url);
-            return new StatusCodeResult(303);
+            return Ok(session);
         }
     }
 }

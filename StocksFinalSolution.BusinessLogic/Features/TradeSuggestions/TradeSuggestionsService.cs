@@ -65,8 +65,8 @@ namespace StocksFinalSolution.BusinessLogic.Features.TradeSuggestions
                 var currentPrice = observations[observation].Price;
                 var expectedPrice = observations[observation + 1].Price;
 
-                if ((isBuy && currentPrice + currentPrice * 0.01m > expectedPrice) ||
-                    (!isBuy && currentPrice - currentPrice * 0.01m < expectedPrice))
+                if ((isBuy && currentPrice + currentPrice * 0.006m > expectedPrice) ||
+                    (!isBuy && currentPrice - currentPrice * 0.006m < expectedPrice))
                 {
                     continue;
                 }

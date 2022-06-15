@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Trainers.FastTree;
@@ -19,8 +20,8 @@ public class TabularFastForestRegressionPredictionEngine : TabularPredictionEngi
         var pipeline = MlContext.Regression.Trainers
             .FastForest(new FastForestRegressionTrainer.Options
             {
-                NumberOfTrees = 10,
-                FeatureFraction = 0.8F, LabelColumnName = @"Label", FeatureColumnName = @"Features"
+                FeatureFraction = 0.8F, LabelColumnName = @"Label", FeatureColumnName = @"Features",
+                Seed = new Random().Next()
             });
 
         // var pipeline = MlContext.Regression.Trainers
