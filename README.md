@@ -8,21 +8,24 @@ A web software solution that gives users convenient ways of:
 
 ## Demo
 A *short* summary of all features is presented in the video below.
+<!---
 If you want to try the app yourself you can access [this](https://bit.ly/3tu3orN) deployed version which
 may be slow at first operation due to it being hosted on a free development deployment slot,
 app having to cold-start.
-
+-->
 See the video below:
 
-[![Demo](https://i.imgur.com/2qCXI3a.png)](https://bit.ly/3irf9sL "Stocks research")
+[![Demo](https://i.imgur.com/TqqgeAC.png)](https://youtu.be/3f8c9ewmxH8 "Stocks research")
 
-Alt: [click](https://bit.ly/3irf9sL)
+Alt: [click](https://youtu.be/3f8c9ewmxH8)
 
 ## Technologies
 
 ### Back end
 - Web API using ASP .NET Core 6.
 - SQL Server and Entity Framework 5 for Persistance Layer
+- Caching api responses using Redis
+- Handling payments using Stripe
 - Scheduled tasks using Quartz.NET (locally) and Azure Functions for Production environment.
 - ML.NET for taking advantage of SSA algorithm and also several regression algorithms by preproccesing time series datasets to tabular forms.
 - ASP .NET Identity for Authentication and Authorization module.
@@ -36,7 +39,7 @@ Alt: [click](https://bit.ly/3irf9sL)
 
 ## Architecture
 * WebAPI hosted on Azure App service.
-* 3 Functions hosted on Azure Functions Apps.
+* 4 Functions hosted on Azure Functions Apps.
 * Azure SQL.
 * Angular app on Azure Static Web app service with custom domain.
 
